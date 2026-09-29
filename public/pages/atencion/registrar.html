@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Registrar Atención Médica</title>
+
+    <link rel="stylesheet" href="../../css/atencion-registrar.css">
+</head>
+
+<body>
+
+    <header class="header">
+        <div>
+            <h1>Atención Médica</h1>
+            <p>Registro de atención médica del paciente</p>
+        </div>
+
+        <a href="../dashboard.html" class="btn-volver">
+            Volver al inicio
+        </a>
+    </header>
+
+
+    <main class="container">
+
+        <!-- Buscar paciente -->
+        <section class="card">
+
+            <h2>Buscar paciente</h2>
+
+            <form id="buscarPacienteForm" class="search-form">
+
+                <div class="form-group">
+                    <label for="dni">DNI del paciente</label>
+
+                    <input
+                        type="text"
+                        id="dni"
+                        name="dni"
+                        maxlength="8"
+                        placeholder="Ingrese DNI"
+                        required
+                    >
+                </div>
+
+                <button type="submit" class="btn-primary">
+                    Buscar paciente
+                </button>
+
+            </form>
+
+        </section>
+
+
+        <!-- Información del paciente -->
+        <section class="card" id="pacienteSection">
+
+            <h2>Información del paciente</h2>
+
+            <div class="patient-grid">
+
+                <div class="info-item">
+                    <span>Paciente</span>
+                    <strong id="nombrePaciente">-</strong>
+                </div>
+
+                <div class="info-item">
+                    <span>DNI</span>
+                    <strong id="dniPaciente">-</strong>
+                </div>
+
+                <div class="info-item">
+                    <span>Historia clínica</span>
+                    <strong id="historiaClinica">-</strong>
+                </div>
+
+                <div class="info-item">
+                    <span>Edad</span>
+                    <strong id="edadPaciente">-</strong>
+                </div>
+
+                <div class="info-item">
+                    <span>Sexo</span>
+                    <strong id="sexoPaciente">-</strong>
+                </div>
+
+                <div class="info-item">
+                    <span>Fecha de cita</span>
+                    <strong id="fechaCita">-</strong>
+                </div>
+
+                <div class="info-item">
+                    <span>Médico</span>
+                    <strong id="medico">-</strong>
+                </div>
+
+                <div class="info-item">
+                    <span>Especialidad</span>
+                    <strong id="especialidad">-</strong>
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- Registro de atención -->
+        <section class="card">
+
+            <h2>Registro de atención médica</h2>
+
+            <form id="atencionForm">
+
+                <div class="form-group">
+                    <label for="anamnesis">
+                        Anamnesis
+                    </label>
+
+                    <textarea
+                        id="anamnesis"
+                        name="anamnesis"
+                        rows="5"
+                        placeholder="Describa los antecedentes y síntomas referidos por el paciente..."
+                        required
+                    ></textarea>
+                </div>
+
+
+                <div class="form-group">
+                    <label for="examenFisico">
+                        Examen físico
+                    </label>
+
+                    <textarea
+                        id="examenFisico"
+                        name="examenFisico"
+                        rows="5"
+                        placeholder="Registre los hallazgos del examen físico..."
+                        required
+                    ></textarea>
+                </div>
+
+
+                <div class="form-group">
+                    <label for="examenesAuxiliares">
+                        Exámenes auxiliares
+                    </label>
+
+                    <textarea
+                        id="examenesAuxiliares"
+                        name="examenesAuxiliares"
+                        rows="5"
+                        placeholder="Ingrese los resultados de exámenes auxiliares..."
+                    ></textarea>
+                </div>
+
+
+                <div class="form-group">
+                    <label for="diagnostico">
+                        Diagnóstico
+                    </label>
+
+                    <textarea
+                        id="diagnostico"
+                        name="diagnostico"
+                        rows="4"
+                        placeholder="Ingrese el diagnóstico..."
+                        required
+                    ></textarea>
+                </div>
+
+
+                <div class="form-group">
+                    <label for="tratamiento">
+                        Tratamiento
+                    </label>
+
+                    <textarea
+                        id="tratamiento"
+                        name="tratamiento"
+                        rows="5"
+                        placeholder="Describa el tratamiento indicado..."
+                        required
+                    ></textarea>
+                </div>
+
+
+                <div class="form-group">
+                    <label for="observaciones">
+                        Observaciones
+                    </label>
+
+                    <textarea
+                        id="observaciones"
+                        name="observaciones"
+                        rows="4"
+                        placeholder="Ingrese observaciones adicionales..."
+                    ></textarea>
+                </div>
+
+
+                <div class="form-actions">
+
+                    <button
+                        type="reset"
+                        class="btn-secondary"
+                    >
+                        Limpiar
+                    </button>
+
+                    <button
+                        type="submit"
+                        class="btn-primary"
+                    >
+                        Registrar atención
+                    </button>
+
+                </div>
+
+            </form>
+
+        </section>
+
+    </main>
+
+    <script src="../../js/supabase.js"></script>
+
+    <script src="../../js/atencion-registrar.js"></script>
+
+</body>
+</html>

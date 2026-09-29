@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+
+<html lang="es">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
+
+<title>SGC | Registrar cita</title>
+
+<link
+    rel="stylesheet"
+    href="../../css/cita-registrar.css"
+>
+
+
+</head>
+
+<body>
+
+<main class="container">
+
+    <header class="page-header">
+
+        <a href="../dashboard.html">
+            ← Volver al dashboard
+        </a>
+
+        <h1>Registrar cita médica</h1>
+
+        <p>
+            Seleccione el paciente, médico, fecha y hora
+            disponibles.
+        </p>
+
+    </header>
+
+
+    <form id="citaForm">
+
+
+        <!-- PACIENTE -->
+
+        <section class="form-section">
+
+            <div class="section-header">
+
+                <h2>1. Paciente</h2>
+
+                <p>
+                    Identifique al paciente para registrar
+                    la cita.
+                </p>
+
+            </div>
+
+
+            <div class="form-grid">
+
+                <div class="form-group">
+
+                    <label for="dni">
+                        DNI del paciente
+                    </label>
+
+                    <input
+                        type="text"
+                        id="dni"
+                        maxlength="8"
+                        placeholder="Ingrese DNI"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="historia">
+                        Historia clínica
+                    </label>
+
+                    <input
+                        type="text"
+                        id="historia"
+                        placeholder="Número de historia"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group full">
+
+                    <label for="paciente">
+                        Paciente
+                    </label>
+
+                    <select id="paciente" required>
+
+                        <option value="">
+                            Seleccione un paciente
+                        </option>
+
+                        <option value="1">
+                            Juan Pérez Quispe
+                        </option>
+
+                        <option value="2">
+                            María Quispe Huamán
+                        </option>
+
+                    </select>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- MÉDICO -->
+
+        <section class="form-section">
+
+            <div class="section-header">
+
+                <h2>2. Médico y especialidad</h2>
+
+            </div>
+
+
+            <div class="form-grid">
+
+                <div class="form-group">
+
+                    <label for="especialidad">
+                        Especialidad
+                    </label>
+
+                    <select
+                        id="especialidad"
+                        required
+                    >
+
+                        <option value="">
+                            Seleccione
+                        </option>
+
+                        <option value="medicina-general">
+                            Medicina General
+                        </option>
+
+                        <option value="cardiologia">
+                            Cardiología
+                        </option>
+
+                        <option value="traumatologia">
+                            Traumatología
+                        </option>
+
+                        <option value="pediatria">
+                            Pediatría
+                        </option>
+
+                        <option value="ginecologia">
+                            Ginecología
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="medico">
+                        Médico
+                    </label>
+
+                    <select id="medico" required>
+
+                        <option value="">
+                            Seleccione un médico
+                        </option>
+
+                        <option value="1">
+                            Dr. Carlos Mendoza
+                        </option>
+
+                        <option value="2">
+                            Dra. Ana Flores
+                        </option>
+
+                    </select>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- FECHA Y HORA -->
+
+        <section class="form-section">
+
+            <div class="section-header">
+
+                <h2>3. Fecha y hora</h2>
+
+            </div>
+
+
+            <div class="form-grid">
+
+                <div class="form-group">
+
+                    <label for="fecha">
+                        Fecha
+                    </label>
+
+                    <input
+                        type="date"
+                        id="fecha"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="hora">
+                        Hora
+                    </label>
+
+                    <select id="hora" required>
+
+                        <option value="">
+                            Seleccione un horario
+                        </option>
+
+                        <option value="08:00">
+                            08:00
+                        </option>
+
+                        <option value="08:30">
+                            08:30
+                        </option>
+
+                        <option value="09:00">
+                            09:00
+                        </option>
+
+                        <option value="09:30">
+                            09:30
+                        </option>
+
+                        <option value="10:00">
+                            10:00
+                        </option>
+
+                        <option value="10:30">
+                            10:30
+                        </option>
+
+                        <option value="11:00">
+                            11:00
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="consultorio">
+                        Consultorio
+                    </label>
+
+                    <select id="consultorio" required>
+
+                        <option value="">
+                            Seleccione
+                        </option>
+
+                        <option value="101">
+                            Consultorio 101
+                        </option>
+
+                        <option value="102">
+                            Consultorio 102
+                        </option>
+
+                        <option value="103">
+                            Consultorio 103
+                        </option>
+
+                    </select>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- OBSERVACIONES -->
+
+        <section class="form-section">
+
+            <div class="section-header">
+
+                <h2>4. Observaciones</h2>
+
+            </div>
+
+            <div class="form-group">
+
+                <label for="observaciones">
+                    Observaciones
+                </label>
+
+                <textarea
+                    id="observaciones"
+                    rows="4"
+                    placeholder="Información adicional..."
+                ></textarea>
+
+            </div>
+
+        </section>
+
+
+        <!-- ACCIONES -->
+
+        <div class="actions">
+
+            <button
+                type="button"
+                id="cancelButton"
+                class="btn-secondary"
+            >
+                Cancelar
+            </button>
+
+            <button
+                type="submit"
+                class="btn-primary"
+            >
+                Registrar cita
+            </button>
+
+        </div>
+
+
+        <div id="message"></div>
+
+    </form>
+
+</main>
+
+<script src="../../js/supabase.js"></script>
+
+<script src="../../js/cita-registrar.js"></script>
+
+
+</body>
+
+</html>

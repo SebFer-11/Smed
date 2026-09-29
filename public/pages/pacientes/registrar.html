@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+<title>SGC | Registrar paciente</title>
+
+<link rel="stylesheet" href="../../css/paciente-registrar.css">
+
+
+</head>
+
+<body>
+
+
+<div class="page-container">
+
+    <header class="page-header">
+
+        <div>
+            <a href="../dashboard.html" class="back-link">
+                ← Volver al dashboard
+            </a>
+
+            <h1>Registrar paciente</h1>
+
+            <p>
+                Registro de datos del paciente y hoja de referencia
+            </p>
+        </div>
+
+    </header>
+
+
+    <main>
+
+        <form id="pacienteForm">
+
+
+            <!-- 1. DATOS DE REFERENCIA -->
+
+            <section class="form-section">
+
+                <div class="section-header">
+                    <h2>1. Datos de referencia</h2>
+                    <p>Información relacionada con la referencia del paciente.</p>
+                </div>
+
+                <div class="form-grid">
+
+                    <div class="form-group">
+                        <label for="fecha">Fecha</label>
+
+                        <input
+                            type="date"
+                            id="fecha"
+                            name="fecha"
+                            required
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="hora">Hora</label>
+
+                        <input
+                            type="time"
+                            id="hora"
+                            name="hora"
+                            required
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="seguro">Confirmación de seguro</label>
+
+                        <select id="seguro" name="seguro" required>
+                            <option value="">Seleccione</option>
+                            <option value="si">Sí</option>
+                            <option value="no">No</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="sis">Código de afiliación SIS</label>
+
+                        <input
+                            type="text"
+                            id="sis"
+                            name="sis"
+                            placeholder="Código SIS"
+                        >
+                    </div>
+
+                    <div class="form-group full">
+                        <label for="origen">
+                            Establecimiento de origen
+                        </label>
+
+                        <input
+                            type="text"
+                            id="origen"
+                            name="origen"
+                            placeholder="Ingrese establecimiento de origen"
+                            required
+                        >
+                    </div>
+
+                    <div class="form-group full">
+                        <label for="destino">
+                            Establecimiento de destino
+                        </label>
+
+                        <input
+                            type="text"
+                            id="destino"
+                            name="destino"
+                            placeholder="Ingrese establecimiento de destino"
+                            required
+                        >
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- 2. IDENTIFICACIÓN -->
+
+            <section class="form-section">
+
+                <div class="section-header">
+                    <h2>2. Identificación del paciente</h2>
+                </div>
+
+                <div class="form-grid">
+
+                    <div class="form-group">
+                        <label for="historia">
+                            Número de Historia Clínica
+                        </label>
+
+                        <input
+                            type="text"
+                            id="historia"
+                            name="historia"
+                            required
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="dni">
+                            Documento de identidad
+                        </label>
+
+                        <input
+                            type="text"
+                            id="dni"
+                            name="dni"
+                            maxlength="8"
+                            required
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="nombres">Nombres</label>
+
+                        <input
+                            type="text"
+                            id="nombres"
+                            name="nombres"
+                            required
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="apellidos">Apellidos completos</label>
+
+                        <input
+                            type="text"
+                            id="apellidos"
+                            name="apellidos"
+                            required
+                        >
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- 3. DATOS PERSONALES -->
+
+            <section class="form-section">
+
+                <div class="section-header">
+                    <h2>3. Datos personales</h2>
+                </div>
+
+                <div class="form-grid">
+
+                    <div class="form-group">
+                        <label for="sexo">Sexo</label>
+
+                        <select id="sexo" name="sexo" required>
+
+                            <option value="">
+                                Seleccione
+                            </option>
+
+                            <option value="masculino">
+                                Masculino
+                            </option>
+
+                            <option value="femenino">
+                                Femenino
+                            </option>
+
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="edad">Edad</label>
+
+                        <input
+                            type="number"
+                            id="edad"
+                            name="edad"
+                            min="0"
+                            max="120"
+                            required
+                        >
+                    </div>
+
+                    <div class="form-group full">
+                        <label for="direccion">
+                            Dirección
+                        </label>
+
+                        <input
+                            type="text"
+                            id="direccion"
+                            name="direccion"
+                            placeholder="Dirección completa"
+                            required
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="departamento">
+                            Departamento
+                        </label>
+
+                        <select id="departamento" name="departamento" required>
+
+                            <option value="">
+                                Seleccione
+                            </option>
+
+                            <option value="cusco">
+                                Cusco
+                            </option>
+
+                            <option value="lima">
+                                Lima
+                            </option>
+
+                            <option value="arequipa">
+                                Arequipa
+                            </option>
+
+                            <option value="apurimac">
+                                Apurímac
+                            </option>
+
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="distrito">
+                            Distrito
+                        </label>
+
+                        <input
+                            type="text"
+                            id="distrito"
+                            name="distrito"
+                            required
+                        >
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- 4. HISTORIA CLÍNICA -->
+
+            <section class="form-section">
+
+                <div class="section-header">
+                    <h2>4. Resumen de historia clínica</h2>
+                </div>
+
+                <div class="form-group">
+
+                    <label for="anamnesis">
+                        Anamnesis
+                    </label>
+
+                    <textarea
+                        id="anamnesis"
+                        name="anamnesis"
+                        rows="4"
+                    ></textarea>
+
+                </div>
+
+                <div class="form-group">
+
+                    <label for="examenFisico">
+                        Examen físico
+                    </label>
+
+                    <textarea
+                        id="examenFisico"
+                        name="examenFisico"
+                        rows="4"
+                    ></textarea>
+
+                </div>
+
+                <div class="form-group">
+
+                    <label for="examenes">
+                        Exámenes auxiliares
+                    </label>
+
+                    <textarea
+                        id="examenes"
+                        name="examenes"
+                        rows="4"
+                    ></textarea>
+
+                </div>
+
+                <div class="form-group">
+
+                    <label for="diagnosticos">
+                        Diagnósticos
+                    </label>
+
+                    <textarea
+                        id="diagnosticos"
+                        name="diagnosticos"
+                        rows="4"
+                    ></textarea>
+
+                </div>
+
+                <div class="form-group">
+
+                    <label for="tratamiento">
+                        Tratamiento
+                    </label>
+
+                    <textarea
+                        id="tratamiento"
+                        name="tratamiento"
+                        rows="4"
+                    ></textarea>
+
+                </div>
+
+            </section>
+
+
+            <!-- 5. DATOS DE REFERENCIA -->
+
+            <section class="form-section">
+
+                <div class="section-header">
+                    <h2>5. Datos de la referencia</h2>
+                </div>
+
+                <div class="form-grid">
+
+                    <div class="form-group">
+                        <label for="ups">
+                            UPS destino
+                        </label>
+
+                        <select id="ups" name="ups" required>
+
+                            <option value="">
+                                Seleccione
+                            </option>
+
+                            <option value="consulta-externa">
+                                Consulta externa
+                            </option>
+
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="especialidad">
+                            Especialidad
+                        </label>
+
+                        <select
+                            id="especialidad"
+                            name="especialidad"
+                            required
+                        >
+
+                            <option value="">
+                                Seleccione
+                            </option>
+
+                            <option value="medicina-general">
+                                Medicina General
+                            </option>
+
+                            <option value="cardiologia">
+                                Cardiología
+                            </option>
+
+                            <option value="traumatologia">
+                                Traumatología
+                            </option>
+
+                            <option value="pediatria">
+                                Pediatría
+                            </option>
+
+                            <option value="ginecologia">
+                                Ginecología
+                            </option>
+
+                        </select>
+                    </div>
+
+                    <div class="form-group full">
+
+                        <label for="condicion">
+                            Condición del paciente al inicio del traslado
+                        </label>
+
+                        <select id="condicion" name="condicion" required>
+
+                            <option value="">
+                                Seleccione
+                            </option>
+
+                            <option value="estable">
+                                Estable
+                            </option>
+
+                            <option value="delicado">
+                                Delicado
+                            </option>
+
+                            <option value="grave">
+                                Grave
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- 6. RESPONSABLE DE REFERENCIA -->
+
+            <section class="form-section">
+
+                <div class="section-header">
+                    <h2>6. Responsable de la referencia</h2>
+                </div>
+
+                <div class="form-grid">
+
+                    <div class="form-group">
+                        <label for="refNombre">
+                            Nombres y apellidos
+                        </label>
+
+                        <input
+                            type="text"
+                            id="refNombre"
+                            name="refNombre"
+                            required
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="refColegiatura">
+                            Colegiatura
+                        </label>
+
+                        <input
+                            type="text"
+                            id="refColegiatura"
+                            name="refColegiatura"
+                        >
+                    </div>
+
+                    <div class="form-group">
+
+                        <label for="refProfesion">
+                            Profesión
+                        </label>
+
+                        <select
+                            id="refProfesion"
+                            name="refProfesion"
+                            required
+                        >
+
+                            <option value="">
+                                Seleccione
+                            </option>
+
+                            <option value="medico">
+                                Médico
+                            </option>
+
+                            <option value="enfermero">
+                                Enfermero(a)
+                            </option>
+
+                            <option value="obstetra">
+                                Obstetra
+                            </option>
+
+                            <option value="otro">
+                                Otro
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- 7. RESPONSABLE DEL ESTABLECIMIENTO -->
+
+            <section class="form-section">
+
+                <div class="section-header">
+                    <h2>7. Responsable del establecimiento</h2>
+                </div>
+
+                <div class="form-grid">
+
+                    <div class="form-group">
+                        <label for="estNombre">
+                            Nombres y apellidos
+                        </label>
+
+                        <input
+                            type="text"
+                            id="estNombre"
+                            name="estNombre"
+                            required
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="estColegiatura">
+                            Colegiatura
+                        </label>
+
+                        <input
+                            type="text"
+                            id="estColegiatura"
+                            name="estColegiatura"
+                        >
+                    </div>
+
+                    <div class="form-group">
+
+                        <label for="estProfesion">
+                            Profesión
+                        </label>
+
+                        <select
+                            id="estProfesion"
+                            name="estProfesion"
+                            required
+                        >
+
+                            <option value="">
+                                Seleccione
+                            </option>
+
+                            <option value="medico">
+                                Médico
+                            </option>
+
+                            <option value="enfermero">
+                                Enfermero(a)
+                            </option>
+
+                            <option value="obstetra">
+                                Obstetra
+                            </option>
+
+                            <option value="otro">
+                                Otro
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- ACCIONES -->
+
+            <div class="form-actions">
+
+                <button
+                    type="button"
+                    class="btn-secondary"
+                    id="cancelButton"
+                >
+                    Cancelar
+                </button>
+
+                <button
+                    type="reset"
+                    class="btn-light"
+                >
+                    Limpiar
+                </button>
+
+                <button
+                    type="submit"
+                    class="btn-primary"
+                >
+                    Registrar paciente
+                </button>
+
+            </div>
+
+            <div id="message"></div>
+
+        </form>
+
+    </main>
+
+</div>
+<script src="../../js/supabase.js"></script>
+
+<script src="../../js/paciente-registrar.js"></script>
+</body>
+</html>

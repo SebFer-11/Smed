@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+```
+<title>SGC | Consultar paciente</title>
+
+<link rel="stylesheet" href="../../css/paciente-consultar.css">
+
+</head>
+
+<body>
+<main class="container">
+
+    <header class="header">
+
+        <a href="../dashboard.html">
+            ← Volver al dashboard
+        </a>
+
+        <h1>Consultar paciente</h1>
+
+        <p>
+            Busque la información registrada del paciente.
+        </p>
+
+    </header>
+
+
+    <section class="search-card">
+
+        <form id="searchForm">
+
+            <div class="search-group">
+
+                <label for="searchType">
+                    Buscar por
+                </label>
+
+                <select id="searchType">
+
+                    <option value="dni">
+                        DNI
+                    </option>
+
+                    <option value="historia">
+                        Historia clínica
+                    </option>
+
+                    <option value="sis">
+                        Código SIS
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="search-group">
+
+                <label for="searchValue">
+                    Valor
+                </label>
+
+                <input
+                    type="text"
+                    id="searchValue"
+                    placeholder="Ingrese el dato a buscar"
+                    required
+                >
+
+            </div>
+
+
+            <button type="submit">
+                Buscar paciente
+            </button>
+
+        </form>
+
+    </section>
+
+
+    <section
+        id="patientResult"
+        class="patient-card hidden"
+    >
+
+        <div class="patient-header">
+
+            <div>
+
+                <h2 id="patientName">
+                    Juan Pérez Quispe
+                </h2>
+
+                <p id="patientDocument">
+                    DNI: 12345678
+                </p>
+
+            </div>
+
+            <span class="status">
+                Paciente registrado
+            </span>
+
+        </div>
+
+
+        <div class="information-grid">
+
+            <div>
+                <span>Historia clínica</span>
+                <strong id="patientHistory">
+                    HC-000123
+                </strong>
+            </div>
+
+            <div>
+                <span>Código SIS</span>
+                <strong id="patientSIS">
+                    SIS-123456
+                </strong>
+            </div>
+
+            <div>
+                <span>Sexo</span>
+                <strong id="patientSex">
+                    Masculino
+                </strong>
+            </div>
+
+            <div>
+                <span>Edad</span>
+                <strong id="patientAge">
+                    35 años
+                </strong>
+            </div>
+
+            <div>
+                <span>Departamento</span>
+                <strong id="patientDepartment">
+                    Cusco
+                </strong>
+            </div>
+
+            <div>
+                <span>Distrito</span>
+                <strong id="patientDistrict">
+                    Cusco
+                </strong>
+            </div>
+
+        </div>
+
+
+        <div class="reference">
+
+            <h3>Hoja de referencia</h3>
+
+            <p>
+                <strong>Establecimiento de origen:</strong>
+                <span id="origin">
+                    Centro de Salud Cusco
+                </span>
+            </p>
+
+            <p>
+                <strong>Establecimiento de destino:</strong>
+                <span id="destination">
+                    Hospital Antonio Lorena
+                </span>
+            </p>
+
+            <p>
+                <strong>Especialidad:</strong>
+                <span id="specialty">
+                    Cardiología
+                </span>
+            </p>
+
+        </div>
+
+
+        <div class="clinical-summary">
+
+            <h3>Resumen de historia clínica</h3>
+
+            <div>
+                <h4>Anamnesis</h4>
+                <p id="anamnesis">
+                    Información registrada de la anamnesis.
+                </p>
+            </div>
+
+            <div>
+                <h4>Diagnóstico</h4>
+                <p id="diagnosis">
+                    Información registrada del diagnóstico.
+                </p>
+            </div>
+
+            <div>
+                <h4>Tratamiento</h4>
+                <p id="treatment">
+                    Información registrada del tratamiento.
+                </p>
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <p id="message" class="message"></p>
+
+</main>
+<script src="../../js/supabase.js"></script>
+
+<script src="../../js/paciente-consultar.js"></script>
+
+
+</body>
+</html>

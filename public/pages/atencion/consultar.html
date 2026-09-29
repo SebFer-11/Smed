@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Consultar Atención Médica</title>
+
+    <link rel="stylesheet" href="../../css/atencion-consultar.css">
+
+</head>
+
+<body>
+
+    <header class="header">
+
+        <div>
+            <h1>Historia Clínica</h1>
+            <p>Consulta de atenciones médicas</p>
+        </div>
+
+        <a href="../dashboard.html" class="btn-volver">
+            Volver al inicio
+        </a>
+
+    </header>
+
+
+    <main class="container">
+
+        <!-- BUSCAR PACIENTE -->
+
+        <section class="card">
+
+            <h2>Buscar paciente</h2>
+
+            <form id="buscarForm" class="search-form">
+
+                <div class="form-group">
+
+                    <label for="dni">
+                        DNI del paciente
+                    </label>
+
+                    <input
+                        type="text"
+                        id="dni"
+                        maxlength="8"
+                        placeholder="Ingrese DNI"
+                        required
+                    >
+
+                </div>
+
+                <button
+                    type="submit"
+                    class="btn-primary"
+                >
+                    Consultar
+                </button>
+
+            </form>
+
+        </section>
+
+
+        <!-- DATOS PACIENTE -->
+
+        <section class="card">
+
+            <h2>Datos del paciente</h2>
+
+            <div class="patient-info">
+
+                <div>
+                    <span>Paciente</span>
+                    <strong id="nombrePaciente">-</strong>
+                </div>
+
+                <div>
+                    <span>DNI</span>
+                    <strong id="dniPaciente">-</strong>
+                </div>
+
+                <div>
+                    <span>Historia clínica</span>
+                    <strong id="historiaClinica">-</strong>
+                </div>
+
+                <div>
+                    <span>Edad</span>
+                    <strong id="edadPaciente">-</strong>
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- HISTORIAL -->
+
+        <section class="card">
+
+            <h2>Historial de atenciones</h2>
+
+            <div id="historial">
+
+                <p class="empty">
+                    Busque un paciente para visualizar
+                    su historial médico.
+                </p>
+
+            </div>
+
+        </section>
+
+
+        <!-- DETALLE -->
+
+        <section
+            class="card"
+            id="detalleSection"
+            style="display: none;"
+        >
+
+            <h2>Detalle de atención</h2>
+
+            <div class="detalle">
+
+                <div class="detalle-item">
+
+                    <h3>Fecha</h3>
+
+                    <p id="detalleFecha">-</p>
+
+                </div>
+
+
+                <div class="detalle-item">
+
+                    <h3>Médico</h3>
+
+                    <p id="detalleMedico">-</p>
+
+                </div>
+
+
+                <div class="detalle-item">
+
+                    <h3>Especialidad</h3>
+
+                    <p id="detalleEspecialidad">-</p>
+
+                </div>
+
+
+                <div class="detalle-item">
+
+                    <h3>Anamnesis</h3>
+
+                    <p id="detalleAnamnesis">-</p>
+
+                </div>
+
+
+                <div class="detalle-item">
+
+                    <h3>Examen físico</h3>
+
+                    <p id="detalleExamen">-</p>
+
+                </div>
+
+
+                <div class="detalle-item">
+
+                    <h3>Exámenes auxiliares</h3>
+
+                    <p id="detalleAuxiliares">-</p>
+
+                </div>
+
+
+                <div class="detalle-item">
+
+                    <h3>Diagnóstico</h3>
+
+                    <p id="detalleDiagnostico">-</p>
+
+                </div>
+
+
+                <div class="detalle-item">
+
+                    <h3>Tratamiento</h3>
+
+                    <p id="detalleTratamiento">-</p>
+
+                </div>
+
+
+                <div class="detalle-item">
+
+                    <h3>Observaciones</h3>
+
+                    <p id="detalleObservaciones">-</p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+    <script src="../../js/supabase.js"></script>
+
+    <script src="../../js/atencion-consultar.js"></script>
+
+</body>
+</html>

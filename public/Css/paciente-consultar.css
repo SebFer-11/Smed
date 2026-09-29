@@ -1,0 +1,204 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  }
+
+body {
+font-family: Arial, Helvetica, sans-serif;
+background: #f1f5f9;
+color: #1e293b;
+}
+
+.container {
+max-width: 1100px;
+margin: auto;
+padding: 30px;
+}
+
+.header {
+margin-bottom: 25px;
+}
+
+.header a {
+color: #0f766e;
+text-decoration: none;
+font-size: 14px;
+}
+
+.header h1 {
+margin-top: 15px;
+font-size: 28px;
+}
+
+.header p {
+margin-top: 6px;
+color: #64748b;
+}
+
+.search-card,
+.patient-card {
+background: white;
+border: 1px solid #e2e8f0;
+border-radius: 10px;
+padding: 25px;
+}
+
+.search-card {
+margin-bottom: 20px;
+}
+
+#searchForm {
+display: grid;
+grid-template-columns: 200px 1fr auto;
+gap: 15px;
+align-items: end;
+}
+
+.search-group {
+display: flex;
+flex-direction: column;
+}
+
+.search-group label {
+margin-bottom: 7px;
+font-weight: 600;
+font-size: 14px;
+}
+
+.search-group input,
+.search-group select {
+padding: 11px;
+
+
+border: 1px solid #cbd5e1;
+border-radius: 7px;
+
+outline: none;
+
+
+}
+
+#searchForm button {
+padding: 11px 18px;
+
+border: none;
+border-radius: 7px;
+background: #0f766e;
+color: white;
+font-weight: bold;
+cursor: pointer;
+
+}
+
+.patient-header {
+display: flex;
+justify-content: space-between;
+align-items: center;
+padding-bottom: 20px;
+border-bottom: 1px solid #e2e8f0;
+
+
+}
+
+.patient-header h2 {
+margin-bottom: 5px;
+}
+
+.patient-header p {
+color: #64748b;
+}
+
+.status {
+padding: 6px 10px;
+
+
+background: #dcfce7;
+color: #166534;
+
+border-radius: 20px;
+
+font-size: 12px;
+
+}
+
+.information-grid {
+display: grid;
+grid-template-columns: repeat(3, 1fr);
+gap: 20px;
+
+padding: 25px 0;
+
+
+}
+
+.information-grid div {
+display: flex;
+flex-direction: column;
+gap: 5px;
+}
+
+.information-grid span {
+color: #64748b;
+font-size: 13px;
+}
+
+.reference,
+.clinical-summary {
+padding-top: 20px;
+border-top: 1px solid #e2e8f0;
+}
+
+.reference h3,
+.clinical-summary h3 {
+margin-bottom: 15px;
+}
+
+.reference p {
+margin-bottom: 8px;
+}
+
+.clinical-summary div {
+margin-bottom: 18px;
+}
+
+.clinical-summary h4 {
+margin-bottom: 5px;
+}
+
+.clinical-summary p {
+color: #475569;
+line-height: 1.6;
+}
+
+.hidden {
+display: none;
+}
+
+.message {
+margin-top: 15px;
+text-align: center;
+}
+
+@media (max-width: 750px) {
+
+
+#searchForm {
+    grid-template-columns: 1fr;
+}
+
+.information-grid {
+    grid-template-columns: 1fr 1fr;
+}
+
+
+}
+
+@media (max-width: 500px) {
+
+.information-grid {
+    grid-template-columns: 1fr;
+}
+
+
+}
