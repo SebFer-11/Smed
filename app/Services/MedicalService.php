@@ -2,38 +2,25 @@
 
 namespace App\Services;
 
-class MedicalService{
-    
-    public function ingresarRegistro(String $dni, String $nombre, String $apellido){
-        return $dni . " " . $nombre . " " . $apellido;
-
-    }
-
-
-    public function agendarCita(
-        String $dni,
-        String $especialidad,
-        String $fecha
-    ) {
-        return [
-            'dni' => $dni,
-            'especialidad' => $especialidad,
-            'fecha' => $fecha,
-            'estado' => 'Pendiente'
-        ];
-    }
-
-
-    public function verificarAfiliacionSIS(string $dni): array
+class MedicalService
+{
+    public function verificarAfiliacionSIS(string $estado): bool
     {
-        return ['dni' => $dni, 'estado' => 'ACTIVO', 'tabla_afiliacion' => 'SIS-GRATUITO'];
+        return strtoupper($estado) === 'ACTIVO';
     }
 
+    public function validarEdad(int $edad): bool
+    {
+        return $edad >= 0 && $edad <= 120;
+    }
+
+    public function validarDni(string $dni): bool
+    {
+        return preg_match('/^\d{8}$/', $dni) === 1;
+    }
 
     public function validarFechaCita(string $fecha): bool
     {
-        return $fecha >= date('Y-m-d');
+        return strtotime($fecha) !== false;
     }
-
-
 }
