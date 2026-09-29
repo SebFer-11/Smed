@@ -17,6 +17,7 @@ class PacienteServiceTest extends TestCase
 
     public function test_paciente_existe(): void
     {
+        // GIVEN (Dado): Un mock del repositorio configurado con los datos del paciente y la instancia del servicio
         $repository = Mockery::mock();
 
         $repository
@@ -30,8 +31,10 @@ class PacienteServiceTest extends TestCase
 
         $service = new PacienteService($repository);
 
+        // WHEN (Cuando): Se consulta si el paciente existe indicando el DNI
         $resultado = $service->pacienteExiste('12345678');
 
+        // THEN (Entonces): Se confirma que la respuesta sea verdadera
         $this->assertTrue($resultado);
     }
 }

@@ -11,6 +11,9 @@ class ExampleTest extends TestCase
      */
     public function test_that_true_is_true(): void
     {
+        // GIVEN (Dado): Un estado inicial o valor verdadero
+        // WHEN (Cuando): Se evalúa la condición
+        // THEN (Entonces): Se confirma que la afirmación es verdadera
         $this->assertTrue(true);
     }
 }
