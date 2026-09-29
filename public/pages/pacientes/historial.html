@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+
+<html lang="es">
+
+<head>
+
+
+<meta charset="UTF-8">
+
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
+
+<title>SGC | Historial clínico</title>
+
+<link
+    rel="stylesheet"
+    href="../../css/paciente-historial.css"
+>
+
+
+</head>
+
+<body>
+
+
+<main class="container">
+
+    <header class="header">
+
+        <a href="../dashboard.html">
+            ← Volver al dashboard
+        </a>
+
+        <h1>Historial clínico</h1>
+
+        <p>
+            Consulta cronológica de las atenciones médicas.
+        </p>
+
+    </header>
+
+
+    <section class="search-card">
+
+        <form id="historyForm">
+
+            <div>
+
+                <label for="dni">
+                    DNI del paciente
+                </label>
+
+                <input
+                    type="text"
+                    id="dni"
+                    maxlength="8"
+                    placeholder="Ingrese DNI"
+                    required
+                >
+
+            </div>
+
+            <button type="submit">
+                Consultar historial
+            </button>
+
+        </form>
+
+    </section>
+
+
+    <section
+        id="historyResult"
+        class="history-result hidden"
+    >
+
+        <div class="patient-info">
+
+            <div>
+
+                <span>Paciente</span>
+
+                <strong>
+                    Juan Pérez Quispe
+                </strong>
+
+            </div>
+
+            <div>
+
+                <span>DNI</span>
+
+                <strong>
+                    12345678
+                </strong>
+
+            </div>
+
+            <div>
+
+                <span>Historia clínica</span>
+
+                <strong>
+                    HC-000123
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <h2>Atenciones médicas</h2>
+
+
+        <article class="medical-record">
+
+            <div class="record-header">
+
+                <div>
+
+                    <strong>
+                        20/09/2026
+                    </strong>
+
+                    <span>
+                        Medicina General
+                    </span>
+
+                </div>
+
+                <span class="status">
+                    Atención finalizada
+                </span>
+
+            </div>
+
+
+            <div class="record-body">
+
+                <div>
+                    <h3>Motivo de consulta</h3>
+
+                    <p>
+                        Dolor abdominal y malestar general.
+                    </p>
+                </div>
+
+                <div>
+                    <h3>Diagnóstico</h3>
+
+                    <p>
+                        Gastritis aguda.
+                    </p>
+                </div>
+
+                <div>
+                    <h3>Tratamiento</h3>
+
+                    <p>
+                        Tratamiento médico según indicación.
+                    </p>
+                </div>
+
+                <div>
+                    <h3>Médico</h3>
+
+                    <p>
+                        Dr. Carlos Mendoza
+                    </p>
+                </div>
+
+            </div>
+
+        </article>
+
+
+        <article class="medical-record">
+
+            <div class="record-header">
+
+                <div>
+
+                    <strong>
+                        15/07/2026
+                    </strong>
+
+                    <span>
+                        Medicina General
+                    </span>
+
+                </div>
+
+                <span class="status">
+                    Atención finalizada
+                </span>
+
+            </div>
+
+
+            <div class="record-body">
+
+                <div>
+                    <h3>Motivo de consulta</h3>
+
+                    <p>
+                        Control médico.
+                    </p>
+                </div>
+
+                <div>
+                    <h3>Diagnóstico</h3>
+
+                    <p>
+                        Sin diagnóstico relevante.
+                    </p>
+                </div>
+
+                <div>
+                    <h3>Tratamiento</h3>
+
+                    <p>
+                        Recomendaciones generales.
+                    </p>
+                </div>
+
+                <div>
+                    <h3>Médico</h3>
+
+                    <p>
+                        Dra. Ana Flores
+                    </p>
+                </div>
+
+            </div>
+
+        </article>
+
+    </section>
+
+
+    <p id="message"></p>
+
+</main>
+
+<script src="../../js/supabase.js"></script>
+
+<script src="../../js/paciente-historial.js"></script>
+
+
+</body>
+
+</html>

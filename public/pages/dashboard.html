@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+<title>SGC | Dashboard</title>
+
+<link rel="stylesheet" href="../css/dashboard.css">
+
+
+</head>
+
+    <body>
+
+
+    <div class="layout">
+
+        <!-- BARRA LATERAL -->
+
+        <aside class="sidebar">
+
+            <div class="sidebar-header">
+                <div class="logo">SGC</div>
+
+                <div>
+                    <h2>SGC</h2>
+                    <span>Gestión Clínica</span>
+                </div>
+            </div>
+
+            <nav>
+
+                <a href="dashboard.html" class="active">
+                    Dashboard
+                </a>
+
+                <div class="menu-section">
+                    <span>Pacientes</span>
+
+                    <a href="pacientes/registrar.html">
+                        Registrar paciente
+                    </a>
+
+                    <a href="pacientes/consultar.html">
+                        Consultar paciente
+                    </a>
+
+                    <a href="pacientes/historial.html">
+                        Historial clínico
+                    </a>
+                </div>
+
+                <div class="menu-section">
+                    <span>Citas</span>
+
+                    <a href="citas/registrar.html">
+                        Registrar cita
+                    </a>
+
+                    <a href="citas/consultar.html">
+                        Consultar cita
+                    </a>
+
+                    <a href="citas/cancelar.html">
+                        Cancelar cita
+                    </a>
+                </div>
+
+                <div class="menu-section">
+
+                    <span>Atención médica</span>
+
+                    <a href="atencion/registrar.html">
+                        Registrar atención
+                    </a>
+                    <a href="atencion/consultar.html">
+                        Consultar atención
+                    </a>
+                </div>
+
+                <div class="menu-section">
+
+                    <span>Usuarios</span>
+
+                    <a href="../usuarios/usuarios.html">
+                        Gestión de usuarios
+                    </a>
+
+                </div>
+
+            </nav>
+
+            <button id="logoutButton" class="logout">
+                Cerrar sesión
+            </button>
+
+        </aside>
+
+
+        <!-- CONTENIDO -->
+
+        <main class="main-content">
+
+            <header class="topbar">
+
+                <div>
+                    <h1>Dashboard</h1>
+                    <p>Resumen del sistema</p>
+                </div>
+
+                <div class="user-info">
+                    <strong>Administrador</strong>
+                    <span>Personal autorizado</span>
+                </div>
+
+            </header>
+
+
+            <section class="content">
+
+                <div class="welcome">
+                    <h2>Bienvenido al Sistema de Gestión Clínica</h2>
+
+                    <p>
+                        Desde este panel puede gestionar pacientes,
+                        citas médicas y atención clínica.
+                    </p>
+                </div>
+
+
+                <div class="cards">
+
+                    <div class="card">
+                        <span>Pacientes registrados</span>
+                        <strong>124</strong>
+                    </div>
+
+                    <div class="card">
+                        <span>Citas programadas</span>
+                        <strong>32</strong>
+                    </div>
+
+                    <div class="card">
+                        <span>Atenciones médicas</span>
+                        <strong>18</strong>
+                    </div>
+
+                    <div class="card">
+                        <span>Usuarios</span>
+                        <strong>8</strong>
+                    </div>
+
+                </div>
+
+
+                <section class="panel">
+
+                    <div class="panel-header">
+                        <h2>Próximas citas</h2>
+
+                        <a href="../citas/consultar.html">
+                            Ver todas
+                        </a>
+                    </div>
+
+                    <table>
+
+                        <thead>
+
+                            <tr>
+                                <th>Paciente</th>
+                                <th>Médico</th>
+                                <th>Fecha</th>
+                                <th>Hora</th>
+                                <th>Estado</th>
+                            </tr>
+
+                        </thead>
+
+                        <tbody>
+
+                            <tr>
+                                <td>Juan Pérez</td>
+                                <td>Dr. Carlos Mendoza</td>
+                                <td>30/09/2026</td>
+                                <td>08:30</td>
+                                <td>
+                                    <span class="status active">
+                                        Programada
+                                    </span>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td>María Quispe</td>
+                                <td>Dra. Ana Flores</td>
+                                <td>30/09/2026</td>
+                                <td>09:00</td>
+                                <td>
+                                    <span class="status active">
+                                        Programada
+                                    </span>
+                                </td>
+                            </tr>
+
+                        </tbody>
+
+                    </table>
+
+                </section>
+
+            </section>
+
+        </main>
+
+    </div>
+<script src="../../js/supabase.js"></script>
+
+<script src="../js/dashboard.js"></script>
+
+</body>
+</html>

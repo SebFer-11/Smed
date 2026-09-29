@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+
+<html lang="es">
+
+<head>
+<meta charset="UTF-8">
+
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
+
+<title>SGC | Consultar cita</title>
+
+<link
+    rel="stylesheet"
+    href="../../css/cita-consultar.css"
+>
+
+
+</head>
+
+<body>
+
+
+<main class="container">
+
+    <header class="page-header">
+
+        <a href="../dashboard.html">
+            ← Volver al dashboard
+        </a>
+
+        <h1>Consulta de cita programada</h1>
+
+        <p>
+            Consulte la fecha, médico y consultorio
+            de la cita.
+        </p>
+
+    </header>
+
+
+    <section class="search-card">
+
+        <form id="searchForm">
+
+            <div>
+
+                <label for="dni">
+                    DNI del paciente
+                </label>
+
+                <input
+                    type="text"
+                    id="dni"
+                    maxlength="8"
+                    placeholder="Ingrese DNI"
+                    required
+                >
+
+            </div>
+
+
+            <button type="submit">
+                Consultar cita
+            </button>
+
+        </form>
+
+    </section>
+
+
+    <section
+        id="appointmentResult"
+        class="appointment-card hidden"
+    >
+
+        <div class="appointment-header">
+
+            <div>
+
+                <span class="label">
+                    Paciente
+                </span>
+
+                <h2>
+                    Juan Pérez Quispe
+                </h2>
+
+                <p>
+                    DNI: 12345678
+                </p>
+
+            </div>
+
+            <span class="status">
+                Programada
+            </span>
+
+        </div>
+
+
+        <div class="appointment-info">
+
+            <div>
+
+                <span>
+                    Fecha
+                </span>
+
+                <strong>
+                    30/09/2026
+                </strong>
+
+            </div>
+
+
+            <div>
+
+                <span>
+                    Hora
+                </span>
+
+                <strong>
+                    08:30
+                </strong>
+
+            </div>
+
+
+            <div>
+
+                <span>
+                    Médico
+                </span>
+
+                <strong>
+                    Dr. Carlos Mendoza
+                </strong>
+
+            </div>
+
+
+            <div>
+
+                <span>
+                    Especialidad
+                </span>
+
+                <strong>
+                    Medicina General
+                </strong>
+
+            </div>
+
+
+            <div>
+
+                <span>
+                    Consultorio
+                </span>
+
+                <strong>
+                    Consultorio 101
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <div class="appointment-footer">
+
+            <p>
+                Recuerde presentarse con anticipación
+                a su cita programada.
+            </p>
+
+        </div>
+
+    </section>
+
+
+    <p id="message"></p>
+
+</main>
+
+<script src="../../js/supabase.js"></script>
+
+<script src="../../js/cita-consultar.js"></script>
+
+</body>
+
+</html>
