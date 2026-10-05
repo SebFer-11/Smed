@@ -68,10 +68,9 @@ pacienteForm.addEventListener(
         const sexo =
             document.getElementById("sexo").value;
 
-        const edad =
-            Number(
-                document.getElementById("edad").value
-            );
+        const valoredad = Number(document.getElementById("edad").value);
+        const edad = (valoredad<0 || valoredad>105)?null : valoredad;
+
 
         const direccion =
             document.getElementById("direccion")
