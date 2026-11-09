@@ -1,63 +1,179 @@
 <!DOCTYPE html>
-
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SGC - Sistema de Gestión Clínica</title>
-    <link rel="stylesheet" href="css/login.css">
-    </head>
-    <body>
-    <main class="login-container">
+    <title>Iniciar Sesión | Sistema de Gestión Clínica - Hospital Antonio Lorena</title>
 
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Ionicons -->
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+
+    <link rel="stylesheet" href="Css/login.css">
+
+</head>
+
+<body>
+    <!-- Fondo Ambiental con Partículas Médicas y Ondas -->
+    <div class="ambient-glow glow-1"></div>
+    <div class="ambient-glow glow-2"></div>
+    <div class="ambient-glow glow-3"></div>
+    <canvas id="medicalCanvas"></canvas>
+
+    <main class="login-wrapper">
         <section class="login-card">
 
-            <div class="login-header">
-                <div class="logo">
-                    SGC
+            <!-- Encabezado Clínico -->
+            <header class="login-header">
+                <div class="brand-badge">
+                    <span></span> Portal Clínico Asistencial
                 </div>
+
+                <div class="logo-box">
+                    <ion-icon name="medkit-outline"></ion-icon>
+                </div>
+
                 <h1>Sistema de Gestión Clínica</h1>
-                <p>Hospital Antonio Lorena</p>
-            </div>
-            <form id="loginForm">
-                <div class="form-group">
-                    <label for="usuario">Usuario</label>
-                    <input
-                        type="text"
-                        id="usuario"
-                        name="usuario"
-                        placeholder="Ingrese su usuario"
-                        autocomplete="username"
-                        required
-                    >
+                <div class="hospital-subtitle">
+                    <ion-icon name="fitness-outline"></ion-icon>
+                    <span>Hospital Antonio Lorena</span>
                 </div>
-                <div class="form-group">
-                    <label for="password">Contraseña</label>
-                    <input
-                        type="password"
-                        id="password"
-                        name="password"
-                        placeholder="Ingrese su contraseña"
-                        autocomplete="current-password"
-                        required
-                    >
+
+                <!-- Monitor cardíaco animado -->
+                <div class="ecg-divider" title="Monitor de pulso activo">
+                    <svg class="ecg-svg" viewBox="0 0 360 24" fill="none">
+                        <path d="M0 12 H100 L110 5 L120 19 L130 0 L140 24 L150 12 H220 L230 4 L240 20 L250 12 H360" />
+                    </svg>
                 </div>
-                <div class="form-options">
-                    <label>
-                        <input type="checkbox" id="remember">
-                        Recordarme
+            </header>
+
+            <!-- Formulario de Acceso -->
+            <form id="loginForm" novalidate>
+                <div class="welcome-text">
+                    <h2>Identificación de Usuario</h2>
+                    <p>Ingrese sus credenciales hospitalarias asignadas.</p>
+                </div>
+
+                <!-- Campo Usuario -->
+                <div class="form-group">
+                    <label for="usuario">
+                        <span>Usuario o CMP/RNE</span>
                     </label>
-                    <a href="#">¿Olvidó su contraseña?</a>
+                    <div class="input-container" id="usuarioContainer">
+                        <span class="field-icon">
+                            <ion-icon name="person-circle-outline"></ion-icon>
+                        </span>
+                        <input
+                            type="text"
+                            id="usuario"
+                            name="usuario"
+                            placeholder="Ej. med.garcia o N° colegiatura"
+                            autocomplete="username"
+                            maxlength="50"
+                            required
+                        >
+                    </div>
+                    <small class="field-error" id="usuarioError"></small>
                 </div>
-                <button type="submit" class="btn-login">Iniciar sesión</button>
-                <p id="loginMessage" class="login-message"></p>
+
+                <!-- Campo Contraseña -->
+                <div class="form-group">
+                    <label for="password">
+                        <span>Contraseña de Acceso</span>
+                    </label>
+                    <div class="input-container" id="passwordContainer">
+                        <span class="field-icon">
+                            <ion-icon name="lock-closed-outline"></ion-icon>
+                        </span>
+                        <input
+                            type="password"
+                            id="password"
+                            name="password"
+                            placeholder="Ingrese su contraseña"
+                            autocomplete="current-password"
+                            required
+                        >
+                        <button
+                            type="button"
+                            class="toggle-password"
+                            id="togglePassword"
+                            aria-label="Mostrar u ocultar contraseña"
+                        >
+                            <ion-icon name="eye-outline" id="toggleIcon"></ion-icon>
+                        </button>
+                    </div>
+                    <small class="field-error" id="passwordError"></small>
+                </div>
+
+                <!-- Opciones -->
+                <div class="form-options">
+                    <label class="remember-option">
+                        <input type="checkbox" id="remember">
+                        <span>Mantener sesión</span>
+                    </label>
+                    <a href="javascript:void(0)" class="forgot-link" id="forgotPassword">
+                        ¿Olvidó su clave?
+                    </a>
+                </div>
+
+                <!-- Mensaje de Notificación General -->
+                <div
+                    id="loginMessage"
+                    class="login-message"
+                    role="alert"
+                    aria-live="polite"
+                ></div>
+
+                <!-- Bloqueo Temporal por Intentos -->
+                <div id="lockoutMessage" class="lockout-message" hidden>
+                    <ion-icon name="shield-half-outline"></ion-icon>
+                    <div>
+                        <strong>Acceso restringido preventivamente</strong>
+                        <p>
+                            Superó el número de intentos. Espere 
+                            <span id="countdown">30</span> segundos antes de reintentar.
+                        </p>
+                    </div>  
+                </div>
+
+                <!-- Botón de Envío -->
+                <button
+                    type="submit"
+                    class="btn-login"
+                    id="btnLogin"
+                >
+                    <div class="btn-spinner" id="btnSpinner"></div>
+                    <span id="btnText">Ingresar al Sistema</span>
+                    <ion-icon name="arrow-forward-circle-outline" id="btnIcon" style="font-size: 1.25rem;"></ion-icon>
+                </button>
+
+                <!-- Contador de Intentos -->
+                <p class="attempt-counter" id="attemptCounter">
+                    Intentos fallidos: 0 de 3
+                </p>
             </form>
+
+            <!-- Pie de Tarjeta Institucional -->
             <footer class="login-footer">
-                <p>Acceso exclusivo para personal autorizado</p>
-                <small>© 2026 Sistema de Gestión Clínica</small>
+                <div class="security-badge">
+                    <ion-icon name="shield-checkmark"></ion-icon>
+                    <span>Conexión segura cifrada SSL/TLS</span>
+                </div>
+                <div class="copyright">
+                    © 2026 Hospital Antonio Lorena · Unidad de Estadística e Informática
+                </div>
             </footer>
+
         </section>
-</main>
-<script src="js/login.js"></script>
+    </main>
+
+    <script src="Js/login.js">
+       
+    </script>
 </body>
 </html>
