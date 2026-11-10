@@ -1,376 +1,369 @@
 <!DOCTYPE html>
-
 <html lang="es">
 
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<meta charset="UTF-8">
+    <title>SGC | Registrar cita</title>
 
-<meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
->
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 
-<title>SGC | Registrar cita</title>
+    <!-- Ionicons -->
+    <script type="module" src="https://unpkg.com/ionicons@8.0.13/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@8.0.13/dist/ionicons/ionicons.js"></script>
 
-<link
-    rel="stylesheet"
-    href="../../css/cita-registrar.css"
->
+    <link rel="stylesheet" href="../../css/cita-registrar.css">
 
 
 </head>
 
 <body>
 
-<main class="container">
+    <main class="container">
 
-    <header class="page-header">
+        <!-- Encabezado Institucional -->
+        <header class="page-header">
+            <div class="header-nav">
+                <a href="../dashboard.html" class="back-link">
+                    <ion-icon name="arrow-back-outline"></ion-icon>
+                    ← Volver al dashboard
+                </a>
 
-        <a href="../dashboard.html">
-            ← Volver al dashboard
-        </a>
+                <div class="header-actions-group">
+                    <button type="button" class="btn-autofill" onclick="autocompletarCitaDemo()">
+                        <ion-icon name="flash-outline"></ion-icon>
+                        Autocompletar demo
+                    </button>
+                    <div class="hospital-badge">
+                        <span class="dot"></span>
+                        Hospital Antonio Lorena · Cusco (III-1)
+                    </div>
+                </div>
+            </div>
 
-        <h1>Registrar cita médica</h1>
-
-        <p>
-            Seleccione el paciente, médico, fecha y hora
-            disponibles.
-        </p>
-
-    </header>
-
-
-    <form id="citaForm">
-
-
-        <!-- PACIENTE -->
-
-        <section class="form-section">
-
-            <div class="section-header">
-
-                <h2>1. Paciente</h2>
-
+            <div class="header-title-box">
+                <h1>
+                    <ion-icon name="calendar-outline" style="color: var(--teal);"></ion-icon>
+                    Registrar cita médica
+                </h1>
                 <p>
-                    Identifique al paciente para registrar
-                    la cita.
+                    Seleccione el paciente, médico, fecha y hora disponibles.
                 </p>
-
             </div>
+        </header>
 
+        <!-- Barra de Navegación Rápida de Pasos -->
+        <nav class="stepper-nav">
+            <a href="#sec-paciente" class="step-link">
+                <span class="num">1</span>
+                Paciente
+            </a>
+            <a href="#sec-medico" class="step-link">
+                <span class="num">2</span>
+                Médico y Especialidad
+            </a>
+            <a href="#sec-horario" class="step-link">
+                <span class="num">3</span>
+                Fecha y Hora
+            </a>
+            <a href="#sec-observaciones" class="step-link">
+                <span class="num">4</span>
+                Observaciones
+            </a>
+        </nav>
 
-            <div class="form-grid">
+        <form id="citaForm">
+
+            <!-- 1. PACIENTE -->
+            <section class="form-section" id="sec-paciente">
+                <div class="section-header">
+                    <div>
+                        <h2>1. Paciente</h2>
+                        <p>Identifique al paciente para registrar la cita.</p>
+                    </div>
+                    <span class="section-badge">Filiación</span>
+                </div>
+
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="dni">
+                            DNI del paciente
+                            <span class="label-hint" id="dniCounter">0 / 8 dígitos</span>
+                        </label>
+                        <div class="input-wrap">
+                            <ion-icon name="id-card-outline"></ion-icon>
+                            <input
+                                type="text"
+                                id="dni"
+                                maxlength="8"
+                                placeholder="Ingrese DNI"
+                                required
+                            >
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="historia">
+                            Historia clínica
+                            <span class="label-hint">Código único</span>
+                        </label>
+                        <div class="input-wrap">
+                            <ion-icon name="document-text-outline"></ion-icon>
+                            <input
+                                type="text"
+                                id="historia"
+                                placeholder="Número de historia"
+                                required
+                            >
+                        </div>
+                    </div>
+
+                    <div class="form-group full">
+                        <label for="paciente">
+                            Paciente
+                        </label>
+                        <div class="input-wrap">
+                            <ion-icon name="person-outline"></ion-icon>
+                            <select id="paciente" required>
+                                <option value="">
+                                    Seleccione un paciente
+                                </option>
+                                <option value="1">
+                                    Juan Pérez Quispe
+                                </option>
+                                <option value="2">
+                                    María Quispe Huamán
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 2. MÉDICO Y ESPECIALIDAD -->
+            <section class="form-section" id="sec-medico">
+                <div class="section-header">
+                    <div>
+                        <h2>2. Médico y especialidad</h2>
+                        <p>Asigne el servicio asistencial y el profesional tratante.</p>
+                    </div>
+                    <span class="section-badge">Asignación</span>
+                </div>
+
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="especialidad">
+                            Especialidad
+                        </label>
+                        <div class="input-wrap">
+                            <ion-icon name="pulse-outline"></ion-icon>
+                            <select id="especialidad" required>
+                                <option value="">
+                                    Seleccione
+                                </option>
+                                <option value="medicina-general">
+                                    Medicina General
+                                </option>
+                                <option value="cardiologia">
+                                    Cardiología
+                                </option>
+                                <option value="traumatologia">
+                                    Traumatología
+                                </option>
+                                <option value="pediatria">
+                                    Pediatría
+                                </option>
+                                <option value="ginecologia">
+                                    Ginecología
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="medico">
+                            Médico
+                        </label>
+                        <div class="input-wrap">
+                            <ion-icon name="medkit-outline"></ion-icon>
+                            <select id="medico" required>
+                                <option value="">
+                                    Seleccione un médico
+                                </option>
+                                <option value="1">
+                                    Dr. Carlos Mendoza
+                                </option>
+                                <option value="2">
+                                    Dra. Ana Flores
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 3. FECHA Y HORA -->
+            <section class="form-section" id="sec-horario">
+                <div class="section-header">
+                    <div>
+                        <h2>3. Fecha y hora</h2>
+                        <p>Disponibilidad y espacio físico en el hospital.</p>
+                    </div>
+                    <span class="section-badge">Programación</span>
+                </div>
+
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="fecha">
+                            Fecha
+                        </label>
+                        <div class="input-wrap">
+                            <ion-icon name="calendar-clear-outline"></ion-icon>
+                            <input
+                                type="date"
+                                id="fecha"
+                                required
+                            >
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="hora">
+                            Hora
+                        </label>
+                        <div class="input-wrap">
+                            <ion-icon name="time-outline"></ion-icon>
+                            <select id="hora" required>
+                                <option value="">
+                                    Seleccione un horario
+                                </option>
+                                <option value="08:00">08:00</option>
+                                <option value="08:30">08:30</option>
+                                <option value="09:00">09:00</option>
+                                <option value="09:30">09:30</option>
+                                <option value="10:00">10:00</option>
+                                <option value="10:30">10:30</option>
+                                <option value="11:00">11:00</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group full">
+                        <label for="consultorio">
+                            Consultorio
+                        </label>
+                        <div class="input-wrap">
+                            <ion-icon name="business-outline"></ion-icon>
+                            <select id="consultorio" required>
+                                <option value="">
+                                    Seleccione
+                                </option>
+                                <option value="101">Consultorio 101</option>
+                                <option value="102">Consultorio 102</option>
+                                <option value="103">Consultorio 103</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 4. OBSERVACIONES -->
+            <section class="form-section" id="sec-observaciones">
+                <div class="section-header">
+                    <div>
+                        <h2>4. Observaciones</h2>
+                        <p>Detalles adicionales para la consulta médica.</p>
+                    </div>
+                    <span class="section-badge">Notas</span>
+                </div>
 
                 <div class="form-group">
-
-                    <label for="dni">
-                        DNI del paciente
+                    <label for="observaciones">
+                        Observaciones
                     </label>
-
-                    <input
-                        type="text"
-                        id="dni"
-                        maxlength="8"
-                        placeholder="Ingrese DNI"
-                        required
-                    >
-
+                    <textarea
+                        id="observaciones"
+                        rows="4"
+                        placeholder="Información adicional..."
+                    ></textarea>
                 </div>
+            </section>
 
+            <!-- ACCIONES -->
+            <div class="actions">
+                <button
+                    type="button"
+                    id="cancelButton"
+                    class="btn-secondary"
+                >
+                    <ion-icon name="close-outline"></ion-icon>
+                    Cancelar
+                </button>
 
-                <div class="form-group">
-
-                    <label for="historia">
-                        Historia clínica
-                    </label>
-
-                    <input
-                        type="text"
-                        id="historia"
-                        placeholder="Número de historia"
-                        required
-                    >
-
-                </div>
-
-
-                <div class="form-group full">
-
-                    <label for="paciente">
-                        Paciente
-                    </label>
-
-                    <select id="paciente" required>
-
-                        <option value="">
-                            Seleccione un paciente
-                        </option>
-
-                        <option value="1">
-                            Juan Pérez Quispe
-                        </option>
-
-                        <option value="2">
-                            María Quispe Huamán
-                        </option>
-
-                    </select>
-
-                </div>
-
+                <button
+                    type="submit"
+                    class="btn-primary"
+                >
+                    <ion-icon name="checkmark-done-outline"></ion-icon>
+                    Registrar cita
+                </button>
             </div>
 
-        </section>
-
-
-        <!-- MÉDICO -->
-
-        <section class="form-section">
-
-            <div class="section-header">
-
-                <h2>2. Médico y especialidad</h2>
-
-            </div>
-
-
-            <div class="form-grid">
-
-                <div class="form-group">
-
-                    <label for="especialidad">
-                        Especialidad
-                    </label>
-
-                    <select
-                        id="especialidad"
-                        required
-                    >
-
-                        <option value="">
-                            Seleccione
-                        </option>
-
-                        <option value="medicina-general">
-                            Medicina General
-                        </option>
-
-                        <option value="cardiologia">
-                            Cardiología
-                        </option>
-
-                        <option value="traumatologia">
-                            Traumatología
-                        </option>
-
-                        <option value="pediatria">
-                            Pediatría
-                        </option>
-
-                        <option value="ginecologia">
-                            Ginecología
-                        </option>
-
-                    </select>
-
-                </div>
-
-
-                <div class="form-group">
-
-                    <label for="medico">
-                        Médico
-                    </label>
-
-                    <select id="medico" required>
-
-                        <option value="">
-                            Seleccione un médico
-                        </option>
-
-                        <option value="1">
-                            Dr. Carlos Mendoza
-                        </option>
-
-                        <option value="2">
-                            Dra. Ana Flores
-                        </option>
-
-                    </select>
-
-                </div>
-
-            </div>
-
-        </section>
-
-
-        <!-- FECHA Y HORA -->
-
-        <section class="form-section">
-
-            <div class="section-header">
-
-                <h2>3. Fecha y hora</h2>
-
-            </div>
-
-
-            <div class="form-grid">
-
-                <div class="form-group">
-
-                    <label for="fecha">
-                        Fecha
-                    </label>
-
-                    <input
-                        type="date"
-                        id="fecha"
-                        required
-                    >
-
-                </div>
-
-
-                <div class="form-group">
-
-                    <label for="hora">
-                        Hora
-                    </label>
-
-                    <select id="hora" required>
-
-                        <option value="">
-                            Seleccione un horario
-                        </option>
-
-                        <option value="08:00">
-                            08:00
-                        </option>
-
-                        <option value="08:30">
-                            08:30
-                        </option>
-
-                        <option value="09:00">
-                            09:00
-                        </option>
-
-                        <option value="09:30">
-                            09:30
-                        </option>
-
-                        <option value="10:00">
-                            10:00
-                        </option>
-
-                        <option value="10:30">
-                            10:30
-                        </option>
-
-                        <option value="11:00">
-                            11:00
-                        </option>
-
-                    </select>
-
-                </div>
-
-
-                <div class="form-group">
-
-                    <label for="consultorio">
-                        Consultorio
-                    </label>
-
-                    <select id="consultorio" required>
-
-                        <option value="">
-                            Seleccione
-                        </option>
-
-                        <option value="101">
-                            Consultorio 101
-                        </option>
-
-                        <option value="102">
-                            Consultorio 102
-                        </option>
-
-                        <option value="103">
-                            Consultorio 103
-                        </option>
-
-                    </select>
-
-                </div>
-
-            </div>
-
-        </section>
-
-
-        <!-- OBSERVACIONES -->
-
-        <section class="form-section">
-
-            <div class="section-header">
-
-                <h2>4. Observaciones</h2>
-
-            </div>
-
-            <div class="form-group">
-
-                <label for="observaciones">
-                    Observaciones
-                </label>
-
-                <textarea
-                    id="observaciones"
-                    rows="4"
-                    placeholder="Información adicional..."
-                ></textarea>
-
-            </div>
-
-        </section>
-
-
-        <!-- ACCIONES -->
-
-        <div class="actions">
-
-            <button
-                type="button"
-                id="cancelButton"
-                class="btn-secondary"
-            >
-                Cancelar
-            </button>
-
-            <button
-                type="submit"
-                class="btn-primary"
-            >
-                Registrar cita
-            </button>
-
-        </div>
-
-
-        <div id="message"></div>
-
-    </form>
-
-</main>
-
-<script src="../../js/supabase.js"></script>
-
-<script src="../../js/cita-registrar.js"></script>
-
+            <div id="message"></div>
+
+        </form>
+
+    </main>
+
+    <script src="../../js/supabase.js"></script>
+    <script src="../../js/cita-registrar.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const dniInput = document.getElementById('dni');
+            const dniCounter = document.getElementById('dniCounter');
+            const fechaInput = document.getElementById('fecha');
+
+            if (dniInput && dniCounter) {
+                dniInput.addEventListener('input', (e) => {
+                    e.target.value = e.target.value.replace(/[^0-9]/g, '');
+                    const len = e.target.value.length;
+                    dniCounter.textContent = `${len} / 8 dígitos`;
+                    dniCounter.style.color = len === 8 ? 'var(--teal)' : 'var(--slate-400)';
+                });
+            }
+
+            if (fechaInput && !fechaInput.value) {
+                const hoy = new Date().toISOString().split('T')[0];
+                fechaInput.min = hoy;
+                fechaInput.value = hoy;
+            }
+        });
+
+        function autocompletarCitaDemo() {
+            const dni = document.getElementById('dni');
+            const historia = document.getElementById('historia');
+            const paciente = document.getElementById('paciente');
+            const especialidad = document.getElementById('especialidad');
+            const medico = document.getElementById('medico');
+            const hora = document.getElementById('hora');
+            const consultorio = document.getElementById('consultorio');
+            const observaciones = document.getElementById('observaciones');
+
+            if (dni) { dni.value = '12345678'; dni.dispatchEvent(new Event('input')); }
+            if (historia) historia.value = 'HC-000123';
+            if (paciente) paciente.value = '1';
+            if (especialidad) especialidad.value = 'medicina-general';
+            if (medico) medico.value = '1';
+            if (hora) hora.value = '08:30';
+            if (consultorio) consultorio.value = '101';
+            if (observaciones) observaciones.value = 'Cita preventiva de control regular.';
+        }
+    </script>
 
 </body>
 

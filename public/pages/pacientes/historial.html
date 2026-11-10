@@ -1,254 +1,310 @@
 <!DOCTYPE html>
-
 <html lang="es">
 
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SGC | Historial Clínico - Hospital Antonio Lorena</title>
 
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-<meta charset="UTF-8">
+    <!-- Ionicons -->
+    <script type="module" src="https://unpkg.com/ionicons@8.0.13/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@8.0.13/dist/ionicons/ionicons.js"></script>
 
-<meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
->
-
-<title>SGC | Historial clínico</title>
-
-<link
-    rel="stylesheet"
-    href="../../css/paciente-historial.css"
->
-
-
+    <link rel="stylesheet" href="../../Css/paciente-historial.css">
 </head>
 
 <body>
 
+    <main class="container">
 
-<main class="container">
+        <!-- ENCABEZADO -->
+        <header class="header">
+            <a href="../dashboard.html" class="back-link">
+                <ion-icon name="arrow-back-outline"></ion-icon>
+                <span>Volver al dashboard</span>
+            </a>
 
-    <header class="header">
+            <div class="header-main-info">
+                <div class="header-title-wrap">
+                    <h1>
+                        <ion-icon name="time-outline" style="color:var(--teal);"></ion-icon>
+                        Historial clínico
+                    </h1>
+                    <p>Consulta cronológica de las atenciones médicas y evoluciones asistenciales.</p>
+                </div>
 
-        <a href="../dashboard.html">
-            ← Volver al dashboard
-        </a>
+                <div class="hospital-badge">
+                    <span class="dot"></span>
+                    <span>Hospital Antonio Lorena · Nivel III-1 Cusco</span>
+                </div>
+            </div>
+        </header>
 
-        <h1>Historial clínico</h1>
-
-        <p>
-            Consulta cronológica de las atenciones médicas.
-        </p>
-
-    </header>
-
-
-    <section class="search-card">
-
-        <form id="historyForm">
-
-            <div>
-
-                <label for="dni">
-                    DNI del paciente
-                </label>
-
-                <input
-                    type="text"
-                    id="dni"
-                    maxlength="8"
-                    placeholder="Ingrese DNI"
-                    required
-                >
-
+        <!-- TARJETA DE BÚSQUEDA -->
+        <section class="search-card">
+            <div class="search-card-heading">
+                <h3>
+                    <ion-icon name="search-circle-outline" style="font-size:1.3rem; color:var(--primary);"></ion-icon>
+                    Búsqueda de Expediente por Documento
+                </h3>
+                <span>RENIEC / SIS Activo</span>
             </div>
 
-            <button type="submit">
-                Consultar historial
-            </button>
+            <form id="historyForm" novalidate>
+                <div>
+                    <label for="dni">
+                        <span>DNI del paciente</span>
+                        <span class="char-counter" id="dniCounter">0/8 dígitos</span>
+                    </label>
+                    <div class="input-wrapper">
+                        <ion-icon name="id-card-outline"></ion-icon>
+                        <input
+                            type="text"
+                            id="dni"
+                            maxlength="8"
+                            placeholder="Ingrese DNI (8 dígitos)"
+                            autocomplete="off"
+                            required
+                        >
+                    </div>
+                </div>
 
-        </form>
+                <button type="submit" id="btnSubmitHistory">
+                    <div class="btn-spinner" id="btnSpinner"></div>
+                    <ion-icon name="search-outline" id="btnIcon"></ion-icon>
+                    <span id="btnText">Consultar historial</span>
+                </button>
+            </form>
 
-    </section>
+            <!-- Acceso rápido para pruebas demo -->
+            <div class="demo-helpers">
+                <span><ion-icon name="flash-outline"></ion-icon> Pruebas rápidas:</span>
+                <button type="button" class="demo-tag" onclick="quickSearch('12345678')">DNI: 12345678 (Juan Pérez)</button>
+                <button type="button" class="demo-tag" onclick="quickSearch('71239045')">DNI: 71239045 (María Quispe)</button>
+            </div>
+        </section>
 
+        <!-- MENSAJE DE ESTADO (#message) -->
+        <p id="message" role="alert" aria-live="polite"></p>
 
-    <section
-        id="historyResult"
-        class="history-result hidden"
-    >
+        <!-- ESTADO VACÍO INICIAL -->
+        <section id="emptyHistoryState" class="empty-state">
+            <div class="empty-state-icon">
+                <ion-icon name="newspaper-outline"></ion-icon>
+            </div>
+            <h3>Sin historial consultado</h3>
+            <p>Ingrese los 8 dígitos del DNI del paciente y presione "Consultar historial" para explorar cronológicamente todos los actos médicos registrados.</p>
+        </section>
 
-        <div class="patient-info">
+        <!-- RESULTADO DEL HISTORIAL (#historyResult con .history-result y .hidden) -->
+        <section id="historyResult" class="history-result hidden">
 
-            <div>
+            <!-- Encabezado con Avatar y Acciones Rápidas -->
+            <div class="patient-card-header">
+                <div class="patient-identity-box">
+                    <div class="patient-avatar-badge" id="patientAvatar">JP</div>
+                    <div>
+                        <span style="font-size:0.75rem; font-weight:700; text-transform:uppercase; color:var(--teal); letter-spacing:0.04em;">Paciente Adscrito</span>
+                        <h2 style="font-size:1.35rem; font-weight:800; color:var(--slate-900); margin:0;" id="patientFullName">Juan Pérez Quispe</h2>
+                    </div>
+                </div>
 
-                <span>Paciente</span>
-
-                <strong>
-                    Juan Pérez Quispe
-                </strong>
-
+                <div class="patient-actions-top">
+                    <button type="button" class="btn-top-action" onclick="window.print()">
+                        <ion-icon name="print-outline"></ion-icon>
+                        <span>Imprimir</span>
+                    </button>
+                    <button type="button" class="btn-top-action" onclick="copyPatientDni()">
+                        <ion-icon name="copy-outline"></ion-icon>
+                        <span>Copiar Datos</span>
+                    </button>
+                </div>
             </div>
 
-            <div>
-
-                <span>DNI</span>
-
-                <strong>
-                    12345678
-                </strong>
-
-            </div>
-
-            <div>
-
-                <span>Historia clínica</span>
-
-                <strong>
-                    HC-000123
-                </strong>
-
-            </div>
-
-        </div>
-
-
-        <h2>Atenciones médicas</h2>
-
-
-        <article class="medical-record">
-
-            <div class="record-header">
+            <!-- FICHA DEL PACIENTE (.patient-info) -->
+            <div class="patient-info">
+                <div>
+                    <span>Paciente</span>
+                    <strong>Juan Pérez Quispe</strong>
+                </div>
 
                 <div>
-
+                    <span>DNI</span>
                     <strong>
-                        20/09/2026
+                        <span id="patientDniText">12345678</span>
+                        <button type="button" class="copy-chip" onclick="copyPatientDni()" title="Copiar DNI">Copiar</button>
                     </strong>
-
-                    <span>
-                        Medicina General
-                    </span>
-
                 </div>
 
-                <span class="status">
-                    Atención finalizada
-                </span>
+                <div>
+                    <span>Historia clínica</span>
+                    <strong style="color:var(--teal-dark);">HC-000123</strong>
+                </div>
+            </div>
+
+            <!-- SECCIÓN DE ATENCIONES MÉDICAS -->
+            <div class="records-section-header">
+                <h2>
+                    <ion-icon name="calendar-outline" style="color:var(--primary);"></ion-icon>
+                    Atenciones médicas
+                </h2>
+
+                <div class="timeline-filter-tabs">
+                    <button class="filter-chip active" data-filter="all">Todas</button>
+                    <button class="filter-chip" data-filter="Medicina General">Med. General</button>
+                    <button class="filter-chip" data-filter="Cardiología">Cardiología</button>
+                </div>
+            </div>
+
+            <!-- CONTENEDOR DE LA LÍNEA DE TIEMPO -->
+            <div class="timeline-wrapper" id="timelineContainer">
+
+                <!-- REGISTRO MÉDICO 1 (.medical-record) -->
+                <article class="medical-record" data-specialty="Medicina General">
+                    <div class="record-header">
+                        <div>
+                            <strong>
+                                <ion-icon name="calendar-clear-outline"></ion-icon>
+                                20/09/2026
+                            </strong>
+                            <span>
+                                <ion-icon name="pulse-outline"></ion-icon>
+                                Medicina General
+                            </span>
+                        </div>
+                        <span class="status">
+                            Atención finalizada
+                        </span>
+                    </div>
+
+                    <div class="record-body">
+                        <div>
+                            <h3>
+                                <ion-icon name="help-circle-outline"></ion-icon>
+                                Motivo de consulta
+                            </h3>
+                            <p>Dolor abdominal persistente en epigastrio y malestar general desde hace 4 días.</p>
+                        </div>
+
+                        <div>
+                            <h3>
+                                <ion-icon name="medical-outline"></ion-icon>
+                                Diagnóstico
+                            </h3>
+                            <p>K29.0 - Gastritis aguda erosiva / Dispepsia funcional en tratamiento.</p>
+                        </div>
+
+                        <div>
+                            <h3>
+                                <ion-icon name="flask-outline"></ion-icon>
+                                Tratamiento
+                            </h3>
+                            <p>Omeprazol 20mg c/24h en ayunas por 14 días + Sucralfato 1g antes de alimentos. Dieta blanda fraccionada.</p>
+                        </div>
+
+                        <div>
+                            <h3>
+                                <ion-icon name="person-outline"></ion-icon>
+                                Médico
+                            </h3>
+                            <div class="doctor-badge-wrap">
+                                <div class="doctor-avatar-circle">
+                                    <ion-icon name="person"></ion-icon>
+                                </div>
+                                <p style="font-weight:700; color:var(--slate-900);">Dr. Carlos Mendoza (CMP 48291)</p>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- REGISTRO MÉDICO 2 (.medical-record) -->
+                <article class="medical-record" data-specialty="Medicina General">
+                    <div class="record-header">
+                        <div>
+                            <strong>
+                                <ion-icon name="calendar-clear-outline"></ion-icon>
+                                15/07/2026
+                            </strong>
+                            <span>
+                                <ion-icon name="pulse-outline"></ion-icon>
+                                Medicina General
+                            </span>
+                        </div>
+                        <span class="status">
+                            Atención finalizada
+                        </span>
+                    </div>
+
+                    <div class="record-body">
+                        <div>
+                            <h3>
+                                <ion-icon name="help-circle-outline"></ion-icon>
+                                Motivo de consulta
+                            </h3>
+                            <p>Control médico preventivo anual y evaluación de presión arterial.</p>
+                        </div>
+
+                        <div>
+                            <h3>
+                                <ion-icon name="medical-outline"></ion-icon>
+                                Diagnóstico
+                            </h3>
+                            <p>Z00.0 - Examen médico general / Sin diagnóstico patológico relevante.</p>
+                        </div>
+
+                        <div>
+                            <h3>
+                                <ion-icon name="flask-outline"></ion-icon>
+                                Tratamiento
+                            </h3>
+                            <p>Recomendaciones generales de estilo de vida, hidratación óptima y actividad física 30 min diarios.</p>
+                        </div>
+
+                        <div>
+                            <h3>
+                                <ion-icon name="person-outline"></ion-icon>
+                                Médico
+                            </h3>
+                            <div class="doctor-badge-wrap">
+                                <div class="doctor-avatar-circle" style="background:#ccfbf1; color:#0f766e;">
+                                    <ion-icon name="person"></ion-icon>
+                                </div>
+                                <p style="font-weight:700; color:var(--slate-900);">Dra. Ana Flores (CMP 51042)</p>
+                            </div>
+                        </div>
+                    </div>
+                </article>
 
             </div>
 
-
-            <div class="record-body">
-
-                <div>
-                    <h3>Motivo de consulta</h3>
-
-                    <p>
-                        Dolor abdominal y malestar general.
-                    </p>
+            <!-- PIE DE LA FICHA -->
+            <footer class="history-footer-actions">
+                <div class="history-stamp">
+                    <ion-icon name="shield-checkmark-outline"></ion-icon>
+                    <span>Registro Oficial validado por el Hospital Antonio Lorena · Cusco</span>
                 </div>
-
-                <div>
-                    <h3>Diagnóstico</h3>
-
-                    <p>
-                        Gastritis aguda.
-                    </p>
+                <div style="font-size:0.75rem; color:var(--slate-500); font-weight:600;">
+                    Total de actos médicos: <span style="color:var(--teal); font-weight:800;">2 atenciones</span>
                 </div>
+            </footer>
 
-                <div>
-                    <h3>Tratamiento</h3>
+        </section>
 
-                    <p>
-                        Tratamiento médico según indicación.
-                    </p>
-                </div>
+    </main>
 
-                <div>
-                    <h3>Médico</h3>
+    <!-- SCRIPTS EXTERNOS EXISTENTES -->
+    <script src="../../js/supabase.js"></script>
+    <script src="../../js/paciente-historial.js"></script>
 
-                    <p>
-                        Dr. Carlos Mendoza
-                    </p>
-                </div>
-
-            </div>
-
-        </article>
-
-
-        <article class="medical-record">
-
-            <div class="record-header">
-
-                <div>
-
-                    <strong>
-                        15/07/2026
-                    </strong>
-
-                    <span>
-                        Medicina General
-                    </span>
-
-                </div>
-
-                <span class="status">
-                    Atención finalizada
-                </span>
-
-            </div>
-
-
-            <div class="record-body">
-
-                <div>
-                    <h3>Motivo de consulta</h3>
-
-                    <p>
-                        Control médico.
-                    </p>
-                </div>
-
-                <div>
-                    <h3>Diagnóstico</h3>
-
-                    <p>
-                        Sin diagnóstico relevante.
-                    </p>
-                </div>
-
-                <div>
-                    <h3>Tratamiento</h3>
-
-                    <p>
-                        Recomendaciones generales.
-                    </p>
-                </div>
-
-                <div>
-                    <h3>Médico</h3>
-
-                    <p>
-                        Dra. Ana Flores
-                    </p>
-                </div>
-
-            </div>
-
-        </article>
-
-    </section>
-
-
-    <p id="message"></p>
-
-</main>
-
-<script src="../../js/supabase.js"></script>
-
-<script src="../../js/paciente-historial.js"></script>
-
-
+    <!-- MEJORAS DE INTERACTIVIDAD COMPATIBLES -->
+    <script src="../../Js/paciente-historial.js">
+ 
+    </script>
 </body>
 
 </html>

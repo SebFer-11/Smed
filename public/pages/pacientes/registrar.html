@@ -1,671 +1,831 @@
 <!DOCTYPE html>
-
 <html lang="es">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SGC | Registrar Paciente y Hoja de Referencia - Hospital Antonio Lorena</title>
 
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-<title>SGC | Registrar paciente</title>
+    <!-- Ionicons -->
+    <script type="module" src="https://unpkg.com/ionicons@8.0.13/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@8.0.13/dist/ionicons/ionicons.js"></script>
 
-<link rel="stylesheet" href="../../css/paciente-registrar.css">
-
-
+    <link rel="stylesheet" href="../../Css/paciente-registrar.css">
 </head>
 
 <body>
 
+    <div class="page-container">
 
-<div class="page-container">
+        <!-- ENCABEZADO DE PÁGINA -->
+        <header class="page-header">
+            <div class="header-nav">
+                <a href="../dashboard.html" class="back-link">
+                    <ion-icon name="arrow-back-outline"></ion-icon>
+                    <span>Volver al dashboard</span>
+                </a>
 
-    <header class="page-header">
+                <div class="header-actions-group">
+                    <button type="button" class="btn-autofill" id="btnAutoFill" title="Cargar datos de prueba para testing">
+                        <ion-icon name="flash-outline"></ion-icon>
+                        <span>Autocompletar demo</span>
+                    </button>
 
-        <div>
-            <a href="../dashboard.html" class="back-link">
-                ← Volver al dashboard
-            </a>
-
-            <h1>Registrar paciente</h1>
-
-            <p>
-                Registro de datos del paciente y hoja de referencia
-            </p>
-        </div>
-
-    </header>
-
-
-    <main>
-
-        <form id="pacienteForm">
-
-
-            <!-- 1. DATOS DE REFERENCIA -->
-
-            <section class="form-section">
-
-                <div class="section-header">
-                    <h2>1. Datos de referencia</h2>
-                    <p>Información relacionada con la referencia del paciente.</p>
+                    <div class="hospital-badge">
+                        <span class="dot"></span>
+                        <span>MINSA · Hospital Antonio Lorena (Cusco)</span>
+                    </div>
                 </div>
-
-                <div class="form-grid">
-
-                    <div class="form-group">
-                        <label for="fecha">Fecha</label>
-
-                        <input
-                            type="date"
-                            id="fecha"
-                            name="fecha"
-                            required
-                        >
-                    </div>
-
-                    <div class="form-group">
-                        <label for="hora">Hora</label>
-
-                        <input
-                            type="time"
-                            id="hora"
-                            name="hora"
-                            required
-                        >
-                    </div>
-
-                    <div class="form-group">
-                        <label for="seguro">Confirmación de seguro</label>
-
-                        <select id="seguro" name="seguro" required>
-                            <option value="">Seleccione</option>
-                            <option value="si">Sí</option>
-                            <option value="no">No</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="sis">Código de afiliación SIS</label>
-
-                        <input
-                            type="text"
-                            id="sis"
-                            name="sis"
-                            placeholder="Código SIS"
-                        >
-                    </div>
-
-                    <div class="form-group full">
-                        <label for="origen">
-                            Establecimiento de origen
-                        </label>
-
-                        <input
-                            type="text"
-                            id="origen"
-                            name="origen"
-                            placeholder="Ingrese establecimiento de origen"
-                            required
-                        >
-                    </div>
-
-                    <div class="form-group full">
-                        <label for="destino">
-                            Establecimiento de destino
-                        </label>
-
-                        <input
-                            type="text"
-                            id="destino"
-                            name="destino"
-                            placeholder="Ingrese establecimiento de destino"
-                            required
-                        >
-                    </div>
-
-                </div>
-
-            </section>
-
-
-            <!-- 2. IDENTIFICACIÓN -->
-
-            <section class="form-section">
-
-                <div class="section-header">
-                    <h2>2. Identificación del paciente</h2>
-                </div>
-
-                <div class="form-grid">
-
-                    <div class="form-group">
-                        <label for="historia">
-                            Número de Historia Clínica
-                        </label>
-
-                        <input
-                            type="text"
-                            id="historia"
-                            name="historia"
-                            required
-                        >
-                    </div>
-
-                    <div class="form-group">
-                        <label for="dni">
-                            Documento de identidad
-                        </label>
-
-                        <input
-                            type="text"
-                            id="dni"
-                            name="dni"
-                            maxlength="8"
-                            required
-                        >
-                    </div>
-
-                    <div class="form-group">
-                        <label for="nombres">Nombres</label>
-
-                        <input
-                            type="text"
-                            id="nombres"
-                            name="nombres"
-                            required
-                        >
-                    </div>
-
-                    <div class="form-group">
-                        <label for="apellidos">Apellidos completos</label>
-
-                        <input
-                            type="text"
-                            id="apellidos"
-                            name="apellidos"
-                            required
-                        >
-                    </div>
-
-                </div>
-
-            </section>
-
-
-            <!-- 3. DATOS PERSONALES -->
-
-            <section class="form-section">
-
-                <div class="section-header">
-                    <h2>3. Datos personales</h2>
-                </div>
-
-                <div class="form-grid">
-
-                    <div class="form-group">
-                        <label for="sexo">Sexo</label>
-
-                        <select id="sexo" name="sexo" required>
-
-                            <option value="">
-                                Seleccione
-                            </option>
-
-                            <option value="masculino">
-                                Masculino
-                            </option>
-
-                            <option value="femenino">
-                                Femenino
-                            </option>
-
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="edad">Edad</label>
-
-                        <input
-                            type="number"
-                            id="edad"
-                            name="edad"
-                            min="0"
-                            max="120"
-                            required
-                        >
-                    </div>
-
-                    <div class="form-group full">
-                        <label for="direccion">
-                            Dirección
-                        </label>
-
-                        <input
-                            type="text"
-                            id="direccion"
-                            name="direccion"
-                            placeholder="Dirección completa"
-                            required
-                        >
-                    </div>
-
-                    <div class="form-group">
-                        <label for="departamento">
-                            Departamento
-                        </label>
-
-                        <select id="departamento" name="departamento" required>
-
-                            <option value="">
-                                Seleccione
-                            </option>
-
-                            <option value="cusco">
-                                Cusco
-                            </option>
-
-                            <option value="lima">
-                                Lima
-                            </option>
-
-                            <option value="arequipa">
-                                Arequipa
-                            </option>
-
-                            <option value="apurimac">
-                                Apurímac
-                            </option>
-
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="distrito">
-                            Distrito
-                        </label>
-
-                        <input
-                            type="text"
-                            id="distrito"
-                            name="distrito"
-                            required
-                        >
-                    </div>
-
-                </div>
-
-            </section>
-
-
-            <!-- 4. HISTORIA CLÍNICA -->
-
-            <section class="form-section">
-
-                <div class="section-header">
-                    <h2>4. Resumen de historia clínica</h2>
-                </div>
-
-                <div class="form-group">
-
-                    <label for="anamnesis">
-                        Anamnesis
-                    </label>
-
-                    <textarea
-                        id="anamnesis"
-                        name="anamnesis"
-                        rows="4"
-                    ></textarea>
-
-                </div>
-
-                <div class="form-group">
-
-                    <label for="examenFisico">
-                        Examen físico
-                    </label>
-
-                    <textarea
-                        id="examenFisico"
-                        name="examenFisico"
-                        rows="4"
-                    ></textarea>
-
-                </div>
-
-                <div class="form-group">
-
-                    <label for="examenes">
-                        Exámenes auxiliares
-                    </label>
-
-                    <textarea
-                        id="examenes"
-                        name="examenes"
-                        rows="4"
-                    ></textarea>
-
-                </div>
-
-                <div class="form-group">
-
-                    <label for="diagnosticos">
-                        Diagnósticos
-                    </label>
-
-                    <textarea
-                        id="diagnosticos"
-                        name="diagnosticos"
-                        rows="4"
-                    ></textarea>
-
-                </div>
-
-                <div class="form-group">
-
-                    <label for="tratamiento">
-                        Tratamiento
-                    </label>
-
-                    <textarea
-                        id="tratamiento"
-                        name="tratamiento"
-                        rows="4"
-                    ></textarea>
-
-                </div>
-
-            </section>
-
-
-            <!-- 5. DATOS DE REFERENCIA -->
-
-            <section class="form-section">
-
-                <div class="section-header">
-                    <h2>5. Datos de la referencia</h2>
-                </div>
-
-                <div class="form-grid">
-
-                    <div class="form-group">
-                        <label for="ups">
-                            UPS destino
-                        </label>
-
-                        <select id="ups" name="ups" required>
-
-                            <option value="">
-                                Seleccione
-                            </option>
-
-                            <option value="consulta-externa">
-                                Consulta externa
-                            </option>
-
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="especialidad">
-                            Especialidad
-                        </label>
-
-                        <select
-                            id="especialidad"
-                            name="especialidad"
-                            required
-                        >
-
-                            <option value="">
-                                Seleccione
-                            </option>
-
-                            <option value="medicina-general">
-                                Medicina General
-                            </option>
-
-                            <option value="cardiologia">
-                                Cardiología
-                            </option>
-
-                            <option value="traumatologia">
-                                Traumatología
-                            </option>
-
-                            <option value="pediatria">
-                                Pediatría
-                            </option>
-
-                            <option value="ginecologia">
-                                Ginecología
-                            </option>
-
-                        </select>
-                    </div>
-
-                    <div class="form-group full">
-
-                        <label for="condicion">
-                            Condición del paciente al inicio del traslado
-                        </label>
-
-                        <select id="condicion" name="condicion" required>
-
-                            <option value="">
-                                Seleccione
-                            </option>
-
-                            <option value="estable">
-                                Estable
-                            </option>
-
-                            <option value="delicado">
-                                Delicado
-                            </option>
-
-                            <option value="grave">
-                                Grave
-                            </option>
-
-                        </select>
-
-                    </div>
-
-                </div>
-
-            </section>
-
-
-            <!-- 6. RESPONSABLE DE REFERENCIA -->
-
-            <section class="form-section">
-
-                <div class="section-header">
-                    <h2>6. Responsable de la referencia</h2>
-                </div>
-
-                <div class="form-grid">
-
-                    <div class="form-group">
-                        <label for="refNombre">
-                            Nombres y apellidos
-                        </label>
-
-                        <input
-                            type="text"
-                            id="refNombre"
-                            name="refNombre"
-                            required
-                        >
-                    </div>
-
-                    <div class="form-group">
-                        <label for="refColegiatura">
-                            Colegiatura
-                        </label>
-
-                        <input
-                            type="text"
-                            id="refColegiatura"
-                            name="refColegiatura"
-                        >
-                    </div>
-
-                    <div class="form-group">
-
-                        <label for="refProfesion">
-                            Profesión
-                        </label>
-
-                        <select
-                            id="refProfesion"
-                            name="refProfesion"
-                            required
-                        >
-
-                            <option value="">
-                                Seleccione
-                            </option>
-
-                            <option value="medico">
-                                Médico
-                            </option>
-
-                            <option value="enfermero">
-                                Enfermero(a)
-                            </option>
-
-                            <option value="obstetra">
-                                Obstetra
-                            </option>
-
-                            <option value="otro">
-                                Otro
-                            </option>
-
-                        </select>
-
-                    </div>
-
-                </div>
-
-            </section>
-
-
-            <!-- 7. RESPONSABLE DEL ESTABLECIMIENTO -->
-
-            <section class="form-section">
-
-                <div class="section-header">
-                    <h2>7. Responsable del establecimiento</h2>
-                </div>
-
-                <div class="form-grid">
-
-                    <div class="form-group">
-                        <label for="estNombre">
-                            Nombres y apellidos
-                        </label>
-
-                        <input
-                            type="text"
-                            id="estNombre"
-                            name="estNombre"
-                            required
-                        >
-                    </div>
-
-                    <div class="form-group">
-                        <label for="estColegiatura">
-                            Colegiatura
-                        </label>
-
-                        <input
-                            type="text"
-                            id="estColegiatura"
-                            name="estColegiatura"
-                        >
-                    </div>
-
-                    <div class="form-group">
-
-                        <label for="estProfesion">
-                            Profesión
-                        </label>
-
-                        <select
-                            id="estProfesion"
-                            name="estProfesion"
-                            required
-                        >
-
-                            <option value="">
-                                Seleccione
-                            </option>
-
-                            <option value="medico">
-                                Médico
-                            </option>
-
-                            <option value="enfermero">
-                                Enfermero(a)
-                            </option>
-
-                            <option value="obstetra">
-                                Obstetra
-                            </option>
-
-                            <option value="otro">
-                                Otro
-                            </option>
-
-                        </select>
-
-                    </div>
-
-                </div>
-
-            </section>
-
-
-            <!-- ACCIONES -->
-
-            <div class="form-actions">
-
-                <button
-                    type="button"
-                    class="btn-secondary"
-                    id="cancelButton"
-                >
-                    Cancelar
-                </button>
-
-                <button
-                    type="reset"
-                    class="btn-light"
-                >
-                    Limpiar
-                </button>
-
-                <button
-                    type="submit"
-                    class="btn-primary"
-                >
-                    Registrar paciente
-                </button>
-
             </div>
 
-            <div id="message"></div>
+            <div class="header-title-box">
+                <h1>
+                    <ion-icon name="person-add-outline" style="color:var(--teal);"></ion-icon>
+                    Registrar paciente
+                </h1>
+                <p>Formulario oficial de admisión hospitalaria y registro de hoja de referencia médica.</p>
+            </div>
+        </header>
 
-        </form>
+        <!-- STEPPER NAV / ÍNDICE RÁPIDO DE SECCIONES -->
+        <nav class="stepper-nav" aria-label="Navegación de secciones">
+            <a href="#sec-referencia" class="step-link">
+                <span class="num">1</span> Referencia
+            </a>
+            <a href="#sec-identificacion" class="step-link">
+                <span class="num">2</span> Identificación
+            </a>
+            <a href="#sec-personales" class="step-link">
+                <span class="num">3</span> Personales
+            </a>
+            <a href="#sec-historia" class="step-link">
+                <span class="num">4</span> Historia Clínica
+            </a>
+            <a href="#sec-traslado" class="step-link">
+                <span class="num">5</span> Traslado
+            </a>
+            <a href="#sec-responsable" class="step-link">
+                <span class="num">6</span> Resp. Ref.
+            </a>
+            <a href="#sec-establecimiento" class="step-link">
+                <span class="num">7</span> Establecimiento
+            </a>
+        </nav>
 
-    </main>
+        <!-- FORMULARIO PRINCIPAL (id="pacienteForm") -->
+        <main>
+            <form id="pacienteForm" novalidate>
 
-</div>
-<script src="../../js/supabase.js"></script>
+                <!-- 1. DATOS DE REFERENCIA -->
+                <section class="form-section" id="sec-referencia">
+                    <div class="section-header">
+                        <div>
+                            <h2>
+                                <ion-icon name="calendar-outline" style="color:var(--teal);"></ion-icon>
+                                1. Datos de referencia
+                            </h2>
+                            <p>Información temporal y cobertura de la referencia hospitalaria.</p>
+                        </div>
+                        <span class="section-badge">Admisión</span>
+                    </div>
 
-<script src="../../js/paciente-registrar.js"></script>
+                    <div class="form-grid">
+
+                        <div class="form-group">
+                            <label for="fecha">
+                                <span>Fecha</span>
+                                <span class="label-hint">Obligatorio</span>
+                            </label>
+                            <div class="input-wrap">
+                                <ion-icon name="calendar-clear-outline"></ion-icon>
+                                <input
+                                    type="date"
+                                    id="fecha"
+                                    name="fecha"
+                                    required
+                                >
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="hora">
+                                <span>Hora</span>
+                                <span class="label-hint">24 horas</span>
+                            </label>
+                            <div class="input-wrap">
+                                <ion-icon name="time-outline"></ion-icon>
+                                <input
+                                    type="time"
+                                    id="hora"
+                                    name="hora"
+                                    required
+                                >
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="seguro">
+                                <span>Confirmación de seguro</span>
+                            </label>
+                            <div class="input-wrap">
+                                <ion-icon name="shield-checkmark-outline"></ion-icon>
+                                <select id="seguro" name="seguro" required>
+                                    <option value="">Seleccione</option>
+                                    <option value="si">Sí</option>
+                                    <option value="no">No</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="sis">
+                                <span>Código de afiliación SIS</span>
+                                <span class="label-hint">Formato SIS-######</span>
+                            </label>
+                            <div class="input-wrap">
+                                <ion-icon name="card-outline"></ion-icon>
+                                <input
+                                    type="text"
+                                    id="sis"
+                                    name="sis"
+                                    placeholder="Ej. SIS-102941"
+                                >
+                            </div>
+                        </div>
+
+                        <div class="form-group full">
+                            <label for="origen">
+                                <span>Establecimiento de origen</span>
+                                <span class="label-hint">Centro o Puesto de Salud remitente</span>
+                            </label>
+                            <div class="input-wrap">
+                                <ion-icon name="business-outline"></ion-icon>
+                                <input
+                                    type="text"
+                                    id="origen"
+                                    name="origen"
+                                    placeholder="Ej. Centro de Salud Belenpampa / C.S. San Jerónimo"
+                                    required
+                                >
+                            </div>
+                        </div>
+
+                        <div class="form-group full">
+                            <label for="destino">
+                                <span>Establecimiento de destino</span>
+                            </label>
+                            <div class="input-wrap">
+                                <ion-icon name="medkit-outline"></ion-icon>
+                                <input
+                                    type="text"
+                                    id="destino"
+                                    name="destino"
+                                    value="Hospital Antonio Lorena"
+                                    placeholder="Ingrese establecimiento de destino"
+                                    required
+                                >
+                            </div>
+                        </div>
+
+                    </div>
+                </section>
+
+
+                <!-- 2. IDENTIFICACIÓN -->
+                <section class="form-section" id="sec-identificacion">
+                    <div class="section-header">
+                        <div>
+                            <h2>
+                                <ion-icon name="id-card-outline" style="color:var(--primary);"></ion-icon>
+                                2. Identificación del paciente
+                            </h2>
+                            <p>Datos oficiales de filiación según RENIEC y archivo clínico.</p>
+                        </div>
+                        <span class="section-badge">Filiación</span>
+                    </div>
+
+                    <div class="form-grid">
+
+                        <div class="form-group">
+                            <label for="historia">
+                                <span>Número de Historia Clínica</span>
+                                <span class="label-hint">Código único</span>
+                            </label>
+                            <div class="input-wrap">
+                                <ion-icon name="folder-outline"></ion-icon>
+                                <input
+                                    type="text"
+                                    id="historia"
+                                    name="historia"
+                                    placeholder="Ej. HC-004812"
+                                    required
+                                >
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="dni">
+                                <span>Documento de identidad (DNI)</span>
+                                <span class="label-hint" id="dniCounter">0/8 dígitos</span>
+                            </label>
+                            <div class="input-wrap">
+                                <ion-icon name="finger-print-outline"></ion-icon>
+                                <input
+                                    type="text"
+                                    id="dni"
+                                    name="dni"
+                                    maxlength="8"
+                                    placeholder="Ingrese 8 dígitos"
+                                    required
+                                >
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="nombres">
+                                <span>Nombres</span>
+                            </label>
+                            <div class="input-wrap">
+                                <ion-icon name="person-outline"></ion-icon>
+                                <input
+                                    type="text"
+                                    id="nombres"
+                                    name="nombres"
+                                    placeholder="Primer y segundo nombre"
+                                    required
+                                >
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="apellidos">
+                                <span>Apellidos completos</span>
+                            </label>
+                            <div class="input-wrap">
+                                <ion-icon name="people-outline"></ion-icon>
+                                <input
+                                    type="text"
+                                    id="apellidos"
+                                    name="apellidos"
+                                    placeholder="Apellido paterno y materno"
+                                    required
+                                >
+                            </div>
+                        </div>
+
+                    </div>
+                </section>
+
+
+                <!-- 3. DATOS PERSONALES -->
+                <section class="form-section" id="sec-personales">
+                    <div class="section-header">
+                        <div>
+                            <h2>
+                                <ion-icon name="home-outline" style="color:#8b5cf6;"></ion-icon>
+                                3. Datos personales y residencia
+                            </h2>
+                            <p>Demografía y localización geográfica del paciente.</p>
+                        </div>
+                        <span class="section-badge">Demografía</span>
+                    </div>
+
+                    <div class="form-grid">
+
+                        <div class="form-group">
+                            <label for="sexo">
+                                <span>Sexo</span>
+                            </label>
+                            <div class="input-wrap">
+                                <ion-icon name="male-female-outline"></ion-icon>
+                                <select id="sexo" name="sexo" required>
+                                    <option value="">Seleccione</option>
+                                    <option value="masculino">Masculino</option>
+                                    <option value="femenino">Femenino</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="edad">
+                                <span>Edad</span>
+                                <span class="label-hint">Años cumplidos</span>
+                            </label>
+                            <div class="input-wrap">
+                                <ion-icon name="hourglass-outline"></ion-icon>
+                                <input
+                                    type="number"
+                                    id="edad"
+                                    name="edad"
+                                    min="0"
+                                    max="120"
+                                    placeholder="Ej. 35"
+                                    required
+                                >
+                            </div>
+                        </div>
+
+                        <div class="form-group full">
+                            <label for="direccion">
+                                <span>Dirección de residencia</span>
+                            </label>
+                            <div class="input-wrap">
+                                <ion-icon name="navigate-outline"></ion-icon>
+                                <input
+                                    type="text"
+                                    id="direccion"
+                                    name="direccion"
+                                    placeholder="Av. / Jr. / Calle, N°, Urb. o Comunidad"
+                                    required
+                                >
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="departamento">
+                                <span>Departamento</span>
+                            </label>
+                            <div class="input-wrap">
+                                <ion-icon name="map-outline"></ion-icon>
+                                <select id="departamento" name="departamento" required>
+                                    <option value="">Seleccione</option>
+                                    <option value="cusco">Cusco</option>
+                                    <option value="lima">Lima</option>
+                                    <option value="arequipa">Arequipa</option>
+                                    <option value="apurimac">Apurímac</option>
+                                    <option value="puno">Puno</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="distrito">
+                                <span>Distrito</span>
+                            </label>
+                            <div class="input-wrap">
+                                <ion-icon name="location-outline"></ion-icon>
+                                <input
+                                    type="text"
+                                    id="distrito"
+                                    name="distrito"
+                                    placeholder="Ej. Santiago, Wanchaq, San Sebastián"
+                                    required
+                                >
+                            </div>
+                        </div>
+
+                    </div>
+                </section>
+
+
+                <!-- 4. HISTORIA CLÍNICA -->
+                <section class="form-section" id="sec-historia">
+                    <div class="section-header">
+                        <div>
+                            <h2>
+                                <ion-icon name="document-text-outline" style="color:var(--teal);"></ion-icon>
+                                4. Resumen de historia clínica
+                            </h2>
+                            <p>Evolución médica de origen previa al traslado.</p>
+                        </div>
+                        <span class="section-badge">Acto Médico</span>
+                    </div>
+
+                    <div class="form-group clinical-textarea-group">
+                        <label for="anamnesis">
+                            <ion-icon name="chatbubbles-outline"></ion-icon>
+                            <span>Anamnesis</span>
+                        </label>
+                        <textarea
+                            id="anamnesis"
+                            name="anamnesis"
+                            rows="4"
+                            placeholder="Descripción cronológica de los síntomas actuales y antecedentes patológicos relevantes..."
+                        ></textarea>
+                    </div>
+
+                    <div class="form-group clinical-textarea-group">
+                        <label for="examenFisico">
+                            <ion-icon name="fitness-outline"></ion-icon>
+                            <span>Examen físico</span>
+                        </label>
+                        <textarea
+                            id="examenFisico"
+                            name="examenFisico"
+                            rows="4"
+                            placeholder="Funciones vitales (PA, FC, FR, SatO2, T°), examen regional y hallazgos clínicos..."
+                        ></textarea>
+                    </div>
+
+                    <div class="form-group clinical-textarea-group">
+                        <label for="examenes">
+                            <ion-icon name="flask-outline"></ion-icon>
+                            <span>Exámenes auxiliares</span>
+                        </label>
+                        <textarea
+                            id="examenes"
+                            name="examenes"
+                            rows="4"
+                            placeholder="Resultados de laboratorio, imágenes radiológicas, EKG u otros estudios previos..."
+                        ></textarea>
+                    </div>
+
+                    <div class="form-group clinical-textarea-group">
+                        <label for="diagnosticos">
+                            <ion-icon name="alert-circle-outline"></ion-icon>
+                            <span>Diagnósticos</span>
+                        </label>
+                        <textarea
+                            id="diagnosticos"
+                            name="diagnosticos"
+                            rows="4"
+                            placeholder="Diagnóstico(s) presuntivo(s) o definitivo(s) con código CIE-10 si aplica..."
+                        ></textarea>
+                    </div>
+
+                    <div class="form-group clinical-textarea-group">
+                        <label for="tratamiento">
+                            <ion-icon name="medkit-outline"></ion-icon>
+                            <span>Tratamiento</span>
+                        </label>
+                        <textarea
+                            id="tratamiento"
+                            name="tratamiento"
+                            rows="4"
+                            placeholder="Medicamentos administrados, vía, dosis, medidas generales y terapéutica inicial..."
+                        ></textarea>
+                    </div>
+                </section>
+
+
+                <!-- 5. DATOS DE LA REFERENCIA / TRASLADO -->
+                <section class="form-section" id="sec-traslado">
+                    <div class="section-header">
+                        <div>
+                            <h2>
+                                <ion-icon name="git-branch-outline" style="color:var(--amber);"></ion-icon>
+                                5. Datos de la referencia y traslado
+                            </h2>
+                            <p>Servicio asistencial de destino y estado durante el transporte.</p>
+                        </div>
+                        <span class="section-badge">Traslado</span>
+                    </div>
+
+                    <div class="form-grid">
+
+                        <div class="form-group">
+                            <label for="ups">
+                                <span>UPS destino</span>
+                            </label>
+                            <div class="input-wrap">
+                                <ion-icon name="business-outline"></ion-icon>
+                                <select id="ups" name="ups" required>
+                                    <option value="">Seleccione</option>
+                                    <option value="consulta-externa">Consulta externa</option>
+                                    <option value="emergencia">Emergencia</option>
+                                    <option value="hospitalizacion">Hospitalización</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="especialidad">
+                                <span>Especialidad</span>
+                            </label>
+                            <div class="input-wrap">
+                                <ion-icon name="heart-half-outline"></ion-icon>
+                                <select id="especialidad" name="especialidad" required>
+                                    <option value="">Seleccione</option>
+                                    <option value="medicina-general">Medicina General</option>
+                                    <option value="cardiologia">Cardiología</option>
+                                    <option value="traumatologia">Traumatología</option>
+                                    <option value="pediatria">Pediatría</option>
+                                    <option value="ginecologia">Ginecología</option>
+                                    <option value="cirugia-general">Cirugía General</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group full">
+                            <label for="condicion">
+                                <span>Condición del paciente al inicio del traslado</span>
+                            </label>
+                            <div class="input-wrap">
+                                <ion-icon name="pulse-outline"></ion-icon>
+                                <select id="condicion" name="condicion" required>
+                                    <option value="">Seleccione</option>
+                                    <option value="estable">Estable</option>
+                                    <option value="delicado">Delicado</option>
+                                    <option value="grave">Grave</option>
+                                </select>
+                            </div>
+                        </div>
+
+                    </div>
+                </section>
+
+
+                <!-- 6. RESPONSABLE DE REFERENCIA -->
+                <section class="form-section" id="sec-responsable">
+                    <div class="section-header">
+                        <div>
+                            <h2>
+                                <ion-icon name="person-circle-outline" style="color:var(--teal);"></ion-icon>
+                                6. Responsable de la referencia
+                            </h2>
+                            <p>Profesional de la salud que dispone la remisión médica.</p>
+                        </div>
+                        <span class="section-badge">Profesional</span>
+                    </div>
+
+                    <div class="form-grid">
+
+                        <div class="form-group full">
+                            <label for="refNombre">
+                                <span>Nombres y apellidos</span>
+                            </label>
+                            <div class="input-wrap">
+                                <ion-icon name="person-outline"></ion-icon>
+                                <input
+                                    type="text"
+                                    id="refNombre"
+                                    name="refNombre"
+                                    placeholder="Nombre completo del remitente"
+                                    required
+                                >
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="refColegiatura">
+                                <span>Colegiatura</span>
+                                <span class="label-hint">CMP / CEP / COP</span>
+                            </label>
+                            <div class="input-wrap">
+                                <ion-icon name="ribbon-outline"></ion-icon>
+                                <input
+                                    type="text"
+                                    id="refColegiatura"
+                                    name="refColegiatura"
+                                    placeholder="N° de Colegiatura"
+                                >
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="refProfesion">
+                                <span>Profesión</span>
+                            </label>
+                            <div class="input-wrap">
+                                <ion-icon name="school-outline"></ion-icon>
+                                <select id="refProfesion" name="refProfesion" required>
+                                    <option value="">Seleccione</option>
+                                    <option value="medico">Médico</option>
+                                    <option value="enfermero">Enfermero(a)</option>
+                                    <option value="obstetra">Obstetra</option>
+                                    <option value="otro">Otro</option>
+                                </select>
+                            </div>
+                        </div>
+
+                    </div>
+                </section>
+
+
+                <!-- 7. RESPONSABLE DEL ESTABLECIMIENTO -->
+                <section class="form-section" id="sec-establecimiento">
+                    <div class="section-header">
+                        <div>
+                            <h2>
+                                <ion-icon name="shield-checkmark-outline" style="color:#0369a1;"></ion-icon>
+                                7. Responsable del establecimiento
+                            </h2>
+                            <p>Autoridad médica o jefe de guardia que autoriza la referencia.</p>
+                        </div>
+                        <span class="section-badge">Jefatura</span>
+                    </div>
+
+                    <div class="form-grid">
+
+                        <div class="form-group full">
+                            <label for="estNombre">
+                                <span>Nombres y apellidos</span>
+                            </label>
+                            <div class="input-wrap">
+                                <ion-icon name="person-outline"></ion-icon>
+                                <input
+                                    type="text"
+                                    id="estNombre"
+                                    name="estNombre"
+                                    placeholder="Jefe de establecimiento o médico de turno"
+                                    required
+                                >
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="estColegiatura">
+                                <span>Colegiatura</span>
+                            </label>
+                            <div class="input-wrap">
+                                <ion-icon name="ribbon-outline"></ion-icon>
+                                <input
+                                    type="text"
+                                    id="estColegiatura"
+                                    name="estColegiatura"
+                                    placeholder="N° de Colegiatura"
+                                >
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="estProfesion">
+                                <span>Profesión</span>
+                            </label>
+                            <div class="input-wrap">
+                                <ion-icon name="school-outline"></ion-icon>
+                                <select id="estProfesion" name="estProfesion" required>
+                                    <option value="">Seleccione</option>
+                                    <option value="medico">Médico</option>
+                                    <option value="enfermero">Enfermero(a)</option>
+                                    <option value="obstetra">Obstetra</option>
+                                    <option value="otro">Otro</option>
+                                </select>
+                            </div>
+                        </div>
+
+                    </div>
+                </section>
+
+
+                <!-- ACCIONES DEL FORMULARIO -->
+                <div class="form-actions">
+                    <button
+                        type="button"
+                        class="btn-secondary"
+                        id="cancelButton"
+                    >
+                        <ion-icon name="close-circle-outline"></ion-icon>
+                        <span>Cancelar</span>
+                    </button>
+
+                    <button
+                        type="reset"
+                        class="btn-light"
+                    >
+                        <ion-icon name="refresh-outline"></ion-icon>
+                        <span>Limpiar</span>
+                    </button>
+
+                    <button
+                        type="submit"
+                        class="btn-primary"
+                        id="btnSubmitPaciente"
+                    >
+                        <div class="btn-spinner" id="submitSpinner"></div>
+                        <ion-icon name="checkmark-done-circle-outline" id="submitIcon"></ion-icon>
+                        <span id="submitText">Registrar paciente</span>
+                    </button>
+                </div>
+
+                <!-- CONTENEDOR DE MENSAJES (#message) -->
+                <div id="message" role="alert" aria-live="polite"></div>
+
+            </form>
+        </main>
+
+    </div>
+
+    <!-- SCRIPTS EXTERNOS REQUERIDOS (conservados tal como en la base) -->
+    <script src="../../js/supabase.js"></script>
+    <script src="../../js/paciente-registrar.js"></script>
+
+    <!-- MEJORAS DE INTERACCIÓN CLÍNICA COMPATIBLES -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+
+            // 1. Contador y filtro de dígitos para el DNI
+            const dniInput = document.getElementById('dni');
+            const dniCounter = document.getElementById('dniCounter');
+
+            if (dniInput) {
+                dniInput.addEventListener('input', () => {
+                    dniInput.value = dniInput.value.replace(/\D/g, '').slice(0, 8);
+                    if (dniCounter) {
+                        dniCounter.textContent = `${dniInput.value.length}/8 dígitos`;
+                        dniCounter.style.color = dniInput.value.length === 8 ? 'var(--teal)' : 'var(--slate-400)';
+                    }
+                });
+            }
+
+            // 2. Establecer automáticamente fecha y hora actual por defecto
+            const fechaInput = document.getElementById('fecha');
+            const horaInput = document.getElementById('hora');
+
+            if (fechaInput && !fechaInput.value) {
+                const today = new Date().toISOString().split('T')[0];
+                fechaInput.value = today;
+            }
+
+            if (horaInput && !horaInput.value) {
+                const now = new Date();
+                const hh = String(now.getHours()).padStart(2, '0');
+                const mm = String(now.getMinutes()).padStart(2, '0');
+                horaInput.value = `${hh}:${mm}`;
+            }
+
+            // 3. Botón de Cancelar por defecto hacia el dashboard si no está implementado
+            const cancelButton = document.getElementById('cancelButton');
+            if (cancelButton && !cancelButton.onclick) {
+                cancelButton.addEventListener('click', () => {
+                    if (window.confirm('¿Está seguro de que desea cancelar el registro del paciente? Los cambios no guardados se perderán.')) {
+                        window.location.href = '../dashboard.html';
+                    }
+                });
+            }
+
+            // 4. Botón de Auto-completar Demo para pruebas ágiles
+            const btnAutoFill = document.getElementById('btnAutoFill');
+            if (btnAutoFill) {
+                btnAutoFill.addEventListener('click', () => {
+                    document.getElementById('seguro').value = 'si';
+                    document.getElementById('sis').value = 'SIS-902341';
+                    document.getElementById('origen').value = 'Centro de Salud Belenpampa (Cusco)';
+                    document.getElementById('destino').value = 'Hospital Antonio Lorena';
+                    document.getElementById('historia').value = 'HC-009412';
+                    document.getElementById('dni').value = '48201934';
+                    if (dniCounter) dniCounter.textContent = '8/8 dígitos';
+                    document.getElementById('nombres').value = 'Lucía Victoria';
+                    document.getElementById('apellidos').value = 'Condori Huamán';
+                    document.getElementById('sexo').value = 'femenino';
+                    document.getElementById('edad').value = '29';
+                    document.getElementById('direccion').value = 'Av. Antonio Lorena N° 450, Santiago';
+                    document.getElementById('departamento').value = 'cusco';
+                    document.getElementById('distrito').value = 'Santiago';
+
+                    document.getElementById('anamnesis').value = 'Paciente primigesta de 34 semanas refiere cefalea frontal persistente, escotomas centelleantes y edema bimaleolar bilateral de progresión en 48 horas.';
+                    document.getElementById('examenFisico').value = 'PA: 150/95 mmHg, FC: 84 lpm, FR: 18 rpm, T°: 36.6 °C. AU: 32 cm, LCF: 142 lpm. Edema ++/+++ en miembros inferiores.';
+                    document.getElementById('examenes').value = 'Proteinuria cualitativa en tira reactiva (++). Hemograma y perfil hepático en curso.';
+                    document.getElementById('diagnosticos').value = 'O14.0 - Preeclampsia moderada en gestación pretérmino.';
+                    document.getElementById('tratamiento').value = 'Sulfato de Magnesio esquema Zuspan iniciado. Nifedipino 10mg VO condicional.';
+
+                    document.getElementById('ups').value = 'emergencia';
+                    document.getElementById('especialidad').value = 'ginecologia';
+                    document.getElementById('condicion').value = 'delicado';
+
+                    document.getElementById('refNombre').value = 'Dra. Patricia Valenzuela';
+                    document.getElementById('refColegiatura').value = 'CMP 58210';
+                    document.getElementById('refProfesion').value = 'medico';
+
+                    document.getElementById('estNombre').value = 'Dr. Juan Carlos Ramos';
+                    document.getElementById('estColegiatura').value = 'CMP 41203';
+                    document.getElementById('estProfesion').value = 'medico';
+
+                    // Notificación en el mensaje
+                    showCustomMessage('Datos de prueba cargados correctamente en el formulario.', 'info');
+                });
+            }
+
+            // 5. Soporte para el contenedor #message
+            function showCustomMessage(text, type = 'info') {
+                const messageEl = document.getElementById('message');
+                if (!messageEl) return;
+                messageEl.className = type;
+                const icon = type === 'error' ? 'alert-circle' : (type === 'success' ? 'checkmark-circle' : 'information-circle');
+                messageEl.innerHTML = `<ion-icon name="${icon}" style="font-size:1.3rem;"></ion-icon><span>${text}</span>`;
+                messageEl.style.display = 'flex';
+                messageEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }
+
+            // 6. Efecto de carga visual durante el submit del formulario
+            const pacienteForm = document.getElementById('pacienteForm');
+            const submitBtn = document.getElementById('btnSubmitPaciente');
+            const submitSpinner = document.getElementById('submitSpinner');
+            const submitIcon = document.getElementById('submitIcon');
+            const submitText = document.getElementById('submitText');
+
+            if (pacienteForm && submitBtn) {
+                pacienteForm.addEventListener('submit', () => {
+                    if (submitSpinner && submitIcon && submitText) {
+                        submitSpinner.style.display = 'block';
+                        submitIcon.style.display = 'none';
+                        submitText.textContent = 'Guardando paciente...';
+
+                        setTimeout(() => {
+                            submitSpinner.style.display = 'none';
+                            submitIcon.style.display = 'inline-block';
+                            submitText.textContent = 'Registrar paciente';
+                        }, 1200);
+                    }
+                });
+            }
+        });
+    </script>
 </body>
+
 </html>

@@ -1,226 +1,562 @@
 <!DOCTYPE html>
-
 <html lang="es">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SGC | Dashboard Clínico - Hospital Antonio Lorena</title>
 
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
-<title>SGC | Dashboard</title>
+    <!-- Ionicons -->
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
 
-<link rel="stylesheet" href="../css/dashboard.css">
-
-
+    <link rel="stylesheet" href="../Css/dashboard.css"
 </head>
 
-    <body>
-
+<body>
 
     <div class="layout">
 
-        <!-- BARRA LATERAL -->
+        <!-- OVERLAY PARA MÓVILES -->
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
-        <aside class="sidebar">
+        <!-- BARRA LATERAL (SIDEBAR) -->
+        <aside class="sidebar" id="sidebar">
 
             <div class="sidebar-header">
-                <div class="logo">SGC</div>
-
-                <div>
-                    <h2>SGC</h2>
-                    <span>Gestión Clínica</span>
+                <div class="hospital-logo">
+                    <ion-icon name="medkit"></ion-icon>
+                </div>
+                <div class="header-title-box">
+                    <h2>Hospital Lorena</h2>
+                    <span><ion-icon name="pulse"></ion-icon> Sistema Clínico</span>
                 </div>
             </div>
 
-            <nav>
+            <nav class="sidebar-nav">
 
-                <a href="dashboard.html" class="active">
-                    Dashboard
+                <a href="dashboard.html" class="nav-link active">
+                    <ion-icon name="grid-outline"></ion-icon>
+                    <span>Dashboard</span>
                 </a>
 
                 <div class="menu-section">
-                    <span>Pacientes</span>
-
-                    <a href="pacientes/registrar.html">
-                        Registrar paciente
+                    <span class="menu-section-label">Gestión de Pacientes</span>
+                    <a href="pacientes/registrar.html" class="nav-link">
+                        <ion-icon name="person-add-outline"></ion-icon>
+                        <span>Registrar Paciente</span>
                     </a>
-
-                    <a href="pacientes/consultar.html">
-                        Consultar paciente
+                    <a href="pacientes/consultar.html" class="nav-link">
+                        <ion-icon name="people-outline"></ion-icon>
+                        <span>Consultar Pacientes</span>
                     </a>
-
-                    <a href="pacientes/historial.html">
-                        Historial clínico
-                    </a>
-                </div>
-
-                <div class="menu-section">
-                    <span>Citas</span>
-
-                    <a href="citas/registrar.html">
-                        Registrar cita
-                    </a>
-
-                    <a href="citas/consultar.html">
-                        Consultar cita
-                    </a>
-
-                    <a href="citas/cancelar.html">
-                        Cancelar cita
+                    <a href="pacientes/historial.html" class="nav-link">
+                        <ion-icon name="document-text-outline"></ion-icon>
+                        <span>Historial Clínico</span>
                     </a>
                 </div>
 
                 <div class="menu-section">
-
-                    <span>Atención médica</span>
-
-                    <a href="atencion/registrar.html">
-                        Registrar atención
+                    <span class="menu-section-label">Citas & Turnos</span>
+                    <a href="citas/registrar.html" class="nav-link">
+                        <ion-icon name="calendar-number-outline"></ion-icon>
+                        <span>Registrar Cita</span>
                     </a>
-                    <a href="atencion/consultar.html">
-                        Consultar atención
+                    <a href="citas/consultar.html" class="nav-link">
+                        <ion-icon name="calendar-outline"></ion-icon>
+                        <span>Consultar Citas</span>
+                    </a>
+                    <a href="citas/cancelar.html" class="nav-link">
+                        <ion-icon name="close-circle-outline"></ion-icon>
+                        <span>Cancelar Cita</span>
                     </a>
                 </div>
 
                 <div class="menu-section">
-
-                    <span>Usuarios</span>
-
-                    <a href="../usuarios/usuarios.html">
-                        Gestión de usuarios
+                    <span class="menu-section-label">Acto Médico</span>
+                    <a href="atencion/registrar.html" class="nav-link">
+                        <ion-icon name="fitness-outline"></ion-icon>
+                        <span>Registrar Atención</span>
                     </a>
+                    <a href="atencion/consultar.html" class="nav-link">
+                        <ion-icon name="receipt-outline"></ion-icon>
+                        <span>Consultar Atenciones</span>
+                    </a>
+                </div>
 
+                <div class="menu-section">
+                    <span class="menu-section-label">Seguridad y Personal</span>
+                    <a href="../usuarios/usuarios.html" class="nav-link">
+                        <ion-icon name="shield-checkmark-outline"></ion-icon>
+                        <span>Gestión de Usuarios</span>
+                    </a>
                 </div>
 
             </nav>
 
-            <button id="logoutButton" class="logout">
-                Cerrar sesión
-            </button>
+            <!-- PIE DE SIDEBAR CON PERFIL & LOGOUT -->
+            <div class="sidebar-footer">
+                <div class="user-compact">
+                    <div class="user-avatar">
+                        CM
+                        <span class="status-dot" title="En servicio"></span>
+                    </div>
+                    <div class="user-meta">
+                        <strong>Dr. Carlos Mendoza</strong>
+                        <span>Médico Internista</span>
+                    </div>
+                </div>
+
+                <button id="logoutButton" class="logout-btn" title="Finalizar sesión actual">
+                    <ion-icon name="log-out-outline"></ion-icon>
+                    <span>Cerrar sesión</span>
+                </button>
+            </div>
 
         </aside>
 
+        <!-- CONTENIDO PRINCIPAL -->
+        <div class="main-wrapper">
 
-        <!-- CONTENIDO -->
-
-        <main class="main-content">
-
+            <!-- TOPBAR -->
             <header class="topbar">
 
-                <div>
-                    <h1>Dashboard</h1>
-                    <p>Resumen del sistema</p>
+                <div class="topbar-left">
+                    <button class="btn-toggle-menu" id="toggleMenuBtn" aria-label="Abrir Menú">
+                        <ion-icon name="menu-outline"></ion-icon>
+                    </button>
+                    <div class="page-titles">
+                        <h1>Panel General</h1>
+                        <p id="currentDateString">
+                            <ion-icon name="time-outline"></ion-icon> 
+                            <span>Cargando fecha...</span>
+                        </p>
+                    </div>
                 </div>
 
-                <div class="user-info">
-                    <strong>Administrador</strong>
-                    <span>Personal autorizado</span>
+                <div class="topbar-right">
+
+                    <!-- Buscador Instantáneo -->
+                    <div class="search-box">
+                        <ion-icon name="search-outline" class="search-icon"></ion-icon>
+                        <input type="text" id="globalSearchInput" placeholder="Buscar por DNI o Paciente...">
+                        <span class="search-kbd">Ctrl+K</span>
+                    </div>
+
+                    <!-- Notificaciones -->
+                    <button class="notification-btn" id="notifBtn" title="Alertas asistenciales">
+                        <ion-icon name="notifications-outline"></ion-icon>
+                        <span class="notif-badge"></span>
+                    </button>
+
+                    <!-- Estado del Hospital -->
+                    <div class="hospital-status-badge">
+                        <span class="live-dot"></span>
+                        <span>Emergencia Operativa</span>
+                    </div>
+
                 </div>
 
             </header>
 
+            <!-- CUERPO DE PANTALLA -->
+            <main class="content-body">
 
-            <section class="content">
+                <!-- BANNER DE BIENVENIDA ASISTENCIAL -->
+                <section class="welcome-card">
+                    <div class="welcome-text">
+                        <h2>Bienvenido al Sistema de Gestión Clínica</h2>
+                        <p>Hospital de Apoyo Antonio Lorena · Administre citas, triaje médico y fichas clínicas de forma oportuna con cifrado seguro.</p>
+                    </div>
+                    <div class="duty-tag">
+                        <ion-icon name="medical-outline"></ion-icon>
+                        <div>
+                            <strong>Servicio: Consulta Externa</strong>
+                            <span>Turno Mañana: 07:30 - 13:30</span>
+                        </div>
+                    </div>
+                </section>
 
-                <div class="welcome">
-                    <h2>Bienvenido al Sistema de Gestión Clínica</h2>
+                <!-- BOTONES DE ACCIÓN RÁPIDA -->
+                <section class="quick-actions-bar">
+                    <a href="citas/registrar.html" class="quick-btn">
+                        <div class="btn-icon-box icon-blue">
+                            <ion-icon name="add-circle-outline"></ion-icon>
+                        </div>
+                        <div>
+                            <span style="display:block; font-size:0.72rem; color:var(--text-muted);">Acción Directa</span>
+                            Nueva Cita
+                        </div>
+                    </a>
 
-                    <p>
-                        Desde este panel puede gestionar pacientes,
-                        citas médicas y atención clínica.
-                    </p>
-                </div>
+                    <a href="pacientes/registrar.html" class="quick-btn">
+                        <div class="btn-icon-box icon-teal">
+                            <ion-icon name="person-add-outline"></ion-icon>
+                        </div>
+                        <div>
+                            <span style="display:block; font-size:0.72rem; color:var(--text-muted);">Admisión</span>
+                            Nuevo Paciente
+                        </div>
+                    </a>
 
+                    <a href="atencion/registrar.html" class="quick-btn">
+                        <div class="btn-icon-box icon-amber">
+                            <ion-icon name="bandage-outline"></ion-icon>
+                        </div>
+                        <div>
+                            <span style="display:block; font-size:0.72rem; color:var(--text-muted);">Triaje / Consulta</span>
+                            Registrar Atención
+                        </div>
+                    </a>
 
-                <div class="cards">
+                    <a href="pacientes/historial.html" class="quick-btn">
+                        <div class="btn-icon-box icon-purple">
+                            <ion-icon name="folder-open-outline"></ion-icon>
+                        </div>
+                        <div>
+                            <span style="display:block; font-size:0.72rem; color:var(--text-muted);">Fichas Médicas</span>
+                            Buscar Historial
+                        </div>
+                    </a>
+                </section>
 
-                    <div class="card">
-                        <span>Pacientes registrados</span>
-                        <strong>124</strong>
+                <!-- MÉTRICAS EN TIEMPO REAL -->
+                <section class="metrics-grid">
+
+                    <div class="metric-card">
+                        <div class="metric-header">
+                            <span>Pacientes Registrados</span>
+                            <div class="metric-icon icon-blue">
+                                <ion-icon name="people"></ion-icon>
+                            </div>
+                        </div>
+                        <div class="metric-body">
+                            <strong>124</strong>
+                            <span class="metric-trend trend-up">
+                                <ion-icon name="arrow-up-outline"></ion-icon> +12%
+                            </span>
+                        </div>
+                        <div class="metric-footer">Total adscritos en el Lorena</div>
                     </div>
 
-                    <div class="card">
-                        <span>Citas programadas</span>
-                        <strong>32</strong>
+                    <div class="metric-card">
+                        <div class="metric-header">
+                            <span>Citas Programadas Hoy</span>
+                            <div class="metric-icon icon-teal">
+                                <ion-icon name="calendar"></ion-icon>
+                            </div>
+                        </div>
+                        <div class="metric-body">
+                            <strong>32</strong>
+                            <span class="metric-trend trend-neutral">8 en sala</span>
+                        </div>
+                        <div class="metric-footer">Turnos de consulta externa</div>
                     </div>
 
-                    <div class="card">
-                        <span>Atenciones médicas</span>
-                        <strong>18</strong>
+                    <div class="metric-card">
+                        <div class="metric-header">
+                            <span>Atenciones Realizadas</span>
+                            <div class="metric-icon icon-amber">
+                                <ion-icon name="fitness"></ion-icon>
+                            </div>
+                        </div>
+                        <div class="metric-body">
+                            <strong>18</strong>
+                            <span class="metric-trend trend-up">56% avance</span>
+                        </div>
+                        <div class="metric-footer">Con diagnóstico cerrado hoy</div>
                     </div>
 
-                    <div class="card">
-                        <span>Usuarios</span>
-                        <strong>8</strong>
+                    <div class="metric-card">
+                        <div class="metric-header">
+                            <span>Especialistas de Guardia</span>
+                            <div class="metric-icon icon-purple">
+                                <ion-icon name="id-card"></ion-icon>
+                            </div>
+                        </div>
+                        <div class="metric-body">
+                            <strong>8</strong>
+                            <span class="metric-trend trend-neutral">En consultorio</span>
+                        </div>
+                        <div class="metric-footer">Servicio activo en clínica</div>
                     </div>
-
-                </div>
-
-
-                <section class="panel">
-
-                    <div class="panel-header">
-                        <h2>Próximas citas</h2>
-
-                        <a href="../citas/consultar.html">
-                            Ver todas
-                        </a>
-                    </div>
-
-                    <table>
-
-                        <thead>
-
-                            <tr>
-                                <th>Paciente</th>
-                                <th>Médico</th>
-                                <th>Fecha</th>
-                                <th>Hora</th>
-                                <th>Estado</th>
-                            </tr>
-
-                        </thead>
-
-                        <tbody>
-
-                            <tr>
-                                <td>Juan Pérez</td>
-                                <td>Dr. Carlos Mendoza</td>
-                                <td>30/09/2026</td>
-                                <td>08:30</td>
-                                <td>
-                                    <span class="status active">
-                                        Programada
-                                    </span>
-                                </td>
-                            </tr>
-
-                            <tr>
-                                <td>María Quispe</td>
-                                <td>Dra. Ana Flores</td>
-                                <td>30/09/2026</td>
-                                <td>09:00</td>
-                                <td>
-                                    <span class="status active">
-                                        Programada
-                                    </span>
-                                </td>
-                            </tr>
-
-                        </tbody>
-
-                    </table>
 
                 </section>
 
-            </section>
+                <!-- SECCIÓN CENTRAL: TABLA DE CITAS + WIDGETS -->
+                <div class="dashboard-main-grid">
 
-        </main>
+                    <!-- TABLA PRINCIPAL DE CITAS -->
+                    <section class="panel">
+
+                        <div class="panel-header">
+                            <div class="panel-header-title">
+                                <h2>Próximas Citas Asistenciales</h2>
+                                <span>Monitoreo de flujo de pacientes en tiempo real</span>
+                            </div>
+
+                            <!-- Filtros rápidos de estado -->
+                            <div class="table-filter-tabs">
+                                <button class="filter-btn active" data-filter="all">Todas</button>
+                                <button class="filter-btn" data-filter="espera">En Sala</button>
+                                <button class="filter-btn" data-filter="programada">Programadas</button>
+                            </div>
+                        </div>
+
+                        <div class="table-responsive">
+                            <table id="appointmentsTable">
+                                <thead>
+                                    <tr>
+                                        <th>Paciente</th>
+                                        <th>Médico Especialista</th>
+                                        <th>Fecha / Hora</th>
+                                        <th>Estado</th>
+                                        <th style="text-align: right;">Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr data-status="espera">
+                                        <td>
+                                            <div class="patient-cell">
+                                                <div class="patient-avatar">JP</div>
+                                                <div class="patient-info">
+                                                    <strong>Juan Pérez Quispe</strong>
+                                                    <span>DNI: 47891230 · HC: #10842</span>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="doctor-cell">
+                                                <strong>Dr. Carlos Mendoza</strong>
+                                                <span>Cardiología Clínica</span>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="datetime-cell">
+                                                <span><ion-icon name="calendar-outline"></ion-icon> 30/09/2026</span>
+                                                <span><ion-icon name="time-outline"></ion-icon> 08:30 hrs</span>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <span class="badge badge-waiting">
+                                                <span class="badge-dot"></span> En Espera
+                                            </span>
+                                        </td>
+                                        <td style="text-align: right;">
+                                            <button class="btn-table-action" onclick="attendPatient('Juan Pérez Quispe')">
+                                                <ion-icon name="enter-outline"></ion-icon> Atender
+                                            </button>
+                                        </td>
+                                    </tr>
+
+                                    <tr data-status="programada">
+                                        <td>
+                                            <div class="patient-cell">
+                                                <div class="patient-avatar" style="background:#fce7f3; color:#be185d;">MQ</div>
+                                                <div class="patient-info">
+                                                    <strong>María Quispe Huamán</strong>
+                                                    <span>DNI: 71239045 · HC: #09210</span>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="doctor-cell">
+                                                <strong>Dra. Ana Flores</strong>
+                                                <span>Pediatría Integral</span>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="datetime-cell">
+                                                <span><ion-icon name="calendar-outline"></ion-icon> 30/09/2026</span>
+                                                <span><ion-icon name="time-outline"></ion-icon> 09:00 hrs</span>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <span class="badge badge-scheduled">
+                                                <span class="badge-dot"></span> Programada
+                                            </span>
+                                        </td>
+                                        <td style="text-align: right;">
+                                            <button class="btn-table-action" onclick="attendPatient('María Quispe Huamán')">
+                                                <ion-icon name="eye-outline"></ion-icon> Detalle
+                                            </button>
+                                        </td>
+                                    </tr>
+
+                                    <tr data-status="in_progress">
+                                        <td>
+                                            <div class="patient-cell">
+                                                <div class="patient-avatar" style="background:#ecfdf5; color:#047857;">RO</div>
+                                                <div class="patient-info">
+                                                    <strong>Roberto Ortiz Cárdenas</strong>
+                                                    <span>DNI: 23901284 · HC: #11492</span>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="doctor-cell">
+                                                <strong>Dr. Marcos Véliz</strong>
+                                                <span>Medicina General</span>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="datetime-cell">
+                                                <span><ion-icon name="calendar-outline"></ion-icon> 30/09/2026</span>
+                                                <span><ion-icon name="time-outline"></ion-icon> 09:30 hrs</span>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <span class="badge badge-in-progress">
+                                                <span class="badge-dot"></span> En Consulta
+                                            </span>
+                                        </td>
+                                        <td style="text-align: right;">
+                                            <button class="btn-table-action" onclick="attendPatient('Roberto Ortiz Cárdenas')">
+                                                <ion-icon name="pulse-outline"></ion-icon> Evolución
+                                            </button>
+                                        </td>
+                                    </tr>
+
+                                    <tr data-status="programada">
+                                        <td>
+                                            <div class="patient-cell">
+                                                <div class="patient-avatar" style="background:#fef3c7; color:#b45309;">ES</div>
+                                                <div class="patient-info">
+                                                    <strong>Elena Salazar Paucar</strong>
+                                                    <span>DNI: 45019284 · HC: #12093</span>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="doctor-cell">
+                                                <strong>Dra. Sofía Ugarte</strong>
+                                                <span>Ginecología</span>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="datetime-cell">
+                                                <span><ion-icon name="calendar-outline"></ion-icon> 30/09/2026</span>
+                                                <span><ion-icon name="time-outline"></ion-icon> 10:15 hrs</span>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <span class="badge badge-scheduled">
+                                                <span class="badge-dot"></span> Programada
+                                            </span>
+                                        </td>
+                                        <td style="text-align: right;">
+                                            <button class="btn-table-action" onclick="attendPatient('Elena Salazar Paucar')">
+                                                <ion-icon name="eye-outline"></ion-icon> Detalle
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </section>
+
+                    <!-- COLUMNA DERECHA: ESTADO CLÍNICO & GUARDIA -->
+                    <aside class="widget-column">
+
+                        <!-- Ocupación de Camas y Consultorios -->
+                        <div class="widget-card">
+                            <div class="widget-header">
+                                <h3>Capacidad Asistencial</h3>
+                                <ion-icon name="stats-chart-outline" style="color:var(--teal); font-size:1.2rem;"></ion-icon>
+                            </div>
+
+                            <div class="occupancy-item">
+                                <div class="occupancy-top">
+                                    <span>Consultorios Externos</span>
+                                    <span>8 / 10 activos</span>
+                                </div>
+                                <div class="progress-bar-bg">
+                                    <div class="progress-bar-fill bg-teal" style="width: 80%;"></div>
+                                </div>
+                            </div>
+
+                            <div class="occupancy-item">
+                                <div class="occupancy-top">
+                                    <span>Camas de Observación</span>
+                                    <span>14 / 20 ocupadas</span>
+                                </div>
+                                <div class="progress-bar-bg">
+                                    <div class="progress-bar-fill bg-sky" style="width: 70%;"></div>
+                                </div>
+                            </div>
+
+                            <div class="occupancy-item">
+                                <div class="occupancy-top">
+                                    <span>Tópico de Emergencia</span>
+                                    <span>85% saturación</span>
+                                </div>
+                                <div class="progress-bar-bg">
+                                    <div class="progress-bar-fill bg-amber" style="width: 85%;"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Médicos de Guardia Activos -->
+                        <div class="widget-card">
+                            <div class="widget-header">
+                                <h3>Médicos en Guardia</h3>
+                                <span style="font-size:0.73rem; color:var(--teal); font-weight:700;">H. Lorena</span>
+                            </div>
+
+                            <div class="duty-doctor-item">
+                                <div class="doctor-thumb">
+                                    <ion-icon name="person"></ion-icon>
+                                </div>
+                                <div class="doctor-thumb-meta">
+                                    <strong>Dr. Carlos Mendoza</strong>
+                                    <span>Cardiología · Consultorio 4</span>
+                                </div>
+                            </div>
+
+                            <div class="duty-doctor-item">
+                                <div class="doctor-thumb" style="background:#ccfbf1; color:#0f766e;">
+                                    <ion-icon name="person"></ion-icon>
+                                </div>
+                                <div class="doctor-thumb-meta">
+                                    <strong>Dra. Ana Flores</strong>
+                                    <span>Pediatría · Consultorio 2</span>
+                                </div>
+                            </div>
+
+                            <div class="duty-doctor-item">
+                                <div class="doctor-thumb" style="background:#fef3c7; color:#d97706;">
+                                    <ion-icon name="person"></ion-icon>
+                                </div>
+                                <div class="doctor-thumb-meta">
+                                    <strong>Dr. Marcos Véliz</strong>
+                                    <span>Medicina General · Tópico</span>
+                                </div>
+                            </div>
+                        </div>
+
+                    </aside>
+
+                </div>
+
+            </main>
+
+        </div>
 
     </div>
-<script src="../../js/supabase.js"></script>
 
-<script src="../js/dashboard.js"></script>
+    <!-- TOAST INFORMATIVO -->
+    <div class="toast-notify" id="toastNotify">
+        <ion-icon name="information-circle" style="font-size:1.4rem; color:#38bdf8;"></ion-icon>
+        <span id="toastMessage">Operación realizada con éxito</span>
+    </div>
 
+    <!-- JAVASCRIPT INTEGRADO -->
+    <script src="../Js/dashboard.js"></script>
 </body>
 </html>

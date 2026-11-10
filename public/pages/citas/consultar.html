@@ -1,194 +1,270 @@
 <!DOCTYPE html>
-
 <html lang="es">
 
 <head>
-<meta charset="UTF-8">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
->
+    <title>SGC | Consulta de cita médica</title>
 
-<title>SGC | Consultar cita</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 
-<link
-    rel="stylesheet"
-    href="../../css/cita-consultar.css"
->
+    <!-- Ionicons -->
+    <script type="module" src="https://unpkg.com/ionicons@8.0.13/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@8.0.13/dist/ionicons/ionicons.js"></script>
 
+    <link rel="stylesheet" href="../../css/cita-consultar.css">
 
+    <style>
+    
+    </style>
 </head>
 
 <body>
 
+    <main class="container">
 
-<main class="container">
-
-    <header class="page-header">
-
-        <a href="../dashboard.html">
-            ← Volver al dashboard
-        </a>
-
-        <h1>Consulta de cita programada</h1>
-
-        <p>
-            Consulte la fecha, médico y consultorio
-            de la cita.
-        </p>
-
-    </header>
-
-
-    <section class="search-card">
-
-        <form id="searchForm">
-
-            <div>
-
-                <label for="dni">
-                    DNI del paciente
-                </label>
-
-                <input
-                    type="text"
-                    id="dni"
-                    maxlength="8"
-                    placeholder="Ingrese DNI"
-                    required
-                >
-
+        <!-- Banner institucional unificado -->
+        <header class="hospital-brand-banner">
+            <div class="hospital-identity">
+                <div class="hospital-logo-badge">
+                    <ion-icon name="medical"></ion-icon>
+                </div>
+                <div>
+                    <strong class="hospital-name">Hospital Antonio Lorena · Cusco</strong>
+                    <span class="hospital-sub">Sistema de Gestión Clínica (SGC) · Nivel III-1</span>
+                </div>
             </div>
+            <div class="hospital-system-tag">
+                <ion-icon name="shield-checkmark"></ion-icon>
+                Módulo Asistencial Oficial
+            </div>
+        </header>
 
+        <!-- Cabecera de navegación -->
+        <header class="page-header">
+            <a href="../dashboard.html">
+                <ion-icon name="arrow-back-outline"></ion-icon>
+                ← Volver al dashboard
+            </a>
 
-            <button type="submit">
-                Consultar cita
-            </button>
+            <div class="header-content">
+                <div>
+                    <h1>
+                        <ion-icon name="calendar-outline"></ion-icon>
+                        Consulta de cita programada
+                    </h1>
+                    <p>
+                        Consulte la fecha, médico y consultorio de la cita programada en el hospital.
+                    </p>
+                </div>
+                <div class="header-tools">
+                    <button type="button" class="btn-action-tool" onclick="window.print()">
+                        <ion-icon name="print-outline"></ion-icon>
+                        Imprimir ticket
+                    </button>
+                </div>
+            </div>
+        </header>
 
-        </form>
-
-    </section>
-
-
-    <section
-        id="appointmentResult"
-        class="appointment-card hidden"
-    >
-
-        <div class="appointment-header">
-
-            <div>
-
-                <span class="label">
-                    Paciente
-                </span>
-
+        <!-- Tarjeta de Búsqueda -->
+        <section class="search-card">
+            <div class="search-card-header">
                 <h2>
-                    Juan Pérez Quispe
+                    <ion-icon name="search-outline"></ion-icon>
+                    Criterio de búsqueda del paciente
                 </h2>
-
-                <p>
-                    DNI: 12345678
-                </p>
-
+                <div class="quick-chips-group">
+                    <span>Prueba rápida:</span>
+                    <button type="button" class="chip-btn" onclick="rellenarDni('12345678')">DNI: 12345678</button>
+                    <button type="button" class="chip-btn" onclick="rellenarDni('87654321')">DNI: 87654321</button>
+                </div>
             </div>
 
-            <span class="status">
-                Programada
-            </span>
+            <form id="searchForm">
+                <div>
+                    <div class="label-row">
+                        <label for="dni">
+                            DNI del paciente
+                        </label>
+                        <span class="counter-badge" id="dniCounter">0 / 8 dígitos</span>
+                    </div>
 
-        </div>
+                    <div class="input-with-icon">
+                        <ion-icon name="id-card-outline"></ion-icon>
+                        <input
+                            type="text"
+                            id="dni"
+                            maxlength="8"
+                            inputmode="numeric"
+                            placeholder="Ingrese DNI (8 dígitos)"
+                            required
+                        >
+                    </div>
+                </div>
 
+                <button type="submit">
+                    <ion-icon name="search"></ion-icon>
+                    Consultar cita
+                </button>
+            </form>
+        </section>
 
-        <div class="appointment-info">
-
-            <div>
-
-                <span>
-                    Fecha
-                </span>
-
-                <strong>
-                    30/09/2026
-                </strong>
-
+        <!-- Estado previo a la consulta -->
+        <div id="emptySearchState" class="empty-placeholder">
+            <div class="empty-icon-wrap">
+                <ion-icon name="calendar-clear-outline"></ion-icon>
             </div>
-
-
-            <div>
-
-                <span>
-                    Hora
-                </span>
-
-                <strong>
-                    08:30
-                </strong>
-
-            </div>
-
-
-            <div>
-
-                <span>
-                    Médico
-                </span>
-
-                <strong>
-                    Dr. Carlos Mendoza
-                </strong>
-
-            </div>
-
-
-            <div>
-
-                <span>
-                    Especialidad
-                </span>
-
-                <strong>
-                    Medicina General
-                </strong>
-
-            </div>
-
-
-            <div>
-
-                <span>
-                    Consultorio
-                </span>
-
-                <strong>
-                    Consultorio 101
-                </strong>
-
-            </div>
-
-        </div>
-
-
-        <div class="appointment-footer">
-
+            <h3>Esperando consulta de cita</h3>
             <p>
-                Recuerde presentarse con anticipación
-                a su cita programada.
+                Ingrese el número de DNI del paciente para verificar la fecha, horario, médico y consultorio de atención asignado.
             </p>
-
         </div>
 
-    </section>
+        <!-- Tarjeta de cita encontrada -->
+        <section
+            id="appointmentResult"
+            class="appointment-card hidden"
+        >
+            <div class="appointment-header">
+                <div class="patient-badge-row">
+                    <div class="patient-avatar-circle" id="patientAvatar">JP</div>
+                    <div>
+                        <span class="label">
+                            Paciente
+                        </span>
+                        <h2 id="patientFullName">
+                            Juan Pérez Quispe
+                        </h2>
+                        <p id="patientDniDisplay">
+                            DNI: 12345678
+                        </p>
+                    </div>
+                </div>
 
+                <span class="status">
+                    Programada
+                </span>
+            </div>
 
-    <p id="message"></p>
+            <div class="appointment-info">
+                <div>
+                    <span>
+                        <ion-icon name="calendar-outline"></ion-icon>
+                        Fecha
+                    </span>
+                    <strong id="appointmentDate">
+                        30/09/2026
+                    </strong>
+                </div>
 
-</main>
+                <div>
+                    <span>
+                        <ion-icon name="time-outline"></ion-icon>
+                        Hora
+                    </span>
+                    <strong id="appointmentTime">
+                        08:30
+                    </strong>
+                </div>
 
-<script src="../../js/supabase.js"></script>
+                <div>
+                    <span>
+                        <ion-icon name="person-outline"></ion-icon>
+                        Médico
+                    </span>
+                    <strong id="appointmentDoctor">
+                        Dr. Carlos Mendoza
+                    </strong>
+                </div>
 
-<script src="../../js/cita-consultar.js"></script>
+                <div>
+                    <span>
+                        <ion-icon name="pulse-outline"></ion-icon>
+                        Especialidad
+                    </span>
+                    <strong id="appointmentSpecialty">
+                        Medicina General
+                    </strong>
+                </div>
+
+                <div>
+                    <span>
+                        <ion-icon name="business-outline"></ion-icon>
+                        Consultorio
+                    </span>
+                    <strong id="appointmentRoom">
+                        Consultorio 101
+                    </strong>
+                </div>
+
+                <div>
+                    <span>
+                        <ion-icon name="shield-checkmark-outline"></ion-icon>
+                        Tipo de Cobertura
+                    </span>
+                    <strong id="appointmentCoverage">
+                        SIS Gratuito
+                    </strong>
+                </div>
+            </div>
+
+            <div class="appointment-footer">
+                <p>
+                    Recuerde presentarse con 15 minutos de anticipación a su cita programada con su DNI en físico.
+                </p>
+                <span class="footer-tag">Hospital Antonio Lorena · Admisión Central</span>
+            </div>
+        </section>
+
+        <p id="message"></p>
+
+    </main>
+
+    <script src="../../js/supabase.js"></script>
+    <script src="../../js/cita-consultar.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const dniInput = document.getElementById('dni');
+            const dniCounter = document.getElementById('dniCounter');
+            const appointmentResult = document.getElementById('appointmentResult');
+            const emptyState = document.getElementById('emptySearchState');
+
+            // Formateo numérico y contador de dígitos DNI
+            if (dniInput && dniCounter) {
+                dniInput.addEventListener('input', (e) => {
+                    e.target.value = e.target.value.replace(/[^0-9]/g, '');
+                    const len = e.target.value.length;
+                    dniCounter.textContent = `${len} / 8 dígitos`;
+                    dniCounter.style.color = len === 8 ? 'var(--primary)' : 'var(--slate-400)';
+                });
+            }
+
+            // Ocultar placeholder vacío si el script muestra appointmentResult
+            if (appointmentResult) {
+                const observer = new MutationObserver(() => {
+                    if (!appointmentResult.classList.contains('hidden') && emptyState) {
+                        emptyState.style.display = 'none';
+                    }
+                });
+                observer.observe(appointmentResult, { attributes: true, attributeFilter: ['class', 'style'] });
+            }
+        });
+
+        // Autocompletado de prueba rápida
+        function rellenarDni(dni) {
+            const input = document.getElementById('dni');
+            if (input) {
+                input.value = dni;
+                input.dispatchEvent(new Event('input'));
+                input.focus();
+            }
+        }
+    </script>
 
 </body>
 

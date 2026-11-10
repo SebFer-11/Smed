@@ -355,3 +355,123 @@ function establecerTexto(
             texto;
     }
 }
+
+
+
+
+       document.addEventListener('DOMContentLoaded', () => {
+            const dniInput = document.getElementById('dni');
+            const dniCounter = document.getElementById('dniCounter');
+            const historyForm = document.getElementById('historyForm');
+            const historyResult = document.getElementById('historyResult');
+            const emptyHistoryState = document.getElementById('emptyHistoryState');
+            const messageEl = document.getElementById('message');
+            const btnSubmit = document.getElementById('btnSubmitHistory');
+            const btnSpinner = document.getElementById('btnSpinner');
+            const btnIcon = document.getElementById('btnIcon');
+            const btnText = document.getElementById('btnText');
+
+            // 1. Contador de caracteres en tiempo real y sólo dígitos
+            if (dniInput) {
+                dniInput.addEventListener('input', () => {
+                    dniInput.value = dniInput.value.replace(/\D/g, '').slice(0, 8);
+                    if (dniCounter) {
+                        dniCounter.textContent = `${dniInput.value.length}/8 dígitos`;
+                    }
+                });
+            }
+
+            // 2. Observer para sincronizar el estado vacío con la visibilidad de #historyResult
+            if (historyResult && emptyHistoryState) {
+                const observer = new MutationObserver(() => {
+                    const isHidden = historyResult.classList.contains('hidden');
+                    emptyHistoryState.style.display = isHidden ? 'block' : 'none';
+
+                    // Actualizar avatar e iniciales si existe paciente renderizado
+                    const nameContainer = historyResult.querySelector('.patient-info strong');
+                    if (nameContainer && document.getElementById('patientFullName')) {
+                        const nameText = nameContainer.textContent.trim();
+                        document.getElementById('patientFullName').textContent = nameText;
+                        const initials = nameText.split(' ').map(n => n[0]).slice(0, 2).join('');
+                        document.getElementById('patientAvatar').textContent = initials || 'PX';
+                    }
+                });
+
+                observer.observe(historyResult, { attributes: true, attributeFilter: ['class'] });
+            }
+
+            // 3. Filtro interactivo de la línea de tiempo
+            const filterChips = document.querySelectorAll('.filter-chip');
+            filterChips.forEach(chip => {
+                chip.addEventListener('click', () => {
+                    filterChips.forEach(c => c.classList.remove('active'));
+                    chip.classList.add('active');
+
+                    const filter = chip.dataset.filter;
+                    const records = document.querySelectorAll('.medical-record');
+
+                    records.forEach(rec => {
+                        const spec = rec.dataset.specialty || '';
+                        if (filter === 'all' || spec.includes(filter)) {
+                            rec.style.display = '';
+                        } else {
+                            rec.style.display = 'none';
+                        }
+                    });
+                });
+            });
+
+            // 4. Fallback de respuesta visual en submit
+            if (historyForm) {
+                historyForm.addEventListener('submit', () => {
+                    if (dniInput && dniInput.value.trim().length === 8) {
+                        if (btnSpinner && btnIcon && btnText) {
+                            btnSubmit.disabled = true;
+                            btnSpinner.style.display = 'block';
+                            btnIcon.style.display = 'none';
+                            btnText.textContent = 'Buscando...';
+
+                            setTimeout(() => {
+                                btnSubmit.disabled = false;
+                                btnSpinner.style.display = 'none';
+                                btnIcon.style.display = 'inline-block';
+                                btnText.textContent = 'Consultar historial';
+                            }, 800);
+                        }
+                    }
+                });
+            }
+        });
+
+        // Utilidad rápida para testear DNI
+        function quickSearch(dniValue) {
+            const dniInput = document.getElementById('dni');
+            const historyForm = document.getElementById('historyForm');
+            if (dniInput && historyForm) {
+                dniInput.value = dniValue;
+                dniInput.dispatchEvent(new Event('input'));
+                historyForm.dispatchEvent(new Event('submit'));
+            }
+        }
+
+        // Copiar DNI al portapapeles
+        function copyPatientDni() {
+            const dniText = document.getElementById('patientDniText');
+            const val = dniText ? dniText.textContent.trim() : document.getElementById('dni').value;
+            if (val) {
+                const tempInput = document.createElement('input');
+                tempInput.value = val;
+                document.body.appendChild(tempInput);
+                tempInput.select();
+                document.execCommand('copy');
+                document.body.removeChild(tempInput);
+
+                const messageEl = document.getElementById('message');
+                if (messageEl) {
+                    messageEl.className = 'info';
+                    messageEl.textContent = `DNI ${val} copiado al portapapeles.`;
+                    messageEl.style.display = 'flex';
+                    setTimeout(() => { messageEl.style.display = 'none'; }, 2200);
+                }
+            }
+        }

@@ -1,198 +1,297 @@
 <!DOCTYPE html>
-
 <html lang="es">
 
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+    <title>SGC | Cancelar cita médica</title>
 
-<meta charset="UTF-8">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 
-<meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
->
+    <!-- Ionicons -->
+    <script type="module" src="https://unpkg.com/ionicons@8.0.13/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@8.0.13/dist/ionicons/ionicons.js"></script>
 
-<title>SGC | Cancelar cita</title>
-
-<link
-    rel="stylesheet"
-    href="../../css/cita-cancelar.css"
->
-
-
+    <link rel="stylesheet" href="../../css/cita-cancelar.css">
 </head>
 
 <body>
 
-```
-<main class="container">
+    <main class="container">
 
-    <header class="page-header">
-
-        <a href="../dashboard.html">
-            ← Volver al dashboard
-        </a>
-
-        <h1>Cancelar cita</h1>
-
-        <p>
-            Busque la cita que desea cancelar.
-        </p>
-
-    </header>
-
-
-    <section class="search-card">
-
-        <form id="searchForm">
-
-            <div>
-
-                <label for="dni">
-                    DNI del paciente
-                </label>
-
-                <input
-                    type="text"
-                    id="dni"
-                    maxlength="8"
-                    placeholder="Ingrese DNI"
-                    required
-                >
-
+        <!-- Banner institucional -->
+        <header class="hospital-brand-banner">
+            <div class="hospital-identity">
+                <div class="hospital-logo-badge">
+                    <ion-icon name="medical"></ion-icon>
+                </div>
+                <div>
+                    <strong class="hospital-name">Hospital Antonio Lorena · Cusco</strong>
+                    <span class="hospital-sub">Sistema de Gestión Clínica (SGC) · Nivel III-1</span>
+                </div>
             </div>
+            <div class="hospital-system-tag">
+                <ion-icon name="shield-checkmark"></ion-icon>
+                Módulo Asistencial Oficial
+            </div>
+        </header>
 
+        <!-- Cabecera de navegación -->
+        <header class="page-header">
+            <a href="../dashboard.html">
+                <ion-icon name="arrow-back-outline"></ion-icon>
+                ← Volver al dashboard
+            </a>
 
-            <button type="submit">
-                Buscar cita
-            </button>
+            <div class="header-content">
+                <div>
+                    <h1>
+                        <ion-icon name="close-circle-outline"></ion-icon>
+                        Cancelar cita
+                    </h1>
+                    <p>
+                        Busque la cita médica que desea cancelar.
+                    </p>
+                </div>
+                <div class="ecg-line">
+                    <div class="pulse-dot"></div>
+                    <span>Agenda en tiempo real</span>
+                </div>
+            </div>
+        </header>
 
-        </form>
-
-    </section>
-
-
-    <section
-        id="appointmentResult"
-        class="appointment-card hidden"
-    >
-
-        <div class="appointment-header">
-
-            <div>
-
-                <span>
-                    Paciente
-                </span>
-
+        <!-- Sección de búsqueda -->
+        <section class="search-card">
+            <div class="search-card-header">
                 <h2>
-                    Juan Pérez Quispe
+                    <ion-icon name="search-outline"></ion-icon>
+                    Criterio de búsqueda del paciente
                 </h2>
-
-                <p>
-                    DNI: 12345678
-                </p>
-
+                <div class="quick-chips-group">
+                    <span>Prueba rápida:</span>
+                    <button type="button" class="chip-btn" onclick="rellenarDni('12345678')">DNI: 12345678</button>
+                    <button type="button" class="chip-btn" onclick="rellenarDni('87654321')">DNI: 87654321</button>
+                </div>
             </div>
 
-            <span class="status">
-                Programada
-            </span>
+            <form id="searchForm">
+                <div>
+                    <div class="label-row">
+                        <label for="dni">
+                            DNI del paciente
+                        </label>
+                        <span class="counter-badge" id="dniCounter">0 / 8 dígitos</span>
+                    </div>
 
-        </div>
+                    <div class="input-with-icon">
+                        <ion-icon name="id-card-outline"></ion-icon>
+                        <input
+                            type="text"
+                            id="dni"
+                            maxlength="8"
+                            inputmode="numeric"
+                            placeholder="Ingrese DNI"
+                            required
+                        >
+                    </div>
+                </div>
 
+                <button type="submit">
+                    <ion-icon name="search"></ion-icon>
+                    Buscar cita
+                </button>
+            </form>
+        </section>
 
-        <div class="appointment-info">
-
-            <div>
-
-                <span>Fecha</span>
-
-                <strong>
-                    30/09/2026
-                </strong>
-
+        <!-- Estado previo a la consulta -->
+        <div id="emptySearchState" class="empty-placeholder">
+            <div class="empty-icon-wrap">
+                <ion-icon name="calendar-outline"></ion-icon>
             </div>
-
-            <div>
-
-                <span>Hora</span>
-
-                <strong>
-                    08:30
-                </strong>
-
-            </div>
-
-            <div>
-
-                <span>Médico</span>
-
-                <strong>
-                    Dr. Carlos Mendoza
-                </strong>
-
-            </div>
-
-            <div>
-
-                <span>Especialidad</span>
-
-                <strong>
-                    Medicina General
-                </strong>
-
-            </div>
-
-            <div>
-
-                <span>Consultorio</span>
-
-                <strong>
-                    Consultorio 101
-                </strong>
-
-            </div>
-
-        </div>
-
-
-        <div class="warning">
-
-            <strong>
-                ⚠ Atención
-            </strong>
-
+            <h3>Esperando consulta de cita</h3>
             <p>
-                Una vez cancelada la cita, no podrá
-                ser reprogramada.
+                Ingrese el número de DNI del paciente para localizar su cita programada en los consultorios del hospital.
             </p>
-
         </div>
 
+        <!-- Tarjeta de cita encontrada -->
+        <section
+            id="appointmentResult"
+            class="appointment-card hidden"
+        >
+            <div class="appointment-header">
+                <div class="patient-badge-row">
+                    <div class="patient-avatar-circle" id="patientInitials">JP</div>
+                    <div>
+                        <span>Paciente</span>
+                        <h2 id="patientFullName">Juan Pérez Quispe</h2>
+                        <p id="patientDniText">DNI: 12345678</p>
+                    </div>
+                </div>
 
-        <div class="actions">
+                <span class="status">
+                    Programada
+                </span>
+            </div>
 
-            <button
-                type="button"
-                id="cancelAppointment"
-                class="btn-danger"
-            >
-                Cancelar cita
-            </button>
+            <div class="appointment-info">
+                <div>
+                    <span><ion-icon name="calendar-outline"></ion-icon> Fecha</span>
+                    <strong>30/09/2026</strong>
+                </div>
 
+                <div>
+                    <span><ion-icon name="time-outline"></ion-icon> Hora</span>
+                    <strong>08:30</strong>
+                </div>
+
+                <div>
+                    <span><ion-icon name="person-circle-outline"></ion-icon> Médico</span>
+                    <strong>Dr. Carlos Mendoza</strong>
+                </div>
+
+                <div>
+                    <span><ion-icon name="medkit-outline"></ion-icon> Especialidad</span>
+                    <strong>Medicina General</strong>
+                </div>
+
+                <div>
+                    <span><ion-icon name="business-outline"></ion-icon> Consultorio</span>
+                    <strong>Consultorio 101</strong>
+                </div>
+
+                <div>
+                    <span><ion-icon name="file-tray-full-outline"></ion-icon> Modalidad</span>
+                    <strong>Consulta Externa</strong>
+                </div>
+            </div>
+
+            <!-- Advertencia -->
+            <div class="warning">
+                <div class="warning-icon">⚠</div>
+                <div>
+                    <strong>Atención</strong>
+                    <p>
+                        Una vez cancelada la cita, no podrá ser reprogramada directamente. El cupo será liberado en el sistema hospitalario.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Acciones -->
+            <div class="actions">
+                <div class="actions-note">
+                    <ion-icon name="information-circle-outline"></ion-icon>
+                    Confirmación de seguridad requerida antes de aplicar la baja.
+                </div>
+
+                <button
+                    type="button"
+                    id="cancelAppointment"
+                    class="btn-danger"
+                >
+                    <ion-icon name="trash-outline"></ion-icon>
+                    Cancelar cita
+                </button>
+            </div>
+        </section>
+
+        <!-- Mensajes -->
+        <p id="message"></p>
+
+    </main>
+
+    <!-- Modal confirmatorio -->
+    <div class="modal-overlay" id="confirmModal">
+        <div class="modal-box">
+            <div class="modal-danger-icon">
+                <ion-icon name="alert-circle-outline"></ion-icon>
+            </div>
+            <h3>¿Desea cancelar esta cita?</h3>
+            <p>
+                El cupo quedará desasignado en la agenda del consultorio. Esta acción es irrevocable.
+            </p>
+            <div class="modal-actions">
+                <button type="button" class="btn-modal-back" id="btnBack">Regresar</button>
+                <button type="button" class="btn-modal-proceed" id="btnProceed">Sí, cancelar</button>
+            </div>
         </div>
+    </div>
 
-    </section>
+    <!-- Scripts funcionales -->
+    <script src="../../js/supabase.js"></script>
+    <script src="../../js/cita-cancelar.js"></script>
 
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const dniInput = document.getElementById('dni');
+            const dniCounter = document.getElementById('dniCounter');
+            const appointmentResult = document.getElementById('appointmentResult');
+            const emptyState = document.getElementById('emptySearchState');
+            const cancelBtn = document.getElementById('cancelAppointment');
+            const confirmModal = document.getElementById('confirmModal');
+            const btnBack = document.getElementById('btnBack');
+            const btnProceed = document.getElementById('btnProceed');
+            const messageEl = document.getElementById('message');
 
-    <p id="message"></p>
+            // Formateo y contador de DNI
+            if (dniInput && dniCounter) {
+                dniInput.addEventListener('input', (e) => {
+                    e.target.value = e.target.value.replace(/[^0-9]/g, '');
+                    const len = e.target.value.length;
+                    dniCounter.textContent = `${len} / 8 dígitos`;
+                    dniCounter.style.color = len === 8 ? 'var(--primary)' : 'var(--slate-400)';
+                });
+            }
 
-</main>
+            // Ocultar placeholder si el resultado se muestra
+            const observer = new MutationObserver(() => {
+                if (appointmentResult && !appointmentResult.classList.contains('hidden')) {
+                    if (emptyState) emptyState.style.display = 'none';
+                }
+            });
+            if (appointmentResult) {
+                observer.observe(appointmentResult, { attributes: true, attributeFilter: ['class', 'style'] });
+            }
 
-<script src="../../js/supabase.js"></script>
+            // Modal preventivo
+            if (cancelBtn && confirmModal) {
+                cancelBtn.addEventListener('click', () => {
+                    confirmModal.classList.add('active');
+                });
+            }
 
-<script src="../../js/cita-cancelar.js"></script>
+            if (btnBack && confirmModal) {
+                btnBack.addEventListener('click', () => {
+                    confirmModal.classList.remove('active');
+                });
+            }
+
+            if (btnProceed && confirmModal) {
+                btnProceed.addEventListener('click', () => {
+                    confirmModal.classList.remove('active');
+                    if (appointmentResult) appointmentResult.classList.add('hidden');
+                    if (emptyState) emptyState.style.display = 'block';
+                    if (messageEl) {
+                        messageEl.className = 'active error';
+                        messageEl.textContent = 'La cita médica ha sido cancelada exitosamente.';
+                    }
+                });
+            }
+        });
+
+        function rellenarDni(dni) {
+            const input = document.getElementById('dni');
+            if (input) {
+                input.value = dni;
+                input.dispatchEvent(new Event('input'));
+                input.focus();
+            }
+        }
+    </script>
 
 </body>
 
