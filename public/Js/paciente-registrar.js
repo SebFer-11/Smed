@@ -17,6 +17,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const submitIcon = document.getElementById("submitIcon");
     const submitText = document.getElementById("submitText");
 
+    let omitirLimpiezaReset = false;
+
     // ==========================================
     // 2. INICIALIZACIÓN DE UI (FECHA, HORA, CONTADOR DNI)
     // ==========================================
@@ -33,7 +35,10 @@ document.addEventListener("DOMContentLoaded", () => {
         setTimeout(() => {
             inicializarFechaHora();
             actualizarContadorDNI();
-            limpiarMensaje();
+            if (!omitirLimpiezaReset) {
+                limpiarMensaje();
+            }
+            omitirLimpiezaReset = false;
         }, 0);
     });
 
@@ -201,6 +206,7 @@ document.addEventListener("DOMContentLoaded", () => {
             // ------------------------------------------
             // ÉXITO CP-01
             // ------------------------------------------
+            omitirLimpiezaReset = true;
             pacienteForm.reset();
             mostrarMensaje("Paciente registrado correctamente", "success");
 

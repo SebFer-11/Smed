@@ -6,6 +6,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const atencionForm = document.getElementById("atencionForm");
     const dniInput = document.getElementById("dni");
 
+    // Obtener o crear dinámicamente los contenedores de mensajes en pantalla
+    const searchMessageEl = obtenerOCrearContenedorMensaje("searchMessage", buscarPacienteForm);
+    const formMessageEl = obtenerOCrearContenedorMensaje("message", atencionForm);
+
     let pacienteActual = null;
     let citaActual = null;
     let procesandoRegistro = false;
@@ -17,19 +21,28 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
+    // Limpiar mensaje del formulario al presionar "Limpiar campos"
+    if (atencionForm) {
+        atencionForm.addEventListener("reset", () => {
+            ocultarMensaje(formMessageEl);
+        });
+    }
+
     // ==========================================
     // 2. BÚSQUEDA DE PACIENTE Y CITA (RA-01, RA-02, RA-03)
     // ==========================================
     if (buscarPacienteForm) {
         buscarPacienteForm.addEventListener("submit", async (event) => {
             event.preventDefault();
+            ocultarMensaje(searchMessageEl);
+            ocultarMensaje(formMessageEl);
 
             const dni = dniInput ? dniInput.value.trim() : "";
 
             // Validación básica de DNI
             if (!/^\d{8}$/.test(dni)) {
                 limpiarDatosPacienteYCita();
-                alert("Ingrese un DNI válido de 8 dígitos.");
+                mostrarMensaje(searchMessageEl, "Ingrese un DNI válido de 8 dígitos.", "error");
                 if (dniInput) dniInput.focus();
                 return;
             }
@@ -46,8 +59,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 // RA-02: Paciente no registrado
                 if (!Array.isArray(pacientes) || pacientes.length === 0) {
-                    limpiarDatosPacienteYCita(); // Evita mostrar datos residuales de búsquedas previas
-                    alert("No se encontró un paciente con ese DNI");
+                    limpiarDatosPacienteYCita();
+                    mostrarMensaje(searchMessageEl, "No se encontró un paciente con ese DNI", "error");
                     return;
                 }
 
@@ -61,14 +74,13 @@ document.addEventListener("DOMContentLoaded", () => {
                 const tieneCita = await buscarCitaPaciente(paciente.id);
 
                 if (tieneCita) {
-                    alert("Paciente y cita programada encontrados.");
+                    mostrarMensaje(searchMessageEl, "Paciente y cita programada encontrados.", "success");
                 }
-                // Si no tiene cita, buscarCitaPaciente ya mostró el mensaje exacto de RA-03
 
             } catch (error) {
                 console.error("Error al buscar paciente:", error);
                 limpiarDatosPacienteYCita();
-                alert("Ocurrió un error al buscar el paciente.");
+                mostrarMensaje(searchMessageEl, "Ocurrió un error al buscar el paciente.", "error");
             } finally {
                 setEstadoBoton(btnBuscar, false, "Buscar paciente");
             }
@@ -92,7 +104,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 establecerTexto("medico", "No disponible");
                 establecerTexto("especialidad", "No disponible");
 
-                alert("El paciente no tiene una cita programada");
+                mostrarMensaje(searchMessageEl, "El paciente no tiene una cita programada", "warning");
                 return false;
             }
 
@@ -118,7 +130,7 @@ document.addEventListener("DOMContentLoaded", () => {
             establecerTexto("fechaCita", "No disponible");
             establecerTexto("medico", "No disponible");
             establecerTexto("especialidad", "No disponible");
-            alert("No se pudo consultar la cita del paciente.");
+            mostrarMensaje(searchMessageEl, "No se pudo consultar la cita del paciente.", "error");
             return false;
         }
     }
@@ -169,19 +181,20 @@ document.addEventListener("DOMContentLoaded", () => {
     if (atencionForm) {
         atencionForm.addEventListener("submit", async (event) => {
             event.preventDefault();
+            ocultarMensaje(formMessageEl);
 
             if (procesandoRegistro) return;
 
             // RA-05: Validar que exista un paciente seleccionado antes de continuar
             if (!pacienteActual) {
-                alert("Primero debe buscar y seleccionar un paciente");
+                mostrarMensaje(formMessageEl, "Primero debe buscar y seleccionar un paciente", "error");
                 if (dniInput) dniInput.focus();
                 return;
             }
 
             // Validar que exista una cita programada asociada (refuerzo de RA-03)
             if (!citaActual) {
-                alert("El paciente no tiene una cita programada");
+                mostrarMensaje(formMessageEl, "El paciente no tiene una cita programada", "warning");
                 return;
             }
 
@@ -190,8 +203,6 @@ document.addEventListener("DOMContentLoaded", () => {
             const examenFisicoEl = document.getElementById("examenFisico");
             const diagnosticoEl = document.getElementById("diagnostico");
             const tratamientoEl = document.getElementById("tratamiento");
-
-            // Captura opcional de campos adicionales si existen en el HTML
             const examenesAuxEl = document.getElementById("examenesAuxiliares") || document.getElementById("examenes");
             const observacionesEl = document.getElementById("observaciones");
 
@@ -200,14 +211,13 @@ document.addEventListener("DOMContentLoaded", () => {
             const diagnostico = diagnosticoEl ? diagnosticoEl.value.trim() : "";
             const tratamiento = tratamientoEl ? tratamientoEl.value.trim() : "";
 
-            // RA-04: Validación de campos obligatorios (respaldo si el navegador no detuvo el submit)
+            // RA-04: Validación de campos obligatorios
             if (!anamnesis || !examenFisico || !diagnostico || !tratamiento) {
-                // Si el navegador soporta reportValidity() y los campos tienen atributo required, dispara el globo nativo
                 if (typeof atencionForm.reportValidity === "function" && !atencionForm.checkValidity()) {
                     atencionForm.reportValidity();
                     return;
                 }
-                alert("Complete los campos obligatorios de la atención.");
+                mostrarMensaje(formMessageEl, "Complete los campos obligatorios de la atención.", "error");
                 return;
             }
 
@@ -223,7 +233,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 );
 
                 if (Array.isArray(atencionesExistentes) && atencionesExistentes.length > 0) {
-                    alert("Esta cita ya tiene una atención médica registrada.");
+                    mostrarMensaje(formMessageEl, "Esta cita ya tiene una atención médica registrada.", "warning");
                     return;
                 }
 
@@ -251,16 +261,17 @@ document.addEventListener("DOMContentLoaded", () => {
                     { estado: "ATENDIDA" }
                 );
 
-                alert("Atención médica registrada correctamente.");
-
                 // Resetear formulario y limpiar estado global y visual
                 atencionForm.reset();
                 if (dniInput) dniInput.value = "";
                 limpiarDatosPacienteYCita();
+                ocultarMensaje(searchMessageEl);
+
+                mostrarMensaje(formMessageEl, "Atención médica registrada correctamente.", "success");
 
             } catch (error) {
                 console.error("Error al registrar atención:", error);
-                alert("Ocurrió un error al registrar la atención médica.");
+                mostrarMensaje(formMessageEl, "Ocurrió un error al registrar la atención médica.", "error");
             } finally {
                 procesandoRegistro = false;
                 setEstadoBoton(btnRegistrar, false, "Registrar atención");
@@ -269,7 +280,60 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // ==========================================
-    // 5. FUNCIONES AUXILIARES DE UI Y FORMATO
+    // 5. FUNCIONES AUXILIARES DE MENSAJES EN PANTALLA
+    // ==========================================
+    function obtenerOCrearContenedorMensaje(id, formularioPadre) {
+        let el = document.getElementById(id);
+        if (!el && formularioPadre) {
+            el = document.createElement("div");
+            el.id = id;
+            el.className = "inline-alert";
+            el.setAttribute("role", "alert");
+            el.setAttribute("aria-live", "polite");
+            formularioPadre.insertAdjacentElement("afterend", el);
+        }
+        return el;
+    }
+
+    function mostrarMensaje(elemento, texto, tipo = "info") {
+        if (!elemento) return;
+
+        const estilosPorTipo = {
+            success: { bg: "#ecfdf5", color: "#065f46", border: "#a7f3d0", accent: "#059669", icon: "checkmark-circle" },
+            error:   { bg: "#fef2f2", color: "#991b1b", border: "#fecaca", accent: "#dc2626", icon: "alert-circle" },
+            warning: { bg: "#fffbeb", color: "#92400e", border: "#fde68a", accent: "#d97706", icon: "warning" },
+            info:    { bg: "#e0f2fe", color: "#075985", border: "#bae6fd", accent: "#0284c7", icon: "information-circle" }
+        };
+
+        const cfg = estilosPorTipo[tipo] || estilosPorTipo.info;
+
+        elemento.className = `inline-alert active ${tipo}`;
+        elemento.style.display = "flex";
+        elemento.style.alignItems = "center";
+        elemento.style.gap = "10px";
+        elemento.style.marginTop = "16px";
+        elemento.style.padding = "13px 16px";
+        elemento.style.borderRadius = "10px";
+        elemento.style.fontSize = "13.5px";
+        elemento.style.fontWeight = "600";
+        elemento.style.backgroundColor = cfg.bg;
+        elemento.style.color = cfg.color;
+        elemento.style.border = `1px solid ${cfg.border}`;
+        elemento.style.borderLeft = `4px solid ${cfg.accent}`;
+
+        elemento.innerHTML = `<ion-icon name="${cfg.icon}" style="font-size:20px; flex-shrink:0;"></ion-icon><span>${texto}</span>`;
+        elemento.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    }
+
+    function ocultarMensaje(elemento) {
+        if (!elemento) return;
+        elemento.className = "inline-alert";
+        elemento.style.display = "none";
+        elemento.innerHTML = "";
+    }
+
+    // ==========================================
+    // 6. FUNCIONES AUXILIARES DE DATOS Y FORMATO
     // ==========================================
     function renderizarDatosPaciente(paciente) {
         const nombreCompleto = [
@@ -313,7 +377,12 @@ document.addEventListener("DOMContentLoaded", () => {
     function setEstadoBoton(boton, cargando, texto) {
         if (!boton) return;
         boton.disabled = cargando;
-        boton.textContent = texto;
+        const span = boton.querySelector("span");
+        if (span) {
+            span.textContent = texto;
+        } else {
+            boton.textContent = texto;
+        }
     }
 
     function calcularEdad(fechaNacimiento) {
