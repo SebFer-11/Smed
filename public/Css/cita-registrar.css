@@ -1,458 +1,510 @@
-      /* =========================================================
-           SISTEMA DE DISEÑO CLÍNICO UNIFICADO - SGC LORENA
-           ========================================================= */
-        :root {
-            --primary: #0f766e;
-            --primary-dark: #115e59;
-            --primary-light: #f0fdfa;
-            --primary-border: rgba(15, 118, 110, 0.2);
-            --teal-accent: #14b8a6;
-            --medical-blue: #0284c7;
-            --medical-blue-light: #e0f2fe;
-            --medical-blue-dark: #0369a1;
-            --slate-50: #f8fafc;
-            --slate-100: #f1f5f9;
-            --slate-200: #e2e8f0;
-            --slate-300: #cbd5e1;
-            --slate-400: #94a3b8;
-            --slate-500: #64748b;
-            --slate-600: #475569;
-            --slate-700: #334155;
-            --slate-800: #1e293b;
-            --slate-900: #0f172a;
-            --card-radius: 16px;
-            --inner-radius: 12px;
-            --shadow-subtle: 0 4px 20px -2px rgba(15, 23, 42, 0.05);
-            --shadow-card: 0 12px 35px -4px rgba(15, 23, 42, 0.08), 0 4px 12px rgba(15, 118, 110, 0.04);
-            --font-display: 'Plus Jakarta Sans', system-ui, sans-serif;
-            --font-body: 'Inter', system-ui, sans-serif;
-        }
+/* =========================================================
+   SISTEMA DE DISEÑO CLÍNICO UNIFICADO - SGC LORENA
+   ========================================================= */
+:root {
+    --primary: #0f766e;
+    --primary-dark: #115e59;
+    --primary-light: #f0fdfa;
+    --primary-border: rgba(15, 118, 110, 0.22);
+    --teal: #0d9488;
+    --teal-accent: #14b8a6;
+    --medical-blue: #0284c7;
+    --medical-blue-light: #e0f2fe;
+    --slate-50: #f8fafc;
+    --slate-100: #f1f5f9;
+    --slate-200: #e2e8f0;
+    --slate-300: #cbd5e1;
+    --slate-400: #94a3b8;
+    --slate-500: #64748b;
+    --slate-600: #475569;
+    --slate-700: #334155;
+    --slate-800: #1e293b;
+    --slate-900: #0f172a;
+    --card-radius: 16px;
+    --inner-radius: 10px;
+    --shadow-subtle: 0 4px 20px -2px rgba(15, 23, 42, 0.05);
+    --shadow-card: 0 12px 35px -4px rgba(15, 23, 42, 0.07), 0 4px 12px rgba(15, 118, 110, 0.04);
+    --font-display: 'Plus Jakarta Sans', system-ui, sans-serif;
+    --font-body: 'Inter', system-ui, sans-serif;
+}
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
 
-        body {
-            font-family: var(--font-body);
-            background: radial-gradient(circle at 10% 20%, rgba(2, 132, 199, 0.05) 0%, transparent 40%),
-                        radial-gradient(circle at 90% 80%, rgba(15, 118, 110, 0.06) 0%, transparent 40%),
-                        #f1f5f9;
-            color: var(--slate-800);
-            min-height: 100vh;
-            -webkit-font-smoothing: antialiased;
-            padding: 24px 16px 60px;
-        }
+html {
+    scroll-behavior: smooth;
+}
 
-        .container {
-            max-width: 1040px;
-            margin: 0 auto;
-        }
+body {
+    font-family: var(--font-body);
+    background:
+        radial-gradient(circle at 12% 18%, rgba(2, 132, 199, 0.06) 0%, transparent 42%),
+        radial-gradient(circle at 88% 82%, rgba(15, 118, 110, 0.07) 0%, transparent 42%),
+        var(--slate-100);
+    color: var(--slate-800);
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+    padding: 28px 16px 64px;
+}
 
-        /* BANNER INSTITUCIONAL */
-        .hospital-brand-banner {
-            background: #ffffff;
-            border: 1px solid var(--slate-200);
-            border-radius: var(--card-radius);
-            padding: 12px 20px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 24px;
-            box-shadow: var(--shadow-subtle);
-        }
+.container {
+    max-width: 980px;
+    margin: 0 auto;
+}
 
-        .hospital-identity {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
+/* =========================================================
+   ENCABEZADO DE PÁGINA Y NAVEGACIÓN SUPERIOR
+   ========================================================= */
+.page-header {
+    margin-bottom: 22px;
+}
 
-        .hospital-logo-badge {
-            width: 40px;
-            height: 40px;
-            border-radius: 10px;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-            color: #ffffff;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 22px;
-            box-shadow: 0 4px 12px rgba(15, 118, 110, 0.25);
-        }
+.header-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 18px;
+}
 
-        .hospital-name {
-            font-family: var(--font-display);
-            font-weight: 700;
-            font-size: 14px;
-            color: var(--slate-900);
-            display: block;
-            line-height: 1.2;
-        }
+.back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--primary);
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 8px 14px;
+    background: #ffffff;
+    border: 1px solid var(--slate-200);
+    border-radius: 9px;
+    transition: all 0.2s ease;
+    box-shadow: var(--shadow-subtle);
+}
 
-        .hospital-sub {
-            font-size: 11.5px;
-            color: var(--slate-500);
-        }
+.back-link:hover {
+    background: var(--primary-light);
+    border-color: var(--primary-border);
+    color: var(--primary-dark);
+    transform: translateX(-2px);
+}
 
-        .hospital-system-tag {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            background: var(--primary-light);
-            color: var(--primary);
-            border: 1px solid var(--primary-border);
-            padding: 5px 12px;
-            border-radius: 20px;
-            font-size: 11.5px;
-            font-weight: 600;
-        }
+.header-actions-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
 
-        /* HEADER DE LA PÁGINA */
-        .page-header {
-            margin-bottom: 24px;
-        }
+.btn-autofill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 14px;
+    background: #ffffff;
+    color: var(--slate-700);
+    border: 1px solid var(--slate-300);
+    border-radius: 9px;
+    font-family: var(--font-body);
+    font-size: 12.5px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: var(--shadow-subtle);
+}
 
-        .page-header a {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            color: var(--primary);
-            text-decoration: none;
-            font-size: 13px;
-            font-weight: 600;
-            padding: 8px 14px;
-            background: #ffffff;
-            border: 1px solid var(--slate-200);
-            border-radius: 8px;
-            transition: all 0.2s ease;
-            box-shadow: var(--shadow-subtle);
-        }
+.btn-autofill ion-icon {
+    color: #f59e0b;
+    font-size: 15px;
+}
 
-        .page-header a:hover {
-            background: var(--slate-100);
-            color: var(--primary-dark);
-            transform: translateX(-3px);
-        }
+.btn-autofill:hover {
+    background: var(--primary-light);
+    border-color: var(--teal-accent);
+    color: var(--primary-dark);
+    transform: translateY(-1px);
+}
 
-        .header-content {
-            margin-top: 18px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 16px;
-        }
+.hospital-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: #ffffff;
+    border: 1px solid var(--slate-200);
+    border-radius: 999px;
+    padding: 7px 14px;
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--slate-700);
+    box-shadow: var(--shadow-subtle);
+}
 
-        .page-header h1 {
-            font-family: var(--font-display);
-            font-size: 28px;
-            font-weight: 800;
-            color: var(--slate-900);
-            letter-spacing: -0.02em;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
+.hospital-badge .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #10b981;
+    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
+}
 
-        .page-header h1 ion-icon {
-            color: var(--primary);
-            font-size: 32px;
-        }
+.header-title-box h1 {
+    font-family: var(--font-display);
+    font-size: 27px;
+    font-weight: 800;
+    color: var(--slate-900);
+    letter-spacing: -0.02em;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
 
-        .page-header p {
-            margin-top: 6px;
-            color: var(--slate-500);
-            font-size: 14px;
-        }
+.header-title-box h1 ion-icon {
+    font-size: 30px;
+}
 
-        .header-badge-status {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            background: #ffffff;
-            border: 1px solid var(--slate-200);
-            border-radius: 20px;
-            padding: 6px 14px;
-            font-size: 12px;
-            font-weight: 600;
-            color: var(--slate-600);
-            box-shadow: var(--shadow-subtle);
-        }
+.header-title-box p {
+    margin-top: 5px;
+    color: var(--slate-500);
+    font-size: 14px;
+}
 
-        .badge-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: #22c55e;
-            box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.2);
-        }
+/* =========================================================
+   STEPPER DE NAVEGACIÓN RÁPIDA
+   ========================================================= */
+.stepper-nav {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    background: #ffffff;
+    padding: 10px;
+    border-radius: 14px;
+    border: 1px solid var(--slate-200);
+    box-shadow: var(--shadow-subtle);
+    margin-bottom: 22px;
+}
 
-        /* SECCIONES DEL FORMULARIO */
-        .form-section {
-            background: #ffffff;
-            padding: 26px 28px;
-            border-radius: var(--card-radius);
-            border: 1px solid var(--slate-200);
-            box-shadow: var(--shadow-card);
-            margin-bottom: 22px;
-            position: relative;
-            overflow: hidden;
-        }
+.step-link {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 12px;
+    border-radius: 9px;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--slate-600);
+    transition: all 0.2s ease;
+}
 
-        .form-section::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 4px;
-            height: 100%;
-            background: linear-gradient(180deg, var(--primary) 0%, var(--teal-accent) 100%);
-        }
+.step-link .num {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: var(--primary-light);
+    color: var(--primary);
+    border: 1px solid var(--primary-border);
+    font-family: var(--font-display);
+    font-size: 12px;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: all 0.2s ease;
+}
 
-        .section-header {
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 10px;
-            padding-bottom: 12px;
-            border-bottom: 1px solid var(--slate-100);
-        }
+.step-link:hover {
+    background: var(--slate-50);
+    color: var(--primary-dark);
+}
 
-        .section-header h2 {
-            font-family: var(--font-display);
-            font-size: 17px;
-            font-weight: 700;
-            color: var(--slate-800);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
+.step-link:hover .num {
+    background: var(--primary);
+    color: #ffffff;
+}
 
-        .section-header h2 ion-icon {
-            color: var(--primary);
-            font-size: 20px;
-        }
+/* =========================================================
+   TARJETAS / SECCIONES DEL FORMULARIO
+   ========================================================= */
+.form-section {
+    background: #ffffff;
+    padding: 26px 28px;
+    border-radius: var(--card-radius);
+    border: 1px solid var(--slate-200);
+    box-shadow: var(--shadow-card);
+    margin-bottom: 20px;
+    position: relative;
+    overflow: hidden;
+    scroll-margin-top: 20px;
+}
 
-        .section-header p {
-            margin-top: 4px;
-            color: var(--slate-500);
-            font-size: 13px;
-        }
+.form-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    background: linear-gradient(180deg, var(--primary) 0%, var(--teal-accent) 100%);
+}
 
-        .quick-fill-chip {
-            background: var(--slate-100);
-            border: 1px solid var(--slate-300);
-            border-radius: 6px;
-            padding: 3px 10px;
-            font-size: 11.5px;
-            font-weight: 600;
-            color: var(--slate-700);
-            cursor: pointer;
-            transition: all 0.15s ease;
-        }
+.section-header {
+    margin-bottom: 20px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--slate-100);
+}
 
-        .quick-fill-chip:hover {
-            background: var(--primary-light);
-            border-color: var(--teal-accent);
-            color: var(--primary);
-        }
+.section-header h2 {
+    font-family: var(--font-display);
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--slate-900);
+}
 
-        /* FORM GRID & INPUTS */
-        .form-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 18px 22px;
-        }
+.section-header p {
+    margin-top: 3px;
+    color: var(--slate-500);
+    font-size: 13px;
+}
 
-        .form-group {
-            display: flex;
-            flex-direction: column;
-        }
+.section-badge {
+    display: inline-flex;
+    align-items: center;
+    background: var(--primary-light);
+    color: var(--primary);
+    border: 1px solid var(--primary-border);
+    padding: 4px 11px;
+    border-radius: 999px;
+    font-size: 11.5px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+}
 
-        .form-group.full {
-            grid-column: 1 / -1;
-        }
+/* =========================================================
+   GRID E INPUTS
+   ========================================================= */
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 18px 22px;
+}
 
-        .form-group label {
-            margin-bottom: 8px;
-            font-size: 13px;
-            font-weight: 600;
-            color: var(--slate-700);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
 
-        .label-hint {
-            font-size: 11px;
-            color: var(--slate-400);
-            font-weight: normal;
-        }
+.form-group.full {
+    grid-column: 1 / -1;
+}
 
-        .input-wrapper {
-            position: relative;
-            display: flex;
-            align-items: center;
-        }
+.form-group label {
+    margin-bottom: 7px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--slate-700);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
 
-        .input-wrapper ion-icon {
-            position: absolute;
-            left: 14px;
-            color: var(--slate-400);
-            font-size: 19px;
-            pointer-events: none;
-            transition: color 0.2s ease;
-        }
+.label-hint {
+    font-size: 11.5px;
+    color: var(--slate-400);
+    font-weight: 500;
+}
 
-        .form-group input,
-        .form-group select,
-        .form-group textarea {
-            width: 100%;
-            padding: 12px 14px 12px 42px;
-            border: 1.5px solid var(--slate-300);
-            border-radius: 9px;
-            font-family: inherit;
-            font-size: 14px;
-            color: var(--slate-800);
-            background: #ffffff;
-            outline: none;
-            transition: all 0.2s ease;
-        }
+.input-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
 
-        .form-group select {
-            appearance: none;
-            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
-            background-repeat: no-repeat;
-            background-position: right 14px center;
-            background-size: 16px;
-            padding-right: 38px;
-            cursor: pointer;
-        }
+.input-wrap ion-icon {
+    position: absolute;
+    left: 14px;
+    color: var(--slate-400);
+    font-size: 19px;
+    pointer-events: none;
+    transition: color 0.2s ease;
+}
 
-        .form-group textarea {
-            padding: 12px 14px;
-            resize: vertical;
-            min-height: 90px;
-        }
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 11.5px 14px 11.5px 42px;
+    border: 1.5px solid var(--slate-300);
+    border-radius: var(--inner-radius);
+    font-family: inherit;
+    font-size: 14px;
+    color: var(--slate-800);
+    background: #ffffff;
+    outline: none;
+    transition: all 0.2s ease;
+}
 
-        .form-group input:focus,
-        .form-group select:focus,
-        .form-group textarea:focus {
-            border-color: var(--primary);
-            box-shadow: 0 0 0 4px rgba(15, 118, 110, 0.12);
-        }
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+    color: var(--slate-400);
+}
 
-        .input-wrapper:focus-within ion-icon {
-            color: var(--primary);
-        }
+/* Estilo visual para campos autocompletados en solo lectura */
+.form-group input[readonly] {
+    background-color: var(--slate-50);
+    border-color: var(--slate-200);
+    color: var(--slate-700);
+    font-weight: 600;
+    cursor: default;
+}
 
-        /* ACCIONES Y BOTONES */
-        .actions {
-            display: flex;
-            justify-content: flex-end;
-            align-items: center;
-            gap: 12px;
-            padding: 16px 0 24px;
-        }
+.form-group select {
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    background-size: 16px;
+    padding-right: 38px;
+    cursor: pointer;
+}
 
-        .actions button {
-            padding: 12px 24px;
-            border-radius: 9px;
-            font-family: var(--font-display);
-            font-weight: 700;
-            font-size: 14px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-        }
+.form-group textarea {
+    padding: 12px 14px;
+    resize: vertical;
+    min-height: 92px;
+}
 
-        .btn-primary {
-            border: none;
-            background: var(--primary);
-            color: #ffffff;
-            box-shadow: 0 4px 12px rgba(15, 118, 110, 0.2);
-        }
+.form-group input:not([readonly]):focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 4px rgba(15, 118, 110, 0.12);
+}
 
-        .btn-primary:hover {
-            background: var(--primary-dark);
-            transform: translateY(-1px);
-            box-shadow: 0 6px 16px rgba(15, 118, 110, 0.3);
-        }
+.input-wrap:focus-within ion-icon {
+    color: var(--primary);
+}
 
-        .btn-secondary {
-            border: 1.5px solid var(--slate-300);
-            background: #ffffff;
-            color: var(--slate-700);
-        }
+/* =========================================================
+   BOTONES DE ACCIÓN
+   ========================================================= */
+.actions {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 12px;
+    padding-top: 8px;
+}
 
-        .btn-secondary:hover {
-            background: var(--slate-100);
-            color: var(--slate-900);
-            border-color: var(--slate-400);
-        }
+.actions button {
+    padding: 12px 22px;
+    border-radius: var(--inner-radius);
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
 
-        /* MENSAJE DE ESTADO */
-        #message {
-            margin-top: 10px;
-            text-align: right;
-            font-size: 13.5px;
-            font-weight: 600;
-            padding: 10px 16px;
-            border-radius: 8px;
-            display: none;
-        }
+.btn-primary {
+    border: none;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    color: #ffffff;
+    box-shadow: 0 4px 14px rgba(15, 118, 110, 0.24);
+}
 
-        #message.active {
-            display: block;
-            animation: fadeIn 0.25s ease;
-        }
+.btn-primary:hover:not(:disabled) {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 18px rgba(15, 118, 110, 0.32);
+}
 
-        #message.success {
-            background: #ecfdf5;
-            color: #065f46;
-            border: 1px solid #a7f3d0;
-        }
+.btn-primary:disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+}
 
-        #message.error {
-            background: #fef2f2;
-            color: #991b1b;
-            border: 1px solid #fecaca;
-        }
+.btn-secondary {
+    border: 1.5px solid var(--slate-300);
+    background: #ffffff;
+    color: var(--slate-700);
+}
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-4px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+.btn-secondary:hover {
+    background: var(--slate-100);
+    color: var(--slate-900);
+    border-color: var(--slate-400);
+}
 
-        /* RESPONSIVE */
-        @media (max-width: 768px) {
-            .form-grid {
-                grid-template-columns: 1fr;
-            }
+/* =========================================================
+   MENSAJE DE VALIDACIÓN / ESTADO
+   ========================================================= */
+#message {
+    margin-top: 14px;
+    font-size: 13.5px;
+    font-weight: 600;
+    border-radius: var(--inner-radius);
+    transition: all 0.2s ease;
+}
 
-            .form-group.full {
-                grid-column: auto;
-            }
+#message:not(:empty) {
+    padding: 12px 16px;
+    background: #ffffff;
+    border: 1px solid var(--slate-200);
+    box-shadow: var(--shadow-subtle);
+    animation: fadeIn 0.2s ease;
+}
 
-            .actions {
-                flex-direction: column-reverse;
-                width: 100%;
-            }
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-4px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
 
-            .actions button {
-                width: 100%;
-                justify-content: center;
-            }
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+@media (max-width: 768px) {
+    .stepper-nav {
+        grid-template-columns: repeat(2, 1fr);
+    }
 
-            .hospital-brand-banner {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 10px;
-            }
-        }
+    .form-section {
+        padding: 20px 18px;
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .form-group.full {
+        grid-column: auto;
+    }
+
+    .actions {
+        flex-direction: column-reverse;
+        width: 100%;
+    }
+
+    .actions button {
+        width: 100%;
+        justify-content: center;
+    }
+}

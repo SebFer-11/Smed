@@ -1,610 +1,342 @@
-const buscarPacienteForm =
-    document.getElementById("buscarPacienteForm");
+document.addEventListener("DOMContentLoaded", () => {
+    // ==========================================
+    // 1. REFERENCIAS AL DOM Y ESTADO
+    // ==========================================
+    const buscarPacienteForm = document.getElementById("buscarPacienteForm");
+    const atencionForm = document.getElementById("atencionForm");
+    const dniInput = document.getElementById("dni");
 
-const atencionForm =
-    document.getElementById("atencionForm");
+    let pacienteActual = null;
+    let citaActual = null;
+    let procesandoRegistro = false;
 
-// ID del paciente encontrado
-let pacienteActual = null;
+    // Filtro preventivo para el input de DNI (solo números, máximo 8)
+    if (dniInput) {
+        dniInput.addEventListener("input", () => {
+            dniInput.value = dniInput.value.replace(/\D/g, "").slice(0, 8);
+        });
+    }
 
-// Cita que será utilizada para registrar la atención
-let citaActual = null;
+    // ==========================================
+    // 2. BÚSQUEDA DE PACIENTE Y CITA (RA-01, RA-02, RA-03)
+    // ==========================================
+    if (buscarPacienteForm) {
+        buscarPacienteForm.addEventListener("submit", async (event) => {
+            event.preventDefault();
 
+            const dni = dniInput ? dniInput.value.trim() : "";
 
-// ==========================================
-// BUSCAR PACIENTE
-// ==========================================
-
-buscarPacienteForm.addEventListener(
-    "submit",
-    async function (event) {
-
-        event.preventDefault();
-
-        const dni =
-            document.getElementById("dni")
-                .value
-                .trim();
-
-        if (dni === "") {
-            alert("Ingrese el DNI del paciente.");
-            return;
-        }
-
-        try {
-
-            // ==========================================
-            // BUSCAR PACIENTE EN SUPABASE
-            // ==========================================
-
-            const pacientes = await supabaseGet(
-                "pacientes",
-                `?select=*&dni=eq.${dni}`
-            );
-
-            if (
-                !pacientes ||
-                pacientes.length === 0
-            ) {
-
-                pacienteActual = null;
-                citaActual = null;
-
-                alert(
-                    "No se encontró un paciente con ese DNI."
-                );
-
+            // Validación básica de DNI
+            if (!/^\d{8}$/.test(dni)) {
+                limpiarDatosPacienteYCita();
+                alert("Ingrese un DNI válido de 8 dígitos.");
+                if (dniInput) dniInput.focus();
                 return;
             }
 
-            const paciente = pacientes[0];
+            const btnBuscar = buscarPacienteForm.querySelector('button[type="submit"]');
+            setEstadoBoton(btnBuscar, true, "Buscando...");
 
-            // Guardamos el paciente encontrado
-            pacienteActual = paciente;
-
-            // ==========================================
-            // MOSTRAR DATOS DEL PACIENTE
-            // ==========================================
-
-            document.getElementById(
-                "nombrePaciente"
-            ).textContent =
-                `${paciente.nombres} ${paciente.apellido_paterno} ${paciente.apellido_materno || ""}`;
-
-            document.getElementById(
-                "dniPaciente"
-            ).textContent =
-                paciente.dni;
-
-            document.getElementById(
-                "historiaClinica"
-            ).textContent =
-                paciente.historia_clinica ||
-                "No registrada";
-
-            document.getElementById(
-                "edadPaciente"
-            ).textContent =
-                calcularEdad(
-                    paciente.fecha_nacimiento
+            try {
+                // Consultar paciente en Supabase
+                const pacientes = await supabaseGet(
+                    "pacientes",
+                    `?select=*&dni=eq.${encodeURIComponent(dni)}`
                 );
 
-            document.getElementById(
-                "sexoPaciente"
-            ).textContent =
-                paciente.sexo ||
-                "No registrado";
+                // RA-02: Paciente no registrado
+                if (!Array.isArray(pacientes) || pacientes.length === 0) {
+                    limpiarDatosPacienteYCita(); // Evita mostrar datos residuales de búsquedas previas
+                    alert("No se encontró un paciente con ese DNI");
+                    return;
+                }
 
+                const paciente = pacientes[0];
+                pacienteActual = paciente;
 
-            // ==========================================
-            // BUSCAR CITA DEL PACIENTE
-            // ==========================================
+                // Renderizar datos personales del paciente (RA-01)
+                renderizarDatosPaciente(paciente);
 
-            await buscarCitaPaciente(
-                paciente.id
+                // Consultar cita PROGRAMADA más próxima (RA-03)
+                const tieneCita = await buscarCitaPaciente(paciente.id);
+
+                if (tieneCita) {
+                    alert("Paciente y cita programada encontrados.");
+                }
+                // Si no tiene cita, buscarCitaPaciente ya mostró el mensaje exacto de RA-03
+
+            } catch (error) {
+                console.error("Error al buscar paciente:", error);
+                limpiarDatosPacienteYCita();
+                alert("Ocurrió un error al buscar el paciente.");
+            } finally {
+                setEstadoBoton(btnBuscar, false, "Buscar paciente");
+            }
+        });
+    }
+
+    // ==========================================
+    // 3. CONSULTA DE CITA PROGRAMADA (RA-03)
+    // ==========================================
+    async function buscarCitaPaciente(pacienteId) {
+        try {
+            const citas = await supabaseGet(
+                "citas",
+                `?select=*&paciente_id=eq.${encodeURIComponent(pacienteId)}&estado=eq.PROGRAMADA&order=fecha.asc,hora_inicio.asc`
             );
 
-            alert("Paciente encontrado.");
+            // RA-03: Paciente registrado sin citas PROGRAMADA
+            if (!Array.isArray(citas) || citas.length === 0) {
+                citaActual = null;
+                establecerTexto("fechaCita", "No disponible");
+                establecerTexto("medico", "No disponible");
+                establecerTexto("especialidad", "No disponible");
+
+                alert("El paciente no tiene una cita programada");
+                return false;
+            }
+
+            const cita = citas[0];
+            citaActual = cita;
+
+            // Formatear fecha y hora
+            const fechaFormateada = formatearFecha(cita.fecha);
+            const horaFormateada = cita.hora_inicio ? cita.hora_inicio.substring(0, 5) : "";
+            establecerTexto(
+                "fechaCita",
+                horaFormateada ? `${fechaFormateada} - ${horaFormateada}` : fechaFormateada
+            );
+
+            // Obtener datos del profesional y su especialidad
+            await cargarProfesionalYEspecialidad(cita.profesional_id);
+
+            return true;
 
         } catch (error) {
-
-            console.error(
-                "Error al buscar paciente:",
-                error
-            );
-
-            alert(
-                "Ocurrió un error al buscar el paciente."
-            );
+            console.error("Error al buscar cita:", error);
+            citaActual = null;
+            establecerTexto("fechaCita", "No disponible");
+            establecerTexto("medico", "No disponible");
+            establecerTexto("especialidad", "No disponible");
+            alert("No se pudo consultar la cita del paciente.");
+            return false;
         }
     }
-);
 
-
-// ==========================================
-// BUSCAR CITA DEL PACIENTE
-// ==========================================
-
-async function buscarCitaPaciente(
-    pacienteId
-) {
-
-    try {
-
-        /*
-         * Buscamos una cita del paciente que:
-         *
-         * - esté PROGRAMADA
-         * - esté asociada al paciente
-         *
-         * La ordenamos por fecha/hora para obtener
-         * la cita más próxima.
-         */
-
-        const citas = await supabaseGet(
-            "citas",
-            `?select=*&paciente_id=eq.${pacienteId}&estado=eq.PROGRAMADA&order=fecha.asc,hora_inicio.asc`
-        );
-
-        if (
-            !citas ||
-            citas.length === 0
-        ) {
-
-            citaActual = null;
-
-            document.getElementById(
-                "fechaCita"
-            ).textContent =
-                "No hay cita programada";
-
-            document.getElementById(
-                "medico"
-            ).textContent =
-                "No disponible";
-
-            document.getElementById(
-                "especialidad"
-            ).textContent =
-                "No disponible";
-
-            alert(
-                "El paciente no tiene una cita programada."
-            );
-
+    async function cargarProfesionalYEspecialidad(profesionalId) {
+        if (!profesionalId) {
+            establecerTexto("medico", "No disponible");
+            establecerTexto("especialidad", "No disponible");
             return;
         }
 
-        // Tomamos la primera cita disponible
-        const cita = citas[0];
-
-        citaActual = cita;
-
-        // ==========================================
-        // FECHA DE LA CITA
-        // ==========================================
-
-        const fechaCita =
-            formatearFecha(
-                cita.fecha
-            );
-
-        const horaCita =
-            cita.hora_inicio
-                ? cita.hora_inicio.substring(0, 5)
-                : "";
-
-        document.getElementById(
-            "fechaCita"
-        ).textContent =
-            `${fechaCita} - ${horaCita}`;
-
-
-        // ==========================================
-        // BUSCAR PROFESIONAL
-        // ==========================================
-
-        if (cita.profesional_id) {
-
-            const profesionales =
-                await supabaseGet(
-                    "profesionales",
-                    `?select=*&id=eq.${cita.profesional_id}`
-                );
-
-            if (
-                profesionales &&
-                profesionales.length > 0
-            ) {
-
-                const profesional =
-                    profesionales[0];
-
-                document.getElementById(
-                    "medico"
-                ).textContent =
-                    `${profesional.nombres} ${profesional.apellidos}`;
-
-
-                // ==========================================
-                // BUSCAR ESPECIALIDAD
-                // ==========================================
-
-                if (
-                    profesional.especialidad_id
-                ) {
-
-                    const especialidades =
-                        await supabaseGet(
-                            "especialidades",
-                            `?select=*&id=eq.${profesional.especialidad_id}`
-                        );
-
-                    if (
-                        especialidades &&
-                        especialidades.length > 0
-                    ) {
-
-                        document.getElementById(
-                            "especialidad"
-                        ).textContent =
-                            especialidades[0].nombre;
-
-                    } else {
-
-                        document.getElementById(
-                            "especialidad"
-                        ).textContent =
-                            "No registrada";
-                    }
-
-                } else {
-
-                    document.getElementById(
-                        "especialidad"
-                    ).textContent =
-                        "No registrada";
-                }
-
-            } else {
-
-                document.getElementById(
-                    "medico"
-                ).textContent =
-                    "No registrado";
-
-                document.getElementById(
-                    "especialidad"
-                ).textContent =
-                    "No registrada";
-            }
-
-        } else {
-
-            document.getElementById(
-                "medico"
-            ).textContent =
-                "No registrado";
-
-            document.getElementById(
-                "especialidad"
-            ).textContent =
-                "No registrada";
-        }
-
-    } catch (error) {
-
-        console.error(
-            "Error al buscar cita:",
-            error
+        const profesionales = await supabaseGet(
+            "profesionales",
+            `?select=*&id=eq.${encodeURIComponent(profesionalId)}`
         );
 
+        if (!Array.isArray(profesionales) || profesionales.length === 0) {
+            establecerTexto("medico", "No disponible");
+            establecerTexto("especialidad", "No disponible");
+            return;
+        }
+
+        const profesional = profesionales[0];
+        const nombreMedico = `${profesional.nombres || ""} ${profesional.apellidos || ""}`.trim();
+        establecerTexto("medico", nombreMedico || "No disponible");
+
+        if (!profesional.especialidad_id) {
+            establecerTexto("especialidad", "No disponible");
+            return;
+        }
+
+        const especialidades = await supabaseGet(
+            "especialidades",
+            `?select=*&id=eq.${encodeURIComponent(profesional.especialidad_id)}`
+        );
+
+        const nombreEspecialidad =
+            Array.isArray(especialidades) && especialidades.length > 0
+                ? especialidades[0].nombre
+                : "No disponible";
+
+        establecerTexto("especialidad", nombreEspecialidad);
+    }
+
+    // ==========================================
+    // 4. REGISTRO DE ATENCIÓN MÉDICA (RA-04, RA-05)
+    // ==========================================
+    if (atencionForm) {
+        atencionForm.addEventListener("submit", async (event) => {
+            event.preventDefault();
+
+            if (procesandoRegistro) return;
+
+            // RA-05: Validar que exista un paciente seleccionado antes de continuar
+            if (!pacienteActual) {
+                alert("Primero debe buscar y seleccionar un paciente");
+                if (dniInput) dniInput.focus();
+                return;
+            }
+
+            // Validar que exista una cita programada asociada (refuerzo de RA-03)
+            if (!citaActual) {
+                alert("El paciente no tiene una cita programada");
+                return;
+            }
+
+            // Obtener campos clínicos
+            const anamnesisEl = document.getElementById("anamnesis");
+            const examenFisicoEl = document.getElementById("examenFisico");
+            const diagnosticoEl = document.getElementById("diagnostico");
+            const tratamientoEl = document.getElementById("tratamiento");
+
+            // Captura opcional de campos adicionales si existen en el HTML
+            const examenesAuxEl = document.getElementById("examenesAuxiliares") || document.getElementById("examenes");
+            const observacionesEl = document.getElementById("observaciones");
+
+            const anamnesis = anamnesisEl ? anamnesisEl.value.trim() : "";
+            const examenFisico = examenFisicoEl ? examenFisicoEl.value.trim() : "";
+            const diagnostico = diagnosticoEl ? diagnosticoEl.value.trim() : "";
+            const tratamiento = tratamientoEl ? tratamientoEl.value.trim() : "";
+
+            // RA-04: Validación de campos obligatorios (respaldo si el navegador no detuvo el submit)
+            if (!anamnesis || !examenFisico || !diagnostico || !tratamiento) {
+                // Si el navegador soporta reportValidity() y los campos tienen atributo required, dispara el globo nativo
+                if (typeof atencionForm.reportValidity === "function" && !atencionForm.checkValidity()) {
+                    atencionForm.reportValidity();
+                    return;
+                }
+                alert("Complete los campos obligatorios de la atención.");
+                return;
+            }
+
+            const btnRegistrar = atencionForm.querySelector('button[type="submit"]');
+            procesandoRegistro = true;
+            setEstadoBoton(btnRegistrar, true, "Registrando...");
+
+            try {
+                // Evitar duplicidad de atención para la misma cita
+                const atencionesExistentes = await supabaseGet(
+                    "atenciones",
+                    `?select=id&cita_id=eq.${encodeURIComponent(citaActual.id)}`
+                );
+
+                if (Array.isArray(atencionesExistentes) && atencionesExistentes.length > 0) {
+                    alert("Esta cita ya tiene una atención médica registrada.");
+                    return;
+                }
+
+                // Construir payload para Supabase
+                const nuevaAtencion = {
+                    cita_id: citaActual.id,
+                    paciente_id: pacienteActual.id,
+                    profesional_id: citaActual.profesional_id,
+                    fecha_hora: new Date().toISOString(),
+                    anamnesis,
+                    examen_fisico: examenFisico,
+                    examenes_auxiliares: examenesAuxEl ? examenesAuxEl.value.trim() : "",
+                    diagnostico,
+                    tratamiento,
+                    observaciones: observacionesEl ? observacionesEl.value.trim() : "",
+                    usuario_registro_id: null
+                };
+
+                await supabasePost("atenciones", nuevaAtencion);
+
+                // Actualizar estado de la cita a ATENDIDA
+                await supabasePatch(
+                    "citas",
+                    `?id=eq.${encodeURIComponent(citaActual.id)}`,
+                    { estado: "ATENDIDA" }
+                );
+
+                alert("Atención médica registrada correctamente.");
+
+                // Resetear formulario y limpiar estado global y visual
+                atencionForm.reset();
+                if (dniInput) dniInput.value = "";
+                limpiarDatosPacienteYCita();
+
+            } catch (error) {
+                console.error("Error al registrar atención:", error);
+                alert("Ocurrió un error al registrar la atención médica.");
+            } finally {
+                procesandoRegistro = false;
+                setEstadoBoton(btnRegistrar, false, "Registrar atención");
+            }
+        });
+    }
+
+    // ==========================================
+    // 5. FUNCIONES AUXILIARES DE UI Y FORMATO
+    // ==========================================
+    function renderizarDatosPaciente(paciente) {
+        const nombreCompleto = [
+            paciente.nombres,
+            paciente.apellido_paterno,
+            paciente.apellido_materno
+        ].filter(Boolean).join(" ").trim();
+
+        establecerTexto("nombrePaciente", nombreCompleto || "No registrado");
+        establecerTexto("dniPaciente", paciente.dni || "No registrado");
+        establecerTexto("historiaClinica", paciente.historia_clinica || "No registrada");
+        establecerTexto("edadPaciente", calcularEdad(paciente.fecha_nacimiento));
+        establecerTexto("sexoPaciente", paciente.sexo || "No registrado");
+    }
+
+    function limpiarDatosPacienteYCita() {
+        pacienteActual = null;
         citaActual = null;
 
-        alert(
-            "No se pudo consultar la cita del paciente."
-        );
+        const camposLimpiar = [
+            "nombrePaciente",
+            "dniPaciente",
+            "historiaClinica",
+            "edadPaciente",
+            "sexoPaciente",
+            "fechaCita",
+            "medico",
+            "especialidad"
+        ];
+
+        camposLimpiar.forEach((id) => establecerTexto(id, "-"));
     }
-}
 
-
-// ==========================================
-// REGISTRAR ATENCIÓN
-// ==========================================
-
-atencionForm.addEventListener(
-    "submit",
-    async function (event) {
-
-        event.preventDefault();
-
-        // ==========================================
-        // VERIFICAR PACIENTE
-        // ==========================================
-
-        if (!pacienteActual) {
-
-            alert(
-                "Primero debe buscar y seleccionar un paciente."
-            );
-
-            return;
-        }
-
-        // ==========================================
-        // VERIFICAR CITA
-        // ==========================================
-
-        if (!citaActual) {
-
-            alert(
-                "El paciente no tiene una cita válida para registrar la atención."
-            );
-
-            return;
-        }
-
-
-        // ==========================================
-        // OBTENER DATOS DEL FORMULARIO
-        // ==========================================
-
-        const anamnesis =
-            document.getElementById(
-                "anamnesis"
-            ).value.trim();
-
-        const examenFisico =
-            document.getElementById(
-                "examenFisico"
-            ).value.trim();
-
-        const diagnostico =
-            document.getElementById(
-                "diagnostico"
-            ).value.trim();
-
-        const tratamiento =
-            document.getElementById(
-                "tratamiento"
-            ).value.trim();
-
-
-        // ==========================================
-        // CAMPOS OBLIGATORIOS
-        // ==========================================
-
-        if (
-            anamnesis === "" ||
-            examenFisico === "" ||
-            diagnostico === "" ||
-            tratamiento === ""
-        ) {
-
-            alert(
-                "Complete los campos obligatorios de la atención."
-            );
-
-            return;
-        }
-
-
-        try {
-
-            // ==========================================
-            // VERIFICAR QUE NO EXISTA ATENCIÓN
-            // ==========================================
-
-            const atencionesExistentes =
-                await supabaseGet(
-                    "atenciones",
-                    `?select=id&cita_id=eq.${citaActual.id}`
-                );
-
-            if (
-                atencionesExistentes &&
-                atencionesExistentes.length > 0
-            ) {
-
-                alert(
-                    "Esta cita ya tiene una atención médica registrada."
-                );
-
-                return;
-            }
-
-
-            // ==========================================
-            // REGISTRAR ATENCIÓN
-            // ==========================================
-
-            const nuevaAtencion = {
-
-                cita_id:
-                    citaActual.id,
-
-                paciente_id:
-                    pacienteActual.id,
-
-                profesional_id:
-                    citaActual.profesional_id,
-
-                fecha_hora:
-                    new Date().toISOString(),
-
-                anamnesis:
-                    anamnesis,
-
-                examen_fisico:
-                    examenFisico,
-
-                examenes_auxiliares:
-                    "",
-
-                diagnostico:
-                    diagnostico,
-
-                tratamiento:
-                    tratamiento,
-
-                observaciones:
-                    "",
-
-                usuario_registro_id:
-                    null
-            };
-
-
-            const resultado =
-                await supabasePost(
-                    "atenciones",
-                    nuevaAtencion
-                );
-
-
-            // ==========================================
-            // ACTUALIZAR ESTADO DE LA CITA
-            // ==========================================
-
-            await supabasePatch(
-                "citas",
-                `?id=eq.${citaActual.id}`,
-                {
-                    estado: "ATENDIDA"
-                }
-            );
-
-
-            console.log(
-                "Atención registrada:",
-                resultado
-            );
-
-
-            alert(
-                "Atención médica registrada correctamente."
-            );
-
-
-            // ==========================================
-            // LIMPIAR FORMULARIO
-            // ==========================================
-
-            atencionForm.reset();
-
-            pacienteActual = null;
-            citaActual = null;
-
-
-            // Limpiar información visual
-
-            document.getElementById(
-                "nombrePaciente"
-            ).textContent = "";
-
-            document.getElementById(
-                "dniPaciente"
-            ).textContent = "";
-
-            document.getElementById(
-                "historiaClinica"
-            ).textContent = "";
-
-            document.getElementById(
-                "edadPaciente"
-            ).textContent = "";
-
-            document.getElementById(
-                "sexoPaciente"
-            ).textContent = "";
-
-            document.getElementById(
-                "fechaCita"
-            ).textContent = "";
-
-            document.getElementById(
-                "medico"
-            ).textContent = "";
-
-            document.getElementById(
-                "especialidad"
-            ).textContent = "";
-
-
-        } catch (error) {
-
-            console.error(
-                "Error al registrar atención:",
-                error
-            );
-
-            alert(
-                "Ocurrió un error al registrar la atención médica."
-            );
+    function establecerTexto(id, valor) {
+        const elemento = document.getElementById(id);
+        if (elemento) {
+            elemento.textContent = valor;
         }
     }
-);
 
-
-// ==========================================
-// CALCULAR EDAD
-// ==========================================
-
-function calcularEdad(
-    fechaNacimiento
-) {
-
-    if (!fechaNacimiento) {
-        return "No registrada";
+    function setEstadoBoton(boton, cargando, texto) {
+        if (!boton) return;
+        boton.disabled = cargando;
+        boton.textContent = texto;
     }
 
-    const nacimiento =
-        new Date(fechaNacimiento);
+    function calcularEdad(fechaNacimiento) {
+        if (!fechaNacimiento) return "No registrada";
 
-    const hoy =
-        new Date();
+        const nacimiento = new Date(fechaNacimiento);
+        if (isNaN(nacimiento.getTime())) return "No registrada";
 
-    let edad =
-        hoy.getFullYear() -
-        nacimiento.getFullYear();
+        const hoy = new Date();
+        let edad = hoy.getFullYear() - nacimiento.getFullYear();
+        const mes = hoy.getMonth() - nacimiento.getMonth();
 
-    const mes =
-        hoy.getMonth() -
-        nacimiento.getMonth();
+        if (mes < 0 || (mes === 0 && hoy.getDate() < nacimiento.getDate())) {
+            edad--;
+        }
 
-    if (
-        mes < 0 ||
-        (
-            mes === 0 &&
-            hoy.getDate() < nacimiento.getDate()
-        )
-    ) {
-
-        edad--;
+        return `${edad} años`;
     }
 
-    return `${edad} años`;
-}
-
-
-// ==========================================
-// FORMATEAR FECHA
-// ==========================================
-
-function formatearFecha(
-    fecha
-) {
-
-    if (!fecha) {
-        return "Fecha no registrada";
+    function formatearFecha(fecha) {
+        if (!fecha) return "Fecha no registrada";
+        const partes = fecha.split("-");
+        if (partes.length !== 3) return fecha;
+        return `${partes[2]}/${partes[1]}/${partes[0]}`;
     }
-
-    const partes =
-        fecha.split("-");
-
-    if (partes.length !== 3) {
-        return fecha;
-    }
-
-    return `${partes[2]}/${partes[1]}/${partes[0]}`;
-}
+});

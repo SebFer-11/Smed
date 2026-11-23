@@ -1,221 +1,211 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SGC | Consultar Historia Clínica - Hospital Antonio Lorena</title>
 
-    <title>Consultar Atención Médica</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <!-- Ionicons -->
+    <script type="module" src="https://unpkg.com/ionicons@8.0.13/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@8.0.13/dist/ionicons/ionicons.js"></script>
 
     <link rel="stylesheet" href="../../css/atencion-consultar.css">
-
 </head>
 
 <body>
 
-    <header class="header">
+    <div class="page-wrapper">
 
-        <div>
-            <h1>Historia Clínica</h1>
-            <p>Consulta de atenciones médicas</p>
+        <!-- Banner institucional -->
+        <div class="hospital-brand-banner">
+            <div class="hospital-identity">
+                <div class="hospital-logo-badge">
+                    <ion-icon name="medical"></ion-icon>
+                </div>
+                <div>
+                    <strong class="hospital-name">Hospital Antonio Lorena · Cusco</strong>
+                    <span class="hospital-sub">Sistema de Gestión Clínica (SGC) · Nivel III-1</span>
+                </div>
+            </div>
+            <div class="hospital-system-tag">
+                <ion-icon name="shield-checkmark"></ion-icon>
+                Archivo Clínico Digital
+            </div>
         </div>
 
-        <a href="../dashboard.html" class="btn-volver">
-            Volver al inicio
-        </a>
-
-    </header>
-
-
-    <main class="container">
-
-        <!-- BUSCAR PACIENTE -->
-
-        <section class="card">
-
-            <h2>Buscar paciente</h2>
-
-            <form id="buscarForm" class="search-form">
-
-                <div class="form-group">
-
-                    <label for="dni">
-                        DNI del paciente
-                    </label>
-
-                    <input
-                        type="text"
-                        id="dni"
-                        maxlength="8"
-                        placeholder="Ingrese DNI"
-                        required
-                    >
-
-                </div>
-
-                <button
-                    type="submit"
-                    class="btn-primary"
-                >
-                    Consultar
-                </button>
-
-            </form>
-
-        </section>
-
-
-        <!-- DATOS PACIENTE -->
-
-        <section class="card">
-
-            <h2>Datos del paciente</h2>
-
-            <div class="patient-info">
-
-                <div>
-                    <span>Paciente</span>
-                    <strong id="nombrePaciente">-</strong>
-                </div>
-
-                <div>
-                    <span>DNI</span>
-                    <strong id="dniPaciente">-</strong>
-                </div>
-
-                <div>
-                    <span>Historia clínica</span>
-                    <strong id="historiaClinica">-</strong>
-                </div>
-
-                <div>
-                    <span>Edad</span>
-                    <strong id="edadPaciente">-</strong>
-                </div>
-
+        <!-- Cabecera de módulo -->
+        <header class="header">
+            <div class="header-title">
+                <h1>
+                    <ion-icon name="folder-open-outline"></ion-icon>
+                    Historia Clínica
+                </h1>
+                <p>Consulta de antecedentes y registro histórico de atenciones médicas</p>
             </div>
 
-        </section>
+            <a href="../dashboard.html" class="btn-volver">
+                <ion-icon name="arrow-back-outline"></ion-icon>
+                <span>Volver al inicio</span>
+            </a>
+        </header>
 
+        <main class="container">
 
-        <!-- HISTORIAL -->
-
-        <section class="card">
-
-            <h2>Historial de atenciones</h2>
-
-            <div id="historial">
-
-                <p class="empty">
-                    Busque un paciente para visualizar
-                    su historial médico.
-                </p>
-
-            </div>
-
-        </section>
-
-
-        <!-- DETALLE -->
-
-        <section
-            class="card"
-            id="detalleSection"
-            style="display: none;"
-        >
-
-            <h2>Detalle de atención</h2>
-
-            <div class="detalle">
-
-                <div class="detalle-item">
-
-                    <h3>Fecha</h3>
-
-                    <p id="detalleFecha">-</p>
-
+            <!-- 1. BUSCAR PACIENTE -->
+            <section class="card card-accent-teal">
+                <div class="card-header-row">
+                    <h2>
+                        <ion-icon name="search-circle-outline"></ion-icon>
+                        1. Buscar paciente
+                    </h2>
+                    <span class="step-badge">Identificación</span>
                 </div>
 
+                <form id="buscarForm" class="search-form" novalidate>
+                    <div class="form-group">
+                        <label for="dni">DNI del paciente</label>
+                        <div class="input-with-icon">
+                            <ion-icon name="id-card-outline"></ion-icon>
+                            <input
+                                type="text"
+                                id="dni"
+                                name="dni"
+                                maxlength="8"
+                                inputmode="numeric"
+                                placeholder="Ingrese los 8 dígitos del DNI"
+                                required
+                            >
+                        </div>
+                    </div>
 
-                <div class="detalle-item">
+                    <button type="submit" class="btn-primary">
+                        <ion-icon name="search-outline"></ion-icon>
+                        <span>Consultar</span>
+                    </button>
+                </form>
 
-                    <h3>Médico</h3>
+                <!-- Banner integrado para mensajes de búsqueda (CP-CA-01, CP-CA-02, CP-CA-03) -->
+                <div id="searchMessage" class="inline-alert" role="alert" aria-live="polite"></div>
+            </section>
 
-                    <p id="detalleMedico">-</p>
-
+            <!-- 2. DATOS DEL PACIENTE -->
+            <section class="card card-accent-blue">
+                <div class="card-header-row">
+                    <h2>
+                        <ion-icon name="person-circle-outline"></ion-icon>
+                        2. Datos del paciente
+                    </h2>
+                    <span class="step-badge badge-blue">Filiación</span>
                 </div>
 
+                <div class="patient-info">
+                    <div class="info-item info-highlight">
+                        <span><ion-icon name="person-outline"></ion-icon> Paciente</span>
+                        <strong id="nombrePaciente">-</strong>
+                    </div>
 
-                <div class="detalle-item">
+                    <div class="info-item">
+                        <span><ion-icon name="finger-print-outline"></ion-icon> DNI</span>
+                        <strong id="dniPaciente">-</strong>
+                    </div>
 
-                    <h3>Especialidad</h3>
+                    <div class="info-item">
+                        <span><ion-icon name="folder-outline"></ion-icon> Historia clínica</span>
+                        <strong id="historiaClinica">-</strong>
+                    </div>
 
-                    <p id="detalleEspecialidad">-</p>
+                    <div class="info-item">
+                        <span><ion-icon name="hourglass-outline"></ion-icon> Edad</span>
+                        <strong id="edadPaciente">-</strong>
+                    </div>
+                </div>
+            </section>
 
+            <!-- 3. HISTORIAL DE ATENCIONES -->
+            <section class="card card-accent-emerald">
+                <div class="card-header-row">
+                    <h2>
+                        <ion-icon name="time-outline"></ion-icon>
+                        3. Historial de atenciones
+                    </h2>
+                    <span class="step-badge badge-emerald" id="contadorAtenciones">0 registros</span>
                 </div>
 
+                <div id="historial">
+                    <div class="empty-state-box">
+                        <ion-icon name="document-text-outline"></ion-icon>
+                        <p class="empty">Busque un paciente para visualizar su historial médico.</p>
+                    </div>
+                </div>
+            </section>
 
-                <div class="detalle-item">
-
-                    <h3>Anamnesis</h3>
-
-                    <p id="detalleAnamnesis">-</p>
-
+            <!-- 4. DETALLE DE ATENCIÓN -->
+            <section class="card card-accent-amber" id="detalleSection" style="display: none;">
+                <div class="card-header-row">
+                    <h2>
+                        <ion-icon name="clipboard-outline"></ion-icon>
+                        4. Detalle de atención médica
+                    </h2>
+                    <span class="step-badge badge-amber">Expediente Clínico</span>
                 </div>
 
+                <div class="detalle">
+                    <div class="detalle-item">
+                        <h3><ion-icon name="calendar-outline"></ion-icon> Fecha</h3>
+                        <p id="detalleFecha">-</p>
+                    </div>
 
-                <div class="detalle-item">
+                    <div class="detalle-item">
+                        <h3><ion-icon name="medkit-outline"></ion-icon> Médico</h3>
+                        <p id="detalleMedico">-</p>
+                    </div>
 
-                    <h3>Examen físico</h3>
+                    <div class="detalle-item">
+                        <h3><ion-icon name="pulse-outline"></ion-icon> Especialidad</h3>
+                        <p id="detalleEspecialidad">-</p>
+                    </div>
 
-                    <p id="detalleExamen">-</p>
+                    <div class="detalle-item full-span">
+                        <h3><ion-icon name="chatbubbles-outline"></ion-icon> Anamnesis</h3>
+                        <p id="detalleAnamnesis">-</p>
+                    </div>
 
+                    <div class="detalle-item">
+                        <h3><ion-icon name="fitness-outline"></ion-icon> Examen físico</h3>
+                        <p id="detalleExamen">-</p>
+                    </div>
+
+                    <div class="detalle-item">
+                        <h3><ion-icon name="analytics-outline"></ion-icon> Exámenes auxiliares</h3>
+                        <p id="detalleAuxiliares">-</p>
+                    </div>
+
+                    <div class="detalle-item">
+                        <h3><ion-icon name="alert-circle-outline"></ion-icon> Diagnóstico</h3>
+                        <p id="detalleDiagnostico">-</p>
+                    </div>
+
+                    <div class="detalle-item">
+                        <h3><ion-icon name="flask-outline"></ion-icon> Tratamiento</h3>
+                        <p id="detalleTratamiento">-</p>
+                    </div>
+
+                    <div class="detalle-item full-span">
+                        <h3><ion-icon name="information-circle-outline"></ion-icon> Observaciones</h3>
+                        <p id="detalleObservaciones">-</p>
+                    </div>
                 </div>
+            </section>
 
-
-                <div class="detalle-item">
-
-                    <h3>Exámenes auxiliares</h3>
-
-                    <p id="detalleAuxiliares">-</p>
-
-                </div>
-
-
-                <div class="detalle-item">
-
-                    <h3>Diagnóstico</h3>
-
-                    <p id="detalleDiagnostico">-</p>
-
-                </div>
-
-
-                <div class="detalle-item">
-
-                    <h3>Tratamiento</h3>
-
-                    <p id="detalleTratamiento">-</p>
-
-                </div>
-
-
-                <div class="detalle-item">
-
-                    <h3>Observaciones</h3>
-
-                    <p id="detalleObservaciones">-</p>
-
-                </div>
-
-            </div>
-
-        </section>
-
-    </main>
+        </main>
+    </div>
 
     <script src="../../js/supabase.js"></script>
-
     <script src="../../js/atencion-consultar.js"></script>
 
 </body>

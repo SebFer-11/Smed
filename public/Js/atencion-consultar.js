@@ -1,340 +1,296 @@
-const buscarForm = document.getElementById("buscarForm");
-const historial = document.getElementById("historial");
-const detalleSection = document.getElementById("detalleSection");
+document.addEventListener("DOMContentLoaded", () => {
+    // ==========================================
+    // 1. REFERENCIAS AL DOM
+    // ==========================================
+    const buscarForm = document.getElementById("buscarForm");
+    const dniInput = document.getElementById("dni");
+    const searchMessageEl = document.getElementById("searchMessage");
+    const historialEl = document.getElementById("historial");
+    const contadorAtencionesEl = document.getElementById("contadorAtenciones");
+    const detalleSection = document.getElementById("detalleSection");
 
-// ==========================================
-// CALCULAR EDAD
-// ==========================================
-
-function calcularEdad(fechaNacimiento) {
-    if (!fechaNacimiento) {
-        return "No registrada";
+    // Filtro numérico en tiempo real para el DNI
+    if (dniInput) {
+        dniInput.addEventListener("input", () => {
+            dniInput.value = dniInput.value.replace(/\D/g, "").slice(0, 8);
+        });
     }
 
-    const nacimiento = new Date(fechaNacimiento);
-    const hoy = new Date();
+    // ==========================================
+    // 2. BUSCAR PACIENTE Y CONSULTAR HISTORIAL
+    // ==========================================
+    if (buscarForm) {
+        buscarForm.addEventListener("submit", async (event) => {
+            event.preventDefault();
+            ocultarMensaje();
 
-    let edad =
-        hoy.getFullYear() -
-        nacimiento.getFullYear();
+            const dni = dniInput ? dniInput.value.trim() : "";
 
-    const mes =
-        hoy.getMonth() -
-        nacimiento.getMonth();
-
-    if (
-        mes < 0 ||
-        (
-            mes === 0 &&
-            hoy.getDate() < nacimiento.getDate()
-        )
-    ) {
-        edad--;
-    }
-
-    return `${edad} años`;
-}
-
-// ==========================================
-// BUSCAR PACIENTE
-// ==========================================
-
-buscarForm.addEventListener("submit", async function (event) {
-
-    event.preventDefault();
-
-    const dni = document
-        .getElementById("dni")
-        .value
-        .trim();
-
-    if (dni === "") {
-        alert("Ingrese el DNI.");
-        return;
-    }
-
-    try {
-
-        // ==========================================
-        // BUSCAR PACIENTE EN SUPABASE
-        // ==========================================
-
-        const pacientes = await supabaseGet(
-            "pacientes",
-            `?select=*&dni=eq.${dni}`
-        );
-
-        if (!pacientes || pacientes.length === 0) {
-
-            alert("No se encontró el paciente.");
-
-            historial.innerHTML = `
-                <p class="empty">
-                    No se encontraron atenciones para este paciente.
-                </p>
-            `;
-
-            detalleSection.style.display = "none";
-
-            return;
-        }
-
-        const paciente = pacientes[0];
-
-        // ==========================================
-        // MOSTRAR DATOS DEL PACIENTE
-        // ==========================================
-
-        document.getElementById("nombrePaciente").textContent =
-            `${paciente.nombres} ${paciente.apellido_paterno} ${paciente.apellido_materno || ""}`;
-
-        document.getElementById("dniPaciente").textContent =
-            paciente.dni;
-
-        document.getElementById("historiaClinica").textContent =
-            paciente.historia_clinica || "No registrada";
-
-        document.getElementById("edadPaciente").textContent =
-            calcularEdad(paciente.fecha_nacimiento);
-
-        // ==========================================
-        // BUSCAR HISTORIAL
-        // ==========================================
-
-        await mostrarHistorial(paciente.id);
-
-    } catch (error) {
-
-        console.error("Error al buscar paciente:", error);
-
-        alert(
-            "Ocurrió un error al consultar el paciente."
-        );
-    }
-});
-
-// ==========================================
-// MOSTRAR HISTORIAL
-// ==========================================
-
-async function mostrarHistorial(pacienteId) {
-
-    try {
-
-        const resultados = await supabaseGet(
-            "atenciones",
-            `?select=*&paciente_id=eq.${pacienteId}&order=fecha_hora.desc`
-        );
-
-        if (!resultados || resultados.length === 0) {
-
-            historial.innerHTML = `
-                <p class="empty">
-                    El paciente no tiene atenciones registradas.
-                </p>
-            `;
-
-            detalleSection.style.display = "none";
-
-            return;
-        }
-
-        historial.innerHTML = "";
-
-        for (const atencion of resultados) {
-
-            // ==========================================
-            // BUSCAR MÉDICO
-            // ==========================================
-
-            let medico = "No registrado";
-            let especialidad = "No registrada";
-
-            if (atencion.profesional_id) {
-
-                const profesionales = await supabaseGet(
-                    "profesionales",
-                    `?select=*&id=eq.${atencion.profesional_id}`
-                );
-
-                if (
-                    profesionales &&
-                    profesionales.length > 0
-                ) {
-
-                    const profesional =
-                        profesionales[0];
-
-                    medico =
-                        `${profesional.nombres} ${profesional.apellidos}`;
-
-                    // ==========================================
-                    // BUSCAR ESPECIALIDAD
-                    // ==========================================
-
-                    if (profesional.especialidad_id) {
-
-                        const especialidades =
-                            await supabaseGet(
-                                "especialidades",
-                                `?select=*&id=eq.${profesional.especialidad_id}`
-                            );
-
-                        if (
-                            especialidades &&
-                            especialidades.length > 0
-                        ) {
-
-                            especialidad =
-                                especialidades[0].nombre;
-                        }
-                    }
-                }
+            if (!/^\d{8}$/.test(dni)) {
+                limpiarDatosPaciente();
+                ocultarDetalle();
+                renderizarEstadoVacioHistorial("Ingrese un DNI válido de 8 dígitos para consultar.");
+                mostrarMensaje("Ingrese un DNI válido de 8 dígitos.", "error");
+                if (dniInput) dniInput.focus();
+                return;
             }
 
-            // ==========================================
-            // FECHA FORMATEADA
-            // ==========================================
+            const btnConsultar = buscarForm.querySelector('button[type="submit"]');
+            setEstadoBoton(btnConsultar, true, "Consultando...");
 
-            const fecha = atencion.fecha_hora
-                ? new Date(atencion.fecha_hora)
-                    .toLocaleString("es-PE")
-                : "Fecha no registrada";
+            try {
+                // Consultar paciente en Supabase
+                const pacientes = await supabaseGet(
+                    "pacientes",
+                    `?select=*&dni=eq.${encodeURIComponent(dni)}`
+                );
 
-            // ==========================================
-            // CREAR ELEMENTO
-            // ==========================================
+                // CP-CA-02: Paciente no registrado
+                if (!Array.isArray(pacientes) || pacientes.length === 0) {
+                    limpiarDatosPaciente(); // Evita mostrar datos de un paciente consultado previamente
+                    ocultarDetalle();
+                    actualizarContador(0);
+                    renderizarEstadoVacioHistorial("No se encontraron atenciones para este paciente.");
+                    mostrarMensaje("No se encontró el paciente", "error");
+                    return;
+                }
 
-            const item =
-                document.createElement("div");
+                const paciente = pacientes[0];
 
-            item.classList.add(
-                "attention-item"
+                // Renderizar datos personales (CP-CA-01 y CP-CA-03)
+                renderizarDatosPaciente(paciente);
+
+                // Consultar historial de atenciones del paciente
+                await mostrarHistorial(paciente.id);
+
+            } catch (error) {
+                console.error("Error al buscar paciente:", error);
+                limpiarDatosPaciente();
+                ocultarDetalle();
+                actualizarContador(0);
+                mostrarMensaje("Ocurrió un error al consultar el paciente.", "error");
+            } finally {
+                setEstadoBoton(btnConsultar, false, "Consultar");
+            }
+        });
+    }
+
+    // ==========================================
+    // 3. MOSTRAR HISTORIAL DE ATENCIONES
+    // ==========================================
+    async function mostrarHistorial(pacienteId) {
+        try {
+            const resultados = await supabaseGet(
+                "atenciones",
+                `?select=*&paciente_id=eq.${encodeURIComponent(pacienteId)}&order=fecha_hora.desc`
             );
 
-            item.innerHTML = `
-                <h3>
-                    Atención del ${fecha}
-                </h3>
+            // CP-CA-03: Paciente registrado sin atenciones médicas
+            if (!Array.isArray(resultados) || resultados.length === 0) {
+                ocultarDetalle();
+                actualizarContador(0);
+                renderizarEstadoVacioHistorial("El paciente no tiene atenciones registradas.");
+                mostrarMensaje("El paciente no tiene atenciones registradas", "warning");
+                return;
+            }
 
-                <p>
-                    <strong>Médico:</strong>
-                    ${medico}
-                </p>
+            // CP-CA-01: Paciente con historial clínico
+            ocultarDetalle();
+            actualizarContador(resultados.length);
+            historialEl.innerHTML = "";
 
-                <p>
-                    <strong>Especialidad:</strong>
-                    ${especialidad}
-                </p>
+            for (const atencion of resultados) {
+                const { medico, especialidad } = await obtenerDatosProfesional(atencion.profesional_id);
 
-                <p>
-                    <strong>Diagnóstico:</strong>
-                    ${atencion.diagnostico || "No registrado"}
-                </p>
-            `;
+                const fecha = atencion.fecha_hora
+                    ? new Date(atencion.fecha_hora).toLocaleString("es-PE", {
+                        day: "2-digit",
+                        month: "2-digit",
+                        year: "numeric",
+                        hour: "2-digit",
+                        minute: "2-digit"
+                    })
+                    : "Fecha no registrada";
 
-            // ==========================================
-            // CLICK → VER DETALLE
-            // ==========================================
+                const item = document.createElement("div");
+                item.className = "attention-item";
+                item.innerHTML = `
+                    <div class="attention-item-header">
+                        <h3>
+                            <ion-icon name="calendar-outline"></ion-icon>
+                            Atención del ${fecha}
+                        </h3>
+                        <span class="view-detail-hint">
+                            Ver detalle completo <ion-icon name="chevron-forward-outline"></ion-icon>
+                        </span>
+                    </div>
+                    <div class="attention-meta">
+                        <p><strong>Médico:</strong> ${medico}</p>
+                        <p><strong>Especialidad:</strong> ${especialidad}</p>
+                        <p><strong>Diagnóstico:</strong> ${atencion.diagnostico || "No registrado"}</p>
+                    </div>
+                `;
 
-            item.addEventListener(
-                "click",
-                () => mostrarDetalle(
-                    atencion,
-                    medico,
-                    especialidad,
-                    fecha
-                )
+                item.addEventListener("click", () => {
+                    document.querySelectorAll(".attention-item").forEach((el) => el.classList.remove("selected"));
+                    item.classList.add("selected");
+                    mostrarDetalle(atencion, medico, especialidad, fecha);
+                });
+
+                historialEl.appendChild(item);
+            }
+
+            mostrarMensaje(
+                `Historial clínico cargado (${resultados.length} ${resultados.length === 1 ? "atención encontrada" : "atenciones encontradas"}).`,
+                "success"
             );
 
-            historial.appendChild(item);
+        } catch (error) {
+            console.error("Error al obtener historial:", error);
+            ocultarDetalle();
+            actualizarContador(0);
+            renderizarEstadoVacioHistorial("Ocurrió un error al cargar el historial clínico.");
+            mostrarMensaje("Ocurrió un error al cargar el historial clínico.", "error");
         }
+    }
 
-    } catch (error) {
+    async function obtenerDatosProfesional(profesionalId) {
+        let medico = "No registrado";
+        let especialidad = "No registrada";
 
-        console.error(
-            "Error al obtener historial:",
-            error
+        if (!profesionalId) return { medico, especialidad };
+
+        const profesionales = await supabaseGet(
+            "profesionales",
+            `?select=*&id=eq.${encodeURIComponent(profesionalId)}`
         );
 
-        historial.innerHTML = `
-            <p class="empty">
-                Ocurrió un error al cargar
-                el historial clínico.
-            </p>
+        if (Array.isArray(profesionales) && profesionales.length > 0) {
+            const profesional = profesionales[0];
+            medico = `${profesional.nombres || ""} ${profesional.apellidos || ""}`.trim() || "No registrado";
+
+            if (profesional.especialidad_id) {
+                const especialidades = await supabaseGet(
+                    "especialidades",
+                    `?select=*&id=eq.${encodeURIComponent(profesional.especialidad_id)}`
+                );
+
+                if (Array.isArray(especialidades) && especialidades.length > 0) {
+                    especialidad = especialidades[0].nombre;
+                }
+            }
+        }
+
+        return { medico, especialidad };
+    }
+
+    // ==========================================
+    // 4. MOSTRAR DETALLE DE ATENCIÓN
+    // ==========================================
+    function mostrarDetalle(atencion, medico, especialidad, fecha) {
+        if (!detalleSection) return;
+        detalleSection.style.display = "block";
+
+        establecerTexto("detalleFecha", fecha);
+        establecerTexto("detalleMedico", medico);
+        establecerTexto("detalleEspecialidad", especialidad);
+        establecerTexto("detalleAnamnesis", atencion.anamnesis || "No registrado");
+        establecerTexto("detalleExamen", atencion.examen_fisico || "No registrado");
+        establecerTexto("detalleAuxiliares", atencion.examenes_auxiliares || "No registrado");
+        establecerTexto("detalleDiagnostico", atencion.diagnostico || "No registrado");
+        establecerTexto("detalleTratamiento", atencion.tratamiento || "No registrado");
+        establecerTexto("detalleObservaciones", atencion.observaciones || "No registrado");
+
+        detalleSection.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    }
+
+    function ocultarDetalle() {
+        if (detalleSection) {
+            detalleSection.style.display = "none";
+        }
+    }
+
+    // ==========================================
+    // 5. UTILIDADES DE UI Y FORMATO
+    // ==========================================
+    function renderizarDatosPaciente(paciente) {
+        const nombreCompleto = [
+            paciente.nombres,
+            paciente.apellido_paterno,
+            paciente.apellido_materno
+        ].filter(Boolean).join(" ").trim();
+
+        establecerTexto("nombrePaciente", nombreCompleto || "No registrado");
+        establecerTexto("dniPaciente", paciente.dni || "No registrado");
+        establecerTexto("historiaClinica", paciente.historia_clinica || "No registrada");
+        establecerTexto("edadPaciente", calcularEdad(paciente.fecha_nacimiento));
+    }
+
+    function limpiarDatosPaciente() {
+        ["nombrePaciente", "dniPaciente", "historiaClinica", "edadPaciente"].forEach((id) => {
+            establecerTexto(id, "-");
+        });
+    }
+
+    function renderizarEstadoVacioHistorial(mensaje) {
+        if (!historialEl) return;
+        historialEl.innerHTML = `
+            <div class="empty-state-box">
+                <ion-icon name="document-text-outline"></ion-icon>
+                <p class="empty">${mensaje}</p>
+            </div>
         `;
     }
-}
 
-// ==========================================
-// MOSTRAR DETALLE
-// ==========================================
+    function actualizarContador(cantidad) {
+        if (!contadorAtencionesEl) return;
+        contadorAtencionesEl.textContent = `${cantidad} ${cantidad === 1 ? "registro" : "registros"}`;
+    }
 
-function mostrarDetalle(
-    atencion,
-    medico,
-    especialidad,
-    fecha
-) {
+    function mostrarMensaje(texto, tipo = "info") {
+        if (!searchMessageEl) return;
+        const iconos = {
+            success: "checkmark-circle",
+            error: "alert-circle",
+            warning: "warning",
+            info: "information-circle"
+        };
+        const icono = iconos[tipo] || "information-circle";
+        searchMessageEl.className = `inline-alert active ${tipo}`;
+        searchMessageEl.innerHTML = `<ion-icon name="${icono}"></ion-icon><span>${texto}</span>`;
+    }
 
-    detalleSection.style.display = "block";
+    function ocultarMensaje() {
+        if (!searchMessageEl) return;
+        searchMessageEl.className = "inline-alert";
+        searchMessageEl.innerHTML = "";
+    }
 
-    document.getElementById(
-        "detalleFecha"
-    ).textContent =
-        fecha;
+    function establecerTexto(id, valor) {
+        const el = document.getElementById(id);
+        if (el) el.textContent = valor;
+    }
 
-    document.getElementById(
-        "detalleMedico"
-    ).textContent =
-        medico;
+    function setEstadoBoton(boton, cargando, texto) {
+        if (!boton) return;
+        boton.disabled = cargando;
+        const span = boton.querySelector("span");
+        if (span) span.textContent = texto;
+        else boton.textContent = texto;
+    }
 
-    document.getElementById(
-        "detalleEspecialidad"
-    ).textContent =
-        especialidad;
+    function calcularEdad(fechaNacimiento) {
+        if (!fechaNacimiento) return "No registrada";
+        const nacimiento = new Date(fechaNacimiento);
+        if (isNaN(nacimiento.getTime())) return "No registrada";
 
-    document.getElementById(
-        "detalleAnamnesis"
-    ).textContent =
-        atencion.anamnesis ||
-        "No registrado";
+        const hoy = new Date();
+        let edad = hoy.getFullYear() - nacimiento.getFullYear();
+        const mes = hoy.getMonth() - nacimiento.getMonth();
 
-    document.getElementById(
-        "detalleExamen"
-    ).textContent =
-        atencion.examen_fisico ||
-        "No registrado";
-
-    document.getElementById(
-        "detalleAuxiliares"
-    ).textContent =
-        atencion.examenes_auxiliares ||
-        "No registrado";
-
-    document.getElementById(
-        "detalleDiagnostico"
-    ).textContent =
-        atencion.diagnostico ||
-        "No registrado";
-
-    document.getElementById(
-        "detalleTratamiento"
-    ).textContent =
-        atencion.tratamiento ||
-        "No registrado";
-
-    document.getElementById(
-        "detalleObservaciones"
-    ).textContent =
-        atencion.observaciones ||
-        "No registrado";
-
-    // ==========================================
-    // LLEVAR AL DETALLE
-    // ==========================================
-
-    detalleSection.scrollIntoView({
-        behavior: "smooth"
-    });
-}
+        if (mes < 0 || (mes === 0 && hoy.getDate() < nacimiento.getDate())) {
+            edad--;
+        }
+        return `${edad} años`;
+    }
+});

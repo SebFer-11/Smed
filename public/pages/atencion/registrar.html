@@ -3,230 +3,267 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SGC | Registrar Atención Médica - Hospital Antonio Lorena</title>
 
-    <title>Registrar Atención Médica</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <!-- Ionicons -->
+    <script type="module" src="https://unpkg.com/ionicons@8.0.13/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@8.0.13/dist/ionicons/ionicons.js"></script>
 
     <link rel="stylesheet" href="../../css/atencion-registrar.css">
 </head>
 
 <body>
 
-    <header class="header">
-        <div>
-            <h1>Atención Médica</h1>
-            <p>Registro de atención médica del paciente</p>
+    <div class="page-wrapper">
+
+        <!-- Banner institucional -->
+        <div class="hospital-brand-banner">
+            <div class="hospital-identity">
+                <div class="hospital-logo-badge">
+                    <ion-icon name="medical"></ion-icon>
+                </div>
+                <div>
+                    <strong class="hospital-name">Hospital Antonio Lorena · Cusco</strong>
+                    <span class="hospital-sub">Sistema de Gestión Clínica (SGC) · Nivel III-1</span>
+                </div>
+            </div>
+            <div class="hospital-system-tag">
+                <ion-icon name="shield-checkmark"></ion-icon>
+                Módulo de Consulta Externa
+            </div>
         </div>
 
-        <a href="../dashboard.html" class="btn-volver">
-            Volver al inicio
-        </a>
-    </header>
-
-
-    <main class="container">
-
-        <!-- Buscar paciente -->
-        <section class="card">
-
-            <h2>Buscar paciente</h2>
-
-            <form id="buscarPacienteForm" class="search-form">
-
-                <div class="form-group">
-                    <label for="dni">DNI del paciente</label>
-
-                    <input
-                        type="text"
-                        id="dni"
-                        name="dni"
-                        maxlength="8"
-                        placeholder="Ingrese DNI"
-                        required
-                    >
-                </div>
-
-                <button type="submit" class="btn-primary">
-                    Buscar paciente
-                </button>
-
-            </form>
-
-        </section>
-
-
-        <!-- Información del paciente -->
-        <section class="card" id="pacienteSection">
-
-            <h2>Información del paciente</h2>
-
-            <div class="patient-grid">
-
-                <div class="info-item">
-                    <span>Paciente</span>
-                    <strong id="nombrePaciente">-</strong>
-                </div>
-
-                <div class="info-item">
-                    <span>DNI</span>
-                    <strong id="dniPaciente">-</strong>
-                </div>
-
-                <div class="info-item">
-                    <span>Historia clínica</span>
-                    <strong id="historiaClinica">-</strong>
-                </div>
-
-                <div class="info-item">
-                    <span>Edad</span>
-                    <strong id="edadPaciente">-</strong>
-                </div>
-
-                <div class="info-item">
-                    <span>Sexo</span>
-                    <strong id="sexoPaciente">-</strong>
-                </div>
-
-                <div class="info-item">
-                    <span>Fecha de cita</span>
-                    <strong id="fechaCita">-</strong>
-                </div>
-
-                <div class="info-item">
-                    <span>Médico</span>
-                    <strong id="medico">-</strong>
-                </div>
-
-                <div class="info-item">
-                    <span>Especialidad</span>
-                    <strong id="especialidad">-</strong>
-                </div>
-
+        <!-- Cabecera de módulo -->
+        <header class="header">
+            <div class="header-title">
+                <h1>
+                    <ion-icon name="clipboard-outline"></ion-icon>
+                    Atención Médica
+                </h1>
+                <p>Registro clínico y evolución de la cita médica programada del paciente</p>
             </div>
 
-        </section>
+            <a href="../dashboard.html" class="btn-volver">
+                <ion-icon name="arrow-back-outline"></ion-icon>
+                <span>Volver al inicio</span>
+            </a>
+        </header>
 
+        <main class="container">
 
-        <!-- Registro de atención -->
-        <section class="card">
-
-            <h2>Registro de atención médica</h2>
-
-            <form id="atencionForm">
-
-                <div class="form-group">
-                    <label for="anamnesis">
-                        Anamnesis
-                    </label>
-
-                    <textarea
-                        id="anamnesis"
-                        name="anamnesis"
-                        rows="5"
-                        placeholder="Describa los antecedentes y síntomas referidos por el paciente..."
-                        required
-                    ></textarea>
+            <!-- 1. Buscar paciente -->
+            <section class="card card-accent-teal">
+                <div class="card-header-row">
+                    <h2>
+                        <ion-icon name="search-circle-outline"></ion-icon>
+                        1. Identificación del paciente
+                    </h2>
+                    <span class="step-badge">Paso 1 · Filiación</span>
                 </div>
 
+                <form id="buscarPacienteForm" class="search-form" novalidate>
+                    <div class="form-group">
+                        <label for="dni">DNI del paciente</label>
+                        <div class="input-with-icon">
+                            <ion-icon name="id-card-outline"></ion-icon>
+                            <input
+                                type="text"
+                                id="dni"
+                                name="dni"
+                                maxlength="8"
+                                inputmode="numeric"
+                                placeholder="Ingrese los 8 dígitos del DNI"
+                                required
+                            >
+                        </div>
+                    </div>
 
-                <div class="form-group">
-                    <label for="examenFisico">
-                        Examen físico
-                    </label>
-
-                    <textarea
-                        id="examenFisico"
-                        name="examenFisico"
-                        rows="5"
-                        placeholder="Registre los hallazgos del examen físico..."
-                        required
-                    ></textarea>
-                </div>
-
-
-                <div class="form-group">
-                    <label for="examenesAuxiliares">
-                        Exámenes auxiliares
-                    </label>
-
-                    <textarea
-                        id="examenesAuxiliares"
-                        name="examenesAuxiliares"
-                        rows="5"
-                        placeholder="Ingrese los resultados de exámenes auxiliares..."
-                    ></textarea>
-                </div>
-
-
-                <div class="form-group">
-                    <label for="diagnostico">
-                        Diagnóstico
-                    </label>
-
-                    <textarea
-                        id="diagnostico"
-                        name="diagnostico"
-                        rows="4"
-                        placeholder="Ingrese el diagnóstico..."
-                        required
-                    ></textarea>
-                </div>
-
-
-                <div class="form-group">
-                    <label for="tratamiento">
-                        Tratamiento
-                    </label>
-
-                    <textarea
-                        id="tratamiento"
-                        name="tratamiento"
-                        rows="5"
-                        placeholder="Describa el tratamiento indicado..."
-                        required
-                    ></textarea>
-                </div>
-
-
-                <div class="form-group">
-                    <label for="observaciones">
-                        Observaciones
-                    </label>
-
-                    <textarea
-                        id="observaciones"
-                        name="observaciones"
-                        rows="4"
-                        placeholder="Ingrese observaciones adicionales..."
-                    ></textarea>
-                </div>
-
-
-                <div class="form-actions">
-
-                    <button
-                        type="reset"
-                        class="btn-secondary"
-                    >
-                        Limpiar
+                    <button type="submit" class="btn-primary">
+                        <ion-icon name="search-outline"></ion-icon>
+                        <span>Buscar paciente</span>
                     </button>
+                </form>
 
-                    <button
-                        type="submit"
-                        class="btn-primary"
-                    >
-                        Registrar atención
-                    </button>
+                <!-- Banner de estado para búsqueda (RA-01, RA-02, RA-03) -->
+                <div id="searchMessage" class="inline-alert" role="alert" aria-live="polite"></div>
+            </section>
 
+            <!-- 2. Información del paciente y cita -->
+            <section class="card card-accent-blue" id="pacienteSection">
+                <div class="card-header-row">
+                    <h2>
+                        <ion-icon name="person-circle-outline"></ion-icon>
+                        2. Datos del paciente y cita programada
+                    </h2>
+                    <span class="step-badge badge-blue">Filiación y Agenda</span>
                 </div>
 
-            </form>
+                <div class="patient-grid">
+                    <div class="info-item info-highlight">
+                        <span><ion-icon name="person-outline"></ion-icon> Paciente</span>
+                        <strong id="nombrePaciente">-</strong>
+                    </div>
 
-        </section>
+                    <div class="info-item">
+                        <span><ion-icon name="finger-print-outline"></ion-icon> DNI</span>
+                        <strong id="dniPaciente">-</strong>
+                    </div>
 
-    </main>
+                    <div class="info-item">
+                        <span><ion-icon name="folder-outline"></ion-icon> Historia clínica</span>
+                        <strong id="historiaClinica">-</strong>
+                    </div>
+
+                    <div class="info-item">
+                        <span><ion-icon name="hourglass-outline"></ion-icon> Edad</span>
+                        <strong id="edadPaciente">-</strong>
+                    </div>
+
+                    <div class="info-item">
+                        <span><ion-icon name="male-female-outline"></ion-icon> Sexo</span>
+                        <strong id="sexoPaciente">-</strong>
+                    </div>
+
+                    <div class="info-item info-cita">
+                        <span><ion-icon name="calendar-outline"></ion-icon> Fecha de cita</span>
+                        <strong id="fechaCita">-</strong>
+                    </div>
+
+                    <div class="info-item info-cita">
+                        <span><ion-icon name="medkit-outline"></ion-icon> Médico</span>
+                        <strong id="medico">-</strong>
+                    </div>
+
+                    <div class="info-item info-cita">
+                        <span><ion-icon name="pulse-outline"></ion-icon> Especialidad</span>
+                        <strong id="especialidad">-</strong>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 3. Registro de atención -->
+            <section class="card card-accent-emerald">
+                <div class="card-header-row">
+                    <h2>
+                        <ion-icon name="document-text-outline"></ion-icon>
+                        3. Registro clínico de atención médica
+                    </h2>
+                    <span class="step-badge badge-emerald">Acto Médico</span>
+                </div>
+
+                <form id="atencionForm">
+
+                    <div class="clinical-grid">
+                        <div class="form-group">
+                            <label for="anamnesis">
+                                <span><ion-icon name="chatbubbles-outline"></ion-icon> Anamnesis</span>
+                                <span class="req-tag">Obligatorio</span>
+                            </label>
+                            <textarea
+                                id="anamnesis"
+                                name="anamnesis"
+                                rows="4"
+                                placeholder="Describa el motivo de consulta, tiempo de enfermedad, antecedentes y síntomas referidos por el paciente..."
+                                required
+                            ></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="examenFisico">
+                                <span><ion-icon name="fitness-outline"></ion-icon> Examen físico</span>
+                                <span class="req-tag">Obligatorio</span>
+                            </label>
+                            <textarea
+                                id="examenFisico"
+                                name="examenFisico"
+                                rows="4"
+                                placeholder="Registre funciones vitales (PA, FC, FR, T°, SatO2) y hallazgos relevantes del examen físico..."
+                                required
+                            ></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="diagnostico">
+                                <span><ion-icon name="alert-circle-outline"></ion-icon> Diagnóstico (CIE-10)</span>
+                                <span class="req-tag">Obligatorio</span>
+                            </label>
+                            <textarea
+                                id="diagnostico"
+                                name="diagnostico"
+                                rows="4"
+                                placeholder="Ingrese el diagnóstico presuntivo o definitivo con su código CIE-10..."
+                                required
+                            ></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="tratamiento">
+                                <span><ion-icon name="flask-outline"></ion-icon> Plan de tratamiento</span>
+                                <span class="req-tag">Obligatorio</span>
+                            </label>
+                            <textarea
+                                id="tratamiento"
+                                name="tratamiento"
+                                rows="4"
+                                placeholder="Describa medicamentos, dosis, vía de administración, frecuencia y medidas generales..."
+                                required
+                            ></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="examenesAuxiliares">
+                                <span><ion-icon name="analytics-outline"></ion-icon> Exámenes auxiliares</span>
+                                <span class="opt-tag">Opcional</span>
+                            </label>
+                            <textarea
+                                id="examenesAuxiliares"
+                                name="examenesAuxiliares"
+                                rows="3"
+                                placeholder="Solicitudes o resultados de laboratorio, imágenes, EKG u otros..."
+                            ></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="observaciones">
+                                <span><ion-icon name="information-circle-outline"></ion-icon> Observaciones</span>
+                                <span class="opt-tag">Opcional</span>
+                            </label>
+                            <textarea
+                                id="observaciones"
+                                name="observaciones"
+                                rows="3"
+                                placeholder="Indicaciones de próxima cita, signos de alarma o interconsultas..."
+                            ></textarea>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="reset" class="btn-secondary">
+                            <ion-icon name="refresh-outline"></ion-icon>
+                            <span>Limpiar campos</span>
+                        </button>
+
+                        <button type="submit" class="btn-primary">
+                            <ion-icon name="checkmark-done-circle-outline"></ion-icon>
+                            <span>Registrar atención</span>
+                        </button>
+                    </div>
+
+                    <!-- Banner de estado para registro clínico (RA-05 y éxito) -->
+                    <div id="message" class="inline-alert" role="alert" aria-live="polite"></div>
+
+                </form>
+            </section>
+
+        </main>
+    </div>
 
     <script src="../../js/supabase.js"></script>
-
     <script src="../../js/atencion-registrar.js"></script>
 
 </body>

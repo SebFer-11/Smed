@@ -1,121 +1,159 @@
+
 const SUPABASE_URL = "https://czafdbsfagyewfhvujjk.supabase.co";
 
 const SUPABASE_ANON_KEY =
     "sb_publishable_wFP8zlLKA8rs-LS5RglnCA_IfG6TVaM";
 
-async function supabaseGet(tabla, query = "") {
+const SUPABASE_SCHEMA = "public";
 
-    const response = await fetch(
-        `${SUPABASE_URL}/rest/v1/${tabla}${query}`,
-        {
-            method: "GET",
+// ========================================
+// FUNCIÓN GENERAL PARA REALIZAR PETICIONES
+// ========================================
 
-            headers: {
-                "apikey": SUPABASE_ANON_KEY,
-                "Authorization": `Bearer ${SUPABASE_ANON_KEY}`,
-                "Content-Type": "application/json"
-            }
-        }
-    );
+async function supabaseRequest(tabla, options = {}, query = "") {
 
-    if (!response.ok) {
+    const {
+        method = "GET",
+        body = null,
+        prefer = null
+    } = options;
 
-        const error = await response.text();
+    const headers = {
+        "apikey": SUPABASE_ANON_KEY,
+        "Authorization": `Bearer ${SUPABASE_ANON_KEY}`,
+        "Content-Type": "application/json"
+    };
 
-        throw new Error(
-            `Error al consultar ${tabla}: ${error}`
-        );
+    // Especificar explícitamente el esquema
+    if (method === "GET" || method === "HEAD") {
+        headers["Accept-Profile"] = SUPABASE_SCHEMA;
+    } else {
+        headers["Content-Profile"] = SUPABASE_SCHEMA;
     }
 
-    return await response.json();
+    if (prefer) {
+        headers["Prefer"] = prefer;
+    }
+
+    try {
+
+        const response = await fetch(
+            `${SUPABASE_URL}/rest/v1/${encodeURIComponent(tabla)}${query}`,
+            {
+                method,
+                headers,
+                body: body !== null ? JSON.stringify(body) : null
+            }
+        );
+
+        const responseText = await response.text();
+
+        if (!response.ok) {
+
+            let errorData;
+
+            try {
+                errorData = JSON.parse(responseText);
+            } catch {
+                errorData = responseText;
+            }
+
+            console.error("Error de Supabase:", {
+                tabla,
+                metodo: method,
+                status: response.status,
+                error: errorData
+            });
+
+            throw new Error(
+                `Error en ${method} ${tabla}: ${
+                    typeof errorData === "object"
+                        ? JSON.stringify(errorData)
+                        : errorData
+                }`
+            );
+        }
+
+        // Algunas operaciones pueden no devolver contenido
+        if (!responseText) {
+            return null;
+        }
+
+        return JSON.parse(responseText);
+
+    } catch (error) {
+
+        console.error(`Error en supabaseRequest (${method}):`, error);
+
+        throw error;
+    }
 }
 
+
+// ========================================
+// CONSULTAR REGISTROS (GET)
+// ========================================
+
+async function supabaseGet(tabla, query = "") {
+
+    return await supabaseRequest(
+        tabla,
+        {
+            method: "GET"
+        },
+        query
+    );
+}
+
+
+// ========================================
+// INSERTAR REGISTROS (POST)
+// ========================================
 
 async function supabasePost(tabla, datos) {
 
-    const response = await fetch(
-        `${SUPABASE_URL}/rest/v1/${tabla}`,
+    return await supabaseRequest(
+        tabla,
         {
             method: "POST",
-
-            headers: {
-                "apikey": SUPABASE_ANON_KEY,
-                "Authorization": `Bearer ${SUPABASE_ANON_KEY}`,
-                "Content-Type": "application/json",
-                "Prefer": "return=representation"
-            },
-
-            body: JSON.stringify(datos)
+            body: datos,
+            prefer: "return=representation"
         }
     );
-
-    if (!response.ok) {
-
-        const error = await response.text();
-
-        throw new Error(
-            `Error al insertar en ${tabla}: ${error}`
-        );
-    }
-
-    return await response.json();
 }
 
+
+// ========================================
+// ACTUALIZAR REGISTROS (PATCH)
+// ========================================
 
 async function supabasePatch(tabla, query, datos) {
 
-    const response = await fetch(
-        `${SUPABASE_URL}/rest/v1/${tabla}${query}`,
+    return await supabaseRequest(
+        tabla,
         {
             method: "PATCH",
-
-            headers: {
-                "apikey": SUPABASE_ANON_KEY,
-                "Authorization": `Bearer ${SUPABASE_ANON_KEY}`,
-                "Content-Type": "application/json",
-                "Prefer": "return=representation"
-            },
-
-            body: JSON.stringify(datos)
-        }
+            body: datos,
+            prefer: "return=representation"
+        },
+        query
     );
-
-    if (!response.ok) {
-
-        const error = await response.text();
-
-        throw new Error(
-            `Error al actualizar ${tabla}: ${error}`
-        );
-    }
-
-    return await response.json();
 }
 
 
+// ========================================
+// ELIMINAR REGISTROS (DELETE)
+// ========================================
+
 async function supabaseDelete(tabla, query) {
 
-    const response = await fetch(
-        `${SUPABASE_URL}/rest/v1/${tabla}${query}`,
+    await supabaseRequest(
+        tabla,
         {
-            method: "DELETE",
-
-            headers: {
-                "apikey": SUPABASE_ANON_KEY,
-                "Authorization": `Bearer ${SUPABASE_ANON_KEY}`,
-                "Content-Type": "application/json"
-            }
-        }
+            method: "DELETE"
+        },
+        query
     );
-
-    if (!response.ok) {
-
-        const error = await response.text();
-
-        throw new Error(
-            `Error al eliminar de ${tabla}: ${error}`
-        );
-    }
 
     return true;
 }

@@ -17,8 +17,6 @@
     <script nomodule src="https://unpkg.com/ionicons@8.0.13/dist/ionicons/ionicons.js"></script>
 
     <link rel="stylesheet" href="../../css/cita-registrar.css">
-
-
 </head>
 
 <body>
@@ -76,7 +74,8 @@
             </a>
         </nav>
 
-        <form id="citaForm">
+        <!-- novalidate permite que JS ejecute y muestre los mensajes de los casos RC-02 y RC-03 -->
+        <form id="citaForm" novalidate>
 
             <!-- 1. PACIENTE -->
             <section class="form-section" id="sec-paciente">
@@ -99,9 +98,10 @@
                             <input
                                 type="text"
                                 id="dni"
+                                inputmode="numeric"
                                 maxlength="8"
-                                placeholder="Ingrese DNI"
-                                required
+                                placeholder="Ingrese DNI (8 dígitos)"
+                                autocomplete="off"
                             >
                         </div>
                     </div>
@@ -116,8 +116,8 @@
                             <input
                                 type="text"
                                 id="historia"
-                                placeholder="Número de historia"
-                                required
+                                placeholder="Se completará automáticamente"
+                                readonly
                             >
                         </div>
                     </div>
@@ -128,15 +128,9 @@
                         </label>
                         <div class="input-wrap">
                             <ion-icon name="person-outline"></ion-icon>
-                            <select id="paciente" required>
+                            <select id="paciente">
                                 <option value="">
-                                    Seleccione un paciente
-                                </option>
-                                <option value="1">
-                                    Juan Pérez Quispe
-                                </option>
-                                <option value="2">
-                                    María Quispe Huamán
+                                    Se seleccionará al ingresar el DNI
                                 </option>
                             </select>
                         </div>
@@ -161,7 +155,7 @@
                         </label>
                         <div class="input-wrap">
                             <ion-icon name="pulse-outline"></ion-icon>
-                            <select id="especialidad" required>
+                            <select id="especialidad">
                                 <option value="">
                                     Seleccione
                                 </option>
@@ -190,7 +184,7 @@
                         </label>
                         <div class="input-wrap">
                             <ion-icon name="medkit-outline"></ion-icon>
-                            <select id="medico" required>
+                            <select id="medico">
                                 <option value="">
                                     Seleccione un médico
                                 </option>
@@ -226,7 +220,6 @@
                             <input
                                 type="date"
                                 id="fecha"
-                                required
                             >
                         </div>
                     </div>
@@ -237,7 +230,7 @@
                         </label>
                         <div class="input-wrap">
                             <ion-icon name="time-outline"></ion-icon>
-                            <select id="hora" required>
+                            <select id="hora">
                                 <option value="">
                                     Seleccione un horario
                                 </option>
@@ -258,7 +251,7 @@
                         </label>
                         <div class="input-wrap">
                             <ion-icon name="business-outline"></ion-icon>
-                            <select id="consultorio" required>
+                            <select id="consultorio">
                                 <option value="">
                                     Seleccione
                                 </option>
@@ -313,7 +306,8 @@
                 </button>
             </div>
 
-            <div id="message"></div>
+            <!-- Contenedor de mensajes de validación y resultados -->
+            <div id="message" role="alert" aria-live="polite" style="margin-top: 1rem; font-weight: 600;"></div>
 
         </form>
 
@@ -324,19 +318,7 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const dniInput = document.getElementById('dni');
-            const dniCounter = document.getElementById('dniCounter');
             const fechaInput = document.getElementById('fecha');
-
-            if (dniInput && dniCounter) {
-                dniInput.addEventListener('input', (e) => {
-                    e.target.value = e.target.value.replace(/[^0-9]/g, '');
-                    const len = e.target.value.length;
-                    dniCounter.textContent = `${len} / 8 dígitos`;
-                    dniCounter.style.color = len === 8 ? 'var(--teal)' : 'var(--slate-400)';
-                });
-            }
-
             if (fechaInput && !fechaInput.value) {
                 const hoy = new Date().toISOString().split('T')[0];
                 fechaInput.min = hoy;
@@ -346,21 +328,22 @@
 
         function autocompletarCitaDemo() {
             const dni = document.getElementById('dni');
-            const historia = document.getElementById('historia');
-            const paciente = document.getElementById('paciente');
             const especialidad = document.getElementById('especialidad');
             const medico = document.getElementById('medico');
             const hora = document.getElementById('hora');
             const consultorio = document.getElementById('consultorio');
             const observaciones = document.getElementById('observaciones');
 
-            if (dni) { dni.value = '12345678'; dni.dispatchEvent(new Event('input')); }
-            if (historia) historia.value = 'HC-000123';
-            if (paciente) paciente.value = '1';
+            // Dispara la consulta real en Supabase para rellenar Historia Clínica y Paciente
+            if (dni) {
+                dni.value = '45678912';
+                dni.dispatchEvent(new Event('input'));
+            }
+
             if (especialidad) especialidad.value = 'medicina-general';
-            if (medico) medico.value = '1';
+            if (medico && medico.options.length > 1) medico.selectedIndex = 1;
             if (hora) hora.value = '08:30';
-            if (consultorio) consultorio.value = '101';
+            if (consultorio && consultorio.options.length > 1) consultorio.selectedIndex = 1;
             if (observaciones) observaciones.value = 'Cita preventiva de control regular.';
         }
     </script>

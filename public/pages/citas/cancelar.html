@@ -44,7 +44,7 @@
         <header class="page-header">
             <a href="../dashboard.html">
                 <ion-icon name="arrow-back-outline"></ion-icon>
-                ← Volver al dashboard
+                Volver al dashboard
             </a>
 
             <div class="header-content">
@@ -78,7 +78,7 @@
                 </div>
             </div>
 
-            <form id="searchForm">
+            <form id="searchForm" novalidate>
                 <div>
                     <div class="label-row">
                         <label for="dni">
@@ -141,32 +141,32 @@
             <div class="appointment-info">
                 <div>
                     <span><ion-icon name="calendar-outline"></ion-icon> Fecha</span>
-                    <strong>30/09/2026</strong>
+                    <strong id="appointmentDate">30/09/2026</strong>
                 </div>
 
                 <div>
                     <span><ion-icon name="time-outline"></ion-icon> Hora</span>
-                    <strong>08:30</strong>
+                    <strong id="appointmentTime">08:30</strong>
                 </div>
 
                 <div>
                     <span><ion-icon name="person-circle-outline"></ion-icon> Médico</span>
-                    <strong>Dr. Carlos Mendoza</strong>
+                    <strong id="appointmentDoctor">Dr. Carlos Mendoza</strong>
                 </div>
 
                 <div>
                     <span><ion-icon name="medkit-outline"></ion-icon> Especialidad</span>
-                    <strong>Medicina General</strong>
+                    <strong id="appointmentSpecialty">Medicina General</strong>
                 </div>
 
                 <div>
                     <span><ion-icon name="business-outline"></ion-icon> Consultorio</span>
-                    <strong>Consultorio 101</strong>
+                    <strong id="appointmentOffice">Consultorio 101</strong>
                 </div>
 
                 <div>
                     <span><ion-icon name="file-tray-full-outline"></ion-icon> Modalidad</span>
-                    <strong>Consulta Externa</strong>
+                    <strong id="appointmentModality">Consulta Externa</strong>
                 </div>
             </div>
 
@@ -200,7 +200,7 @@
         </section>
 
         <!-- Mensajes -->
-        <p id="message"></p>
+        <p id="message" role="alert" aria-live="polite"></p>
 
     </main>
 
@@ -224,74 +224,6 @@
     <!-- Scripts funcionales -->
     <script src="../../js/supabase.js"></script>
     <script src="../../js/cita-cancelar.js"></script>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const dniInput = document.getElementById('dni');
-            const dniCounter = document.getElementById('dniCounter');
-            const appointmentResult = document.getElementById('appointmentResult');
-            const emptyState = document.getElementById('emptySearchState');
-            const cancelBtn = document.getElementById('cancelAppointment');
-            const confirmModal = document.getElementById('confirmModal');
-            const btnBack = document.getElementById('btnBack');
-            const btnProceed = document.getElementById('btnProceed');
-            const messageEl = document.getElementById('message');
-
-            // Formateo y contador de DNI
-            if (dniInput && dniCounter) {
-                dniInput.addEventListener('input', (e) => {
-                    e.target.value = e.target.value.replace(/[^0-9]/g, '');
-                    const len = e.target.value.length;
-                    dniCounter.textContent = `${len} / 8 dígitos`;
-                    dniCounter.style.color = len === 8 ? 'var(--primary)' : 'var(--slate-400)';
-                });
-            }
-
-            // Ocultar placeholder si el resultado se muestra
-            const observer = new MutationObserver(() => {
-                if (appointmentResult && !appointmentResult.classList.contains('hidden')) {
-                    if (emptyState) emptyState.style.display = 'none';
-                }
-            });
-            if (appointmentResult) {
-                observer.observe(appointmentResult, { attributes: true, attributeFilter: ['class', 'style'] });
-            }
-
-            // Modal preventivo
-            if (cancelBtn && confirmModal) {
-                cancelBtn.addEventListener('click', () => {
-                    confirmModal.classList.add('active');
-                });
-            }
-
-            if (btnBack && confirmModal) {
-                btnBack.addEventListener('click', () => {
-                    confirmModal.classList.remove('active');
-                });
-            }
-
-            if (btnProceed && confirmModal) {
-                btnProceed.addEventListener('click', () => {
-                    confirmModal.classList.remove('active');
-                    if (appointmentResult) appointmentResult.classList.add('hidden');
-                    if (emptyState) emptyState.style.display = 'block';
-                    if (messageEl) {
-                        messageEl.className = 'active error';
-                        messageEl.textContent = 'La cita médica ha sido cancelada exitosamente.';
-                    }
-                });
-            }
-        });
-
-        function rellenarDni(dni) {
-            const input = document.getElementById('dni');
-            if (input) {
-                input.value = dni;
-                input.dispatchEvent(new Event('input'));
-                input.focus();
-            }
-        }
-    </script>
 
 </body>
 

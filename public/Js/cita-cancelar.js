@@ -1,431 +1,269 @@
-const searchForm =
-    document.getElementById("searchForm");
+document.addEventListener("DOMContentLoaded", () => {
+    // ==========================================
+    // 1. REFERENCIAS AL DOM
+    // ==========================================
+    const searchForm = document.getElementById("searchForm");
+    const dniInput = document.getElementById("dni");
+    const dniCounter = document.getElementById("dniCounter");
 
-const appointmentResult =
-    document.getElementById("appointmentResult");
+    const emptySearchState = document.getElementById("emptySearchState");
+    const appointmentResult = document.getElementById("appointmentResult");
+    const messageEl = document.getElementById("message");
 
-const cancelAppointment =
-    document.getElementById("cancelAppointment");
+    // Modal de confirmación
+    const cancelAppointmentBtn = document.getElementById("cancelAppointment");
+    const confirmModal = document.getElementById("confirmModal");
+    const btnBack = document.getElementById("btnBack");
+    const btnProceed = document.getElementById("btnProceed");
 
-const message =
-    document.getElementById("message");
+    let citaActual = null;
+    let pacienteActual = null;
 
-// ==========================================
-// CITA ACTUAL
-// ==========================================
+    // ==========================================
+    // 2. CONTADOR Y FILTRO NUMÉRICO DE DNI
+    // ==========================================
+    if (dniInput) {
+        dniInput.addEventListener("input", () => {
+            dniInput.value = dniInput.value.replace(/\D/g, "").slice(0, 8);
+            actualizarContadorDNI();
+        });
+    }
 
-let citaActual = null;
-
-
-// ==========================================
-// BUSCAR CITA POR DNI
-// ==========================================
-
-searchForm.addEventListener(
-    "submit",
-    async function (event) {
-
+    // ==========================================
+    // 3. BÚSQUEDA DE CITA POR DNI (CC-01, CC-02, CC-03)
+    // ==========================================
+    searchForm.addEventListener("submit", async (event) => {
         event.preventDefault();
+        limpiarMensaje();
 
-        const dni =
-            document.getElementById("dni")
-                .value
-                .trim();
+        const dni = dniInput.value.trim();
 
-        // ==========================================
-        // VALIDAR DNI
-        // ==========================================
-
+        // ------------------------------------------
+        // VALIDACIÓN CC-02 / UAT-RC-02: DNI de 8 dígitos
+        // ------------------------------------------
         if (!/^\d{8}$/.test(dni)) {
-
-            appointmentResult.classList.add(
-                "hidden"
-            );
-
-            message.textContent =
-                "El DNI debe tener 8 dígitos.";
-
-            message.style.color = "red";
-
+            ocultarTarjetaCita();
             citaActual = null;
-
+            pacienteActual = null;
+            mostrarMensaje("El DNI debe tener 8 dígitos", "error");
+            dniInput.focus();
             return;
         }
 
         try {
+            // ------------------------------------------
+            // PASO 1: BUSCAR PACIENTE EN SUPABASE (CC-03)
+            // ------------------------------------------
+            const pacientes = await supabaseGet(
+                "pacientes",
+                `?select=*&dni=eq.${encodeURIComponent(dni)}`
+            );
 
-            // ==========================================
-            // BUSCAR PACIENTE
-            // ==========================================
-
-            const pacientes =
-                await supabaseGet(
-                    "pacientes",
-                    `?select=*&dni=eq.${dni}`
-                );
-
-            if (
-                !pacientes ||
-                pacientes.length === 0
-            ) {
-
-                appointmentResult.classList.add(
-                    "hidden"
-                );
-
-                message.textContent =
-                    "No se encontró el paciente.";
-
-                message.style.color = "red";
-
+            if (!pacientes || pacientes.length === 0) {
+                ocultarTarjetaCita();
                 citaActual = null;
-
+                pacienteActual = null;
+                mostrarMensaje("No se encontró el paciente", "error");
                 return;
             }
 
-            const paciente =
-                pacientes[0];
+            pacienteActual = pacientes[0];
 
+            // ------------------------------------------
+            // PASO 2: BUSCAR PRIMERA CITA PROGRAMADA (CC-01)
+            // ------------------------------------------
+            const citas = await supabaseGet(
+                "citas",
+                `?select=*&paciente_id=eq.${pacienteActual.id}&estado=eq.PROGRAMADA&order=fecha.asc,hora_inicio.asc`
+            );
 
-            // ==========================================
-            // BUSCAR CITAS PROGRAMADAS
-            // ==========================================
-
-            const citas =
-                await supabaseGet(
-                    "citas",
-                    `?select=*&paciente_id=eq.${paciente.id}&estado=eq.PROGRAMADA&order=fecha.asc,hora_inicio.asc`
-                );
-
-            if (
-                !citas ||
-                citas.length === 0
-            ) {
-
-                appointmentResult.classList.add(
-                    "hidden"
-                );
-
-                message.textContent =
-                    "No se encontró una cita programada.";
-
-                message.style.color = "red";
-
+            if (!citas || citas.length === 0) {
+                ocultarTarjetaCita();
                 citaActual = null;
-
+                mostrarMensaje("El paciente no tiene citas programadas.", "error");
                 return;
             }
 
+            citaActual = citas[0];
 
-            // ==========================================
-            // TOMAR LA PRIMERA CITA
-            // ==========================================
-
-            citaActual =
-                citas[0];
-
-
-            // ==========================================
-            // MOSTRAR DATOS DE LA CITA
-            // ==========================================
-
-            await mostrarCita(
-                citaActual
-            );
-
-            appointmentResult.classList.remove(
-                "hidden"
-            );
-
-            message.textContent =
-                "Cita encontrada.";
-
-            message.style.color = "green";
-
+            // ------------------------------------------
+            // PASO 3: RENDERIZAR TARJETA Y MOSTRAR ÉXITO
+            // ------------------------------------------
+            await renderizarCita(pacienteActual, citaActual);
+            mostrarTarjetaCita();
+            mostrarMensaje("Cita encontrada", "success");
 
         } catch (error) {
-
-            console.error(
-                "Error al buscar cita:",
-                error
-            );
-
-            appointmentResult.classList.add(
-                "hidden"
-            );
-
-            message.textContent =
-                "Ocurrió un error al consultar la cita.";
-
-            message.style.color = "red";
-
+            console.error("Error al buscar cita:", error);
+            ocultarTarjetaCita();
             citaActual = null;
+            pacienteActual = null;
+            mostrarMensaje("Ocurrió un error al consultar la cita.", "error");
         }
-    }
-);
-
-
-// ==========================================
-// MOSTRAR DATOS DE LA CITA
-// ==========================================
-
-async function mostrarCita(
-    cita
-) {
-
-    /*
-     * IMPORTANTE:
-     *
-     * No sé los IDs exactos de los elementos
-     * que tienes dentro de appointmentResult.
-     *
-     * Por eso primero intentamos encontrar
-     * elementos habituales sin romper el código.
-     *
-     * Si tu HTML tiene IDs específicos,
-     * podemos adaptarlos exactamente.
-     */
-
-    const fecha =
-        formatearFecha(
-            cita.fecha
-        );
-
-    const horaInicio =
-        cita.hora_inicio
-            ? cita.hora_inicio.substring(0, 5)
-            : "";
-
-    const horaFin =
-        cita.hora_fin
-            ? cita.hora_fin.substring(0, 5)
-            : "";
+    });
 
     // ==========================================
-    // FECHA
+    // 4. RENDERIZAR DATOS EN LA TARJETA HTML
     // ==========================================
+    async function renderizarCita(paciente, cita) {
+        // Datos del paciente
+        const nombreCompleto = [
+            paciente.nombres,
+            paciente.apellido_paterno,
+            paciente.apellido_materno
+        ].filter(Boolean).join(" ").trim() || "Paciente Registrado";
 
-    const fechaElemento =
-        document.getElementById("appointmentDate");
+        const iniciales = nombreCompleto
+            .split(" ")
+            .map((p) => p[0])
+            .slice(0, 2)
+            .join("")
+            .toUpperCase();
 
-    if (fechaElemento) {
+        establecerTexto("patientInitials", iniciales);
+        establecerTexto("patientFullName", nombreCompleto);
+        establecerTexto("patientDniText", `DNI: ${paciente.dni}`);
 
-        fechaElemento.textContent =
-            fecha;
-    }
+        // Fecha y Hora
+        const fechaFormateada = formatearFecha(cita.fecha);
+        const horaInicio = cita.hora_inicio ? cita.hora_inicio.substring(0, 5) : "--:--";
+        const horaFin = cita.hora_fin ? ` - ${cita.hora_fin.substring(0, 5)}` : "";
 
+        establecerTexto("appointmentDate", fechaFormateada);
+        establecerTexto("appointmentTime", `${horaInicio}${horaFin}`);
+        establecerTexto("appointmentOffice", cita.consultorio || "Consultorio Externo");
+        establecerTexto("appointmentModality", cita.modalidad || "Consulta Externa");
 
-    // ==========================================
-    // HORA
-    // ==========================================
+        // Médico y Especialidad desde Supabase
+        let nombreMedico = "Médico asignado";
+        let nombreEspecialidad = "Medicina General";
 
-    const horaElemento =
-        document.getElementById("appointmentTime");
-
-    if (horaElemento) {
-
-        horaElemento.textContent =
-            `${horaInicio} - ${horaFin}`;
-    }
-
-
-    // ==========================================
-    // BUSCAR MÉDICO
-    // ==========================================
-
-    if (cita.profesional_id) {
-
-        const profesionales =
-            await supabaseGet(
+        if (cita.profesional_id) {
+            const profesionales = await supabaseGet(
                 "profesionales",
                 `?select=*&id=eq.${cita.profesional_id}`
             );
 
-        if (
-            profesionales &&
-            profesionales.length > 0
-        ) {
+            if (profesionales && profesionales.length > 0) {
+                const prof = profesionales[0];
+                nombreMedico = `Dr(a). ${prof.nombres || ""} ${prof.apellidos || ""}`.trim();
 
-            const profesional =
-                profesionales[0];
-
-            const medicoElemento =
-                document.getElementById(
-                    "appointmentDoctor"
-                );
-
-            if (medicoElemento) {
-
-                medicoElemento.textContent =
-                    `${profesional.nombres} ${profesional.apellidos}`;
-            }
-
-
-            // ==========================================
-            // ESPECIALIDAD
-            // ==========================================
-
-            if (
-                profesional.especialidad_id
-            ) {
-
-                const especialidades =
-                    await supabaseGet(
+                if (prof.especialidad_id) {
+                    const especialidades = await supabaseGet(
                         "especialidades",
-                        `?select=*&id=eq.${profesional.especialidad_id}`
+                        `?select=*&id=eq.${prof.especialidad_id}`
                     );
-
-                if (
-                    especialidades &&
-                    especialidades.length > 0
-                ) {
-
-                    const especialidadElemento =
-                        document.getElementById(
-                            "appointmentSpecialty"
-                        );
-
-                    if (especialidadElemento) {
-
-                        especialidadElemento.textContent =
-                            especialidades[0].nombre;
+                    if (especialidades && especialidades.length > 0) {
+                        nombreEspecialidad = especialidades[0].nombre;
                     }
                 }
             }
         }
-    }
 
+        establecerTexto("appointmentDoctor", nombreMedico);
+        establecerTexto("appointmentSpecialty", nombreEspecialidad);
+    }
 
     // ==========================================
-    // OBSERVACIONES
+    // 5. FLUJO DE CANCELACIÓN CON MODAL INTEGRADO
     // ==========================================
-
-    const observacionesElemento =
-        document.getElementById(
-            "appointmentObservations"
-        );
-
-    if (observacionesElemento) {
-
-        observacionesElemento.textContent =
-            cita.observaciones ||
-            "Sin observaciones";
-    }
-}
-
-
-// ==========================================
-// CANCELAR CITA
-// ==========================================
-
-cancelAppointment.addEventListener(
-    "click",
-    async function () {
-
-        // ==========================================
-        // VERIFICAR CITA
-        // ==========================================
-
-        if (!citaActual) {
-
-            message.textContent =
-                "Primero debe buscar una cita.";
-
-            message.style.color = "red";
-
-            return;
-        }
-
-
-        // ==========================================
-        // CONFIRMAR CANCELACIÓN
-        // ==========================================
-
-        const confirmar =
-            confirm(
-                "¿Está seguro de cancelar esta cita?\n\n" +
-                "La cita no podrá ser reprogramada posteriormente."
-            );
-
-        if (!confirmar) {
-            return;
-        }
-
-
-        try {
-
-            // ==========================================
-            // ACTUALIZAR ESTADO
-            // ==========================================
-
-            await supabasePatch(
-                "citas",
-                `?id=eq.${citaActual.id}`,
-                {
-                    estado: "CANCELADA"
-                }
-            );
-
-
-            // ==========================================
-            // ACTUALIZAR INTERFAZ
-            // ==========================================
-
-            appointmentResult.classList.add(
-                "hidden"
-            );
-
-            message.textContent =
-                "La cita ha sido cancelada correctamente.";
-
-            message.style.color = "green";
-
-
-            // ==========================================
-            // LIMPIAR CITA ACTUAL
-            // ==========================================
-
-            citaActual = null;
-
-            document.getElementById(
-                "dni"
-            ).value = "";
-
-
-        } catch (error) {
-
-            console.error(
-                "Error al cancelar cita:",
-                error
-            );
-
-            message.textContent =
-                "No se pudo cancelar la cita.";
-
-            message.style.color = "red";
-        }
-    }
-);
-
-
-// ==========================================
-// FORMATEAR FECHA
-// ==========================================
-
-function formatearFecha(
-    fecha
-) {
-
-    if (!fecha) {
-        return "Fecha no registrada";
+    if (cancelAppointmentBtn) {
+        cancelAppointmentBtn.addEventListener("click", () => {
+            if (!citaActual) {
+                mostrarMensaje("Primero debe buscar una cita.", "error");
+                return;
+            }
+            if (confirmModal) {
+                confirmModal.classList.add("active");
+            }
+        });
     }
 
-    const partes =
-        fecha.split("-");
-
-    if (partes.length !== 3) {
-        return fecha;
+    if (btnBack && confirmModal) {
+        btnBack.addEventListener("click", () => {
+            confirmModal.classList.remove("active");
+        });
     }
 
-    return `${partes[2]}/${partes[1]}/${partes[0]}`;
+    if (btnProceed && confirmModal) {
+        btnProceed.addEventListener("click", async () => {
+            confirmModal.classList.remove("active");
+
+            if (!citaActual) return;
+
+            try {
+                await supabasePatch(
+                    "citas",
+                    `?id=eq.${citaActual.id}`,
+                    { estado: "CANCELADA" }
+                );
+
+                ocultarTarjetaCita();
+                citaActual = null;
+                pacienteActual = null;
+                dniInput.value = "";
+                actualizarContadorDNI();
+
+                mostrarMensaje("La cita ha sido cancelada correctamente.", "success");
+
+            } catch (error) {
+                console.error("Error al cancelar cita:", error);
+                mostrarMensaje("No se pudo cancelar la cita.", "error");
+            }
+        });
+    }
+
+    // ==========================================
+    // 6. FUNCIONES AUXILIARES DE UI Y FORMATO
+    // ==========================================
+    function mostrarTarjetaCita() {
+        if (appointmentResult) appointmentResult.classList.remove("hidden");
+        if (emptySearchState) emptySearchState.style.display = "none";
+    }
+
+    function ocultarTarjetaCita() {
+        if (appointmentResult) appointmentResult.classList.add("hidden");
+        if (emptySearchState) emptySearchState.style.display = "block";
+    }
+
+    function actualizarContadorDNI() {
+        if (!dniCounter || !dniInput) return;
+        const len = dniInput.value.length;
+        dniCounter.textContent = `${len} / 8 dígitos`;
+        dniCounter.style.color = len === 8 ? "var(--primary)" : "var(--slate-400)";
+    }
+
+    function establecerTexto(id, texto) {
+        const el = document.getElementById(id);
+        if (el) el.textContent = texto;
+    }
+
+    function formatearFecha(fecha) {
+        if (!fecha) return "Fecha no registrada";
+        const partes = fecha.split("-");
+        if (partes.length !== 3) return fecha;
+        return `${partes[2]}/${partes[1]}/${partes[0]}`;
+    }
+
+    function mostrarMensaje(texto, tipo = "info") {
+        if (!messageEl) return;
+        messageEl.className = `active ${tipo}`;
+        messageEl.textContent = texto;
+    }
+
+    function limpiarMensaje() {
+        if (!messageEl) return;
+        messageEl.className = "";
+        messageEl.textContent = "";
+    }
+});
+
+// Función global para los chips de prueba rápida del HTML
+function rellenarDni(dni) {
+    const input = document.getElementById("dni");
+    if (input) {
+        input.value = dni;
+        input.dispatchEvent(new Event("input"));
+        input.focus();
+    }
 }
